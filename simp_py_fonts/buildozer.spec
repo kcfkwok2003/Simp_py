@@ -1,7 +1,7 @@
 [app]
 
 # (str) Title of your application
-title = Simp-py-fonts
+title = Simp-fonts
 
 # (str) Package name
 package.name = simp_py_fonts
@@ -28,7 +28,7 @@ source.include_exts = py,png,jpg,kv,atlas
 #source.exclude_patterns = license,images/*/*.jpg
 
 # (str) Application versioning (method 1)
-version = 1.0.0
+version = 1.0.6
 
 # (str) Application versioning (method 2)
 # version.regex = __version__ = ['"](.*)['"]
@@ -36,7 +36,7 @@ version = 1.0.0
 
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
-requirements = kivy
+requirements = kivy, pil
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes

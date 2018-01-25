@@ -1,17 +1,20 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import os
 from PIL import Image,ImageDraw,ImageFont
 #FONT_PATH='../fonts'
 #FONT_METRIC=16
 #DRAW_METRIC=(16,18)
+FONT_PNG='/storage/emulated/0/data/simp_py_png'
 
 class CH2DAT:
-    def __init__(self,font,font_metric,draw_metric,save_png=False):
+    def __init__(self,font,font_metric,draw_metric,save_png=False,top_cut=2):
         self.font= font
         self.font_metric=font_metric
         self.draw_metric= draw_metric
         self.save_png=save_png
+        self.top_cut=top_cut
         
     def to_dat(self,txt):
         im = Image.new('1',self.draw_metric,color=1)
@@ -23,7 +26,9 @@ class CH2DAT:
         vv = ord(txt)
         fn = '%s-%02x%02x' % (txt, (vv>>8), (vv& 0xff))
         if self.save_png:
-            im.save('ch-%s.png' % fn, 'PNG')
+            if not os.path.isdir(FONT_PNG):
+                os.makedirs(FONT_PNG)
+            im.save('%s/ch-%s.png' % (FONT_PNG,fn), 'PNG')
         dat =list(im.getdata())
         print 'dlen:', len(dat)
         return  self.to_bytes(dat, real_w, real_h)
@@ -32,7 +37,14 @@ class CH2DAT:
         idx=0
         bytes=[]
         if self.font_metric==16:
-            dat = dat[32:]  # drop 1st lines, assume it is blank
+            if self.top_cut==2:
+                dat = dat[32:]  # drop 1st 2 lines, assume it is blank
+            elif self.top_cut==1:
+                dat = dat[16:-16]  # drop 1st line, & last line assume it is blank
+            elif self.top_cut==0:
+                dat = dat[:-32]  # drop last 2 lines
+            else:  # no top_cut
+                pass
         while dat:
             bs, dat= dat[:8], dat[8:]
             bytes.append(self.b2byte(bs))
@@ -50,9 +62,9 @@ class CH2DAT:
         return byte
             
 
-def conv_lines(lines, out_path, font_path, font_metric, draw_metric):
+def conv_lines(lines, out_path, font_path, font_metric, draw_metric,save_png=False,top_cut=2):
     font = ImageFont.truetype(font_path,font_metric)
-    ch2dat = CH2DAT(font,font_metric,draw_metric)
+    ch2dat = CH2DAT(font,font_metric,draw_metric,save_png,top_cut)
     i=0
     fonts={}
     for line in lines:

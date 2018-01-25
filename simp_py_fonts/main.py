@@ -3,7 +3,7 @@
 # author: C.F.Kwok (TienLink Creation)
 # date: 2018-1-17
 
-VERSION='1.0.0'
+VERSION='1.0.6'
 YEAR ='2018'
 ABOUT_MSG='''
 Simp-py-fonts V%s
@@ -18,10 +18,11 @@ from kivy.logger import Logger
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
+from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.label import Label
 from font_path import FONT_PATH
 from ch2dat import conv_lines
-
+import os
 from exc import get_exc_details
 import string
 import time
@@ -54,8 +55,10 @@ class MainRoot(BoxLayout):
         self.elayout.add_widget(lb)
         self.fontfilename =TextInput(text='GNUUnifont9FullHintInstrUCSUR.ttf')
         self.elayout.add_widget(self.fontfilename)
+        self.top_cut=TextInput(text='0', size_hint_x=0.1)
+        self.elayout.add_widget(self.top_cut)
         self.add_widget(self.elayout)
-        self.slayout=BoxLayout(orientation='horizontal',size_hint_y=0.1)
+        self.slayout=BoxLayout(orientation='horizontal',size_hint_y=0.3)
         self.status =TextInput(text='',disabled=True)
         self.slayout.add_widget(self.status)
 
@@ -65,8 +68,14 @@ class MainRoot(BoxLayout):
             btn=Button(text=btn_name)
             btn.bind(on_press=self.on_op)
             self.btns_layout.add_widget(btn)
+        self.save_png_btn = ToggleButton(text='Save Png')
+        self.save_png_btn.bind(on_press=self.on_save_png_btn)
+        self.btns_layout.add_widget(self.save_png_btn)
         self.add_widget(self.btns_layout)
 
+    def on_save_png_btn(self,v):
+        self.status.text='Save Png is %s' % self.save_png_btn.state
+        
     def app_on_op(self,v):
         operation = self.app_operations.get(v.text, None)        
         on_op = getattr(self.app, operation, None)
@@ -110,6 +119,8 @@ class MainApp(App):
         self.textfilename = self.mainScreen.mainRoot.textfilename
         self.fontfilename = self.mainScreen.mainRoot.fontfilename
         self.text_input =  self.mainScreen.mainRoot.text_input
+        self.save_png_btn = self.mainScreen.mainRoot.save_png_btn
+        self.top_cut= self.mainScreen.mainRoot.top_cut
         screenManager = ScreenManager(transition=FadeTransition())
         screenManager.add_widget(self.mainScreen)
         return screenManager
@@ -159,13 +170,27 @@ class MainApp(App):
             lines = f.readlines()
             f.close()
             font_path = '%s/%s' % (IN_FONT_PATH, self.fontfilename.text)
-            
+            if not os.path.isfile(font_path):
+                font_path = FONT_PATH
             out_path = '%s/%s' % (OUT_PATH,self.get_out_fn(fn))
             font_metric=16
             draw_metric=(16,18)
-
-            report=conv_lines(lines, out_path,font_path,font_metric,draw_metric)
+            save_png=False
+            top_cut=0
+            try:
+                top_cut= int(self.top_cut.text)
+            except:
+                exc = get_exc_details()
+                Logger.info('kcf: invalid top_cut:%s' % self.top_cut.text)
+            if top_cut>2:
+                top_cut=2
+            if  self.save_png_btn.state=='down':
+                save_png=True
+            Logger.info('kcf: font_path:%s' % font_path)
+            report=conv_lines(lines, out_path,font_path,font_metric,draw_metric,save_png=save_png,top_cut=top_cut)
+            report = 'font:%s\n' % font_path + report
             self.status.text=report
+            
         except:
             exc = get_exc_details()
             self.status.text=exc
