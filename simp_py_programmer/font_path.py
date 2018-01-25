@@ -3,7 +3,7 @@ from kivy.core.text import LabelBase
 from kivy.logger import Logger
 import os
 
-PREFERED=['simsun.ttc','DroidSansFallback.ttf','Roboto-Regular.ttf','DroidSans.ttf','HYSerif_Regular.ttf','NotoSerif-Regular.ttf','Roboto-Regular.ttf','DroidSans.ttf']
+PREFERED=['simsun.ttc','NotoSansCJK-Regular.ttc','DroidSansFallback.ttf','Roboto-Regular.ttf','DroidSans.ttf','HYSerif_Regular.ttf','NotoSerif-Regular.ttf','Roboto-Regular.ttf','DroidSans.ttf']
 
 fonts_dir=LabelBase.get_system_fonts_dir()
 font_names=''
@@ -18,10 +18,12 @@ for dirx in fonts_dir:
         if fx in PREFERED:
             paths.append(os.path.join(dirx, fx))
 
-
-f=open('font_names.txt', 'wb')
-f.write(font_names)
-f.close()
+FONT_NAMES_FILE='/storage/emulated/0/data/font_names.txt'
+if not os.path.isfile(FONT_NAMES_FILE):
+    f=open('/storage/emulated/0/data/font_names.txt', 'wb')
+    f.write(font_names)
+    f.close()
+    
 #print 'paths:%s' % `paths`
 FONT_PATH =''
 if paths:

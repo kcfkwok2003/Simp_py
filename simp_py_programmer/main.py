@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-VERSION='1.0.5'
+VERSION='1.0.6'
 YEAR ='2018'
 ABOUT_MSG='''
 Simp-py-programmer V%s
@@ -45,7 +45,7 @@ APP_OPERATIONS={
     '?' : 'on_about',
     }
 
-OPERATION_BUTTONS=['File','Set..','Ping','Upld','Rst','Mon','Up','Dn','Pup','Pdn','?']
+OPERATION_BUTTONS=['File','Set..','Ping','Upld','Rst','Mon','Pup','Pdn','?']
 
 MON_OPERATIONS={
     'Start': 'on_mon_start',
@@ -369,9 +369,14 @@ class MainApp(App):
             return True
         
     def on_file(self,v):
+        screen = self.sm.get_screen('textScreen')
+        screen.textRoot.status.text='opening file list...'
+        Clock.schedule_once(self.on_file_1)
+
+    def on_file_1(self,v):
         if not self.sm.has_screen('fileScreen'):
             self.fileScreen = FileScreen(name='fileScreen')
-            self.sm.add_widget(self.fileScreen)            
+            self.sm.add_widget(self.fileScreen)
         self.sm.current='fileScreen'
 
     def on_file_cancel(self,v):
@@ -379,10 +384,15 @@ class MainApp(App):
             self.sm.current='textScreen'
 
     def on_file_open(self,filename):
+        self.filename = filename
+        fileScreen = self.sm.get_screen('fileScreen')
+        fileScreen.fileRoot.status.text='opening file...'
+        Clock.schedule_once(self.on_file_open_1)
+
+    def on_file_open_1(self,dt):
         textScreen = self.sm.get_screen('textScreen')
         file_label = textScreen.textRoot.file_label
-        self.filename = filename
-        file_label.text=filename
+        file_label.text=self.filename
         filecont=''
         try:
             f=open('%s/%s' % (self.datapath, self.filename),'rb')
@@ -392,8 +402,8 @@ class MainApp(App):
             exc = get_exc_details()
             Logger.info('kcf: on_file_open exc:%s' % exc)
             
-        self.sm.get_screen('textScreen').textRoot.text_input.text=filecont
-        self.sm.get_screen('textScreen').textRoot.text_input.cursor=(0,0)
+        textScreen.textRoot.text_input.text=filecont
+        textScreen.textRoot.text_input.cursor=(0,0)
         self.sm.current='textScreen'
 
     def on_file_new(self,filename):

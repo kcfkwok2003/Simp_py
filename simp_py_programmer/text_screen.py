@@ -37,7 +37,7 @@ class TextRoot(BoxLayout):
         self.add_widget(self.slayout)
         self.btns_layout = BoxLayout(orientation='horizontal',size_hint_y=0.1)
         self.file_label = Label(text=self.app.filename,size_hint_x=2)
-        self.btns_layout.add_widget(self.file_label)
+        #self.btns_layout.add_widget(self.file_label)
         for btn_name in self.operation_buttons:
             btn = Button(text=btn_name)
             btn.bind(on_press=self.on_op)

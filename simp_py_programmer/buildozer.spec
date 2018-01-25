@@ -1,7 +1,7 @@
 [app]
 
 # (str) Title of your application
-title = Simp-py-programmer
+title = Simp-programmer
 
 # (str) Package name
 package.name = simp_py_programmer
@@ -28,7 +28,7 @@ source.include_patterns = assets/*,images/*.png,examples/*.pyt
 #source.exclude_patterns = license,images/*/*.jpg
 
 # (str) Application versioning (method 1)
-version = 1.0.5
+version = 1.0.6
 
 # (str) Application versioning (method 2)
 # version.regex = __version__ = ['"](.*)['"]

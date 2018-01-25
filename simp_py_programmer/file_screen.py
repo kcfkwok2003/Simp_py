@@ -13,6 +13,7 @@ import time
 import re
 import os
 import math
+from kivy.clock import Clock
 
 r_file_no=r'test(\d+).py'
 re_file_no=re.compile(r_file_no)
@@ -26,7 +27,7 @@ APP_OPERATIONS={
     'Cancel':'on_file_cancel',
     }
 
-OPERATION_BUTTONS=['New','Open','Save','Prev','Next','Cancel']
+OPERATION_BUTTONS=['Open','Prev','Next','Cancel']
 DATA_PATH ='/storage/emulated/0/data/simp_py_dat'
 
 class FileRoot(BoxLayout):
@@ -52,9 +53,11 @@ class FileRoot(BoxLayout):
         self.content = GridLayout(cols=2,size_hint_y=0.8)
         self.show_file_list()
         self.add_widget(self.content)
-        self.layout1 = BoxLayout(orientation='vertical', size_hint_y=0.1)
-        self.ti = TextInput(text=filename)
+        self.layout1 = BoxLayout(orientation='horizontal', size_hint_y=0.1)
+        self.ti = TextInput(text=filename,size_hint_x=0.4)
         self.layout1.add_widget(self.ti)
+        self.status =TextInput(text='',size_hint_x=0.6)
+        self.layout1.add_widget(self.status)
         self.add_widget(self.layout1)
         self.blayout = BoxLayout(orientation='horizontal',size_hint_y=0.1)
         for btn_name in OPERATION_BUTTONS:
@@ -143,19 +146,28 @@ class FileRoot(BoxLayout):
 
     def on_file_next(self,v):
         Logger.info('kcf: on_file_next')
+        self.status.text='open next page...'
+        Clock.schedule_once(self.on_file_next_1)
+
+    def on_file_next_1(self,dt):
         all_end = self.get_files_len()
         page = self.get_next_page_n(all_end, self.nrec_per_page, self.page)
         if page > self.page:
             self.content.clear_widgets()
             self.show_file_list(page=page)
-
+        self.status.text='open next page done'
             
     def on_file_prev(self,v):
         Logger.info('kcf: on_file_prev')
+        self.status.text='open prev page...'
+        Clock.schedule_once(self.on_file_prev_1)
+
+    def on_file_prev(self,dt):    
         if self.page > 1:
             self.content.clear_widgets()
             self.show_file_list(page=self.page-1)
-            
+        self.status.text='open prev page done'
+        
     def on_file_new(self,v):
         fnos=[]
         fs = os.listdir(self.file_settings['datapath'])
@@ -204,6 +216,7 @@ class FileRoot(BoxLayout):
             pass
 
     def refresh(self):
+        self.status.text=''
         self.content.clear_widgets()
         self.show_file_list()
         
