@@ -1,7 +1,7 @@
 [app]
 
 # (str) Title of your application
-title = Simp-py-remote
+title = Simp-remote
 
 # (str) Package name
 package.name = simp_py_remote
@@ -28,7 +28,7 @@ source.include_exts = py,png,jpg,kv,atlas
 #source.exclude_patterns = license,images/*/*.jpg
 
 # (str) Application versioning (method 1)
-version = 1.0.0
+version = 1.0.6
 
 # (str) Application versioning (method 2)
 # version.regex = __version__ = ['"](.*)['"]

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-VERSION='1.0.0'
+VERSION='1.0.6'
 YEAR ='2018'
 ABOUT_MSG='''
 Simp-py-remote V%s
@@ -131,7 +131,7 @@ class MainApp(App):
         self.settings={
             'ip':'192.168.4.1',
             }
-        
+        self.ping_sent=0
         self.dev_com= DEV_COM(self.settings['ip'], self.dev_com_cb)
         self.mainScreen=MainScreen()
         self.status = self.mainScreen.mainRoot.status
@@ -182,6 +182,9 @@ class MainApp(App):
             if len(tlines)>0:
                 txt = tlines[-1]+'\n'+txt
             self.status.text = txt
+            if self.ping_sent:
+                self.ping_sent=0
+                self.dev_com.close()
             return
         if nlines[0]=='uresp':
             txt = nlines[1]
@@ -199,6 +202,7 @@ class MainApp(App):
         Clock.schedule_once(self.ping)
         
     def ping(self,dt):
+        self.ping_sent=1
         cont = '\x02\nping\n\x03\n\x04\n'
         self.dev_com.send(cont, self.settings['ip'])
 
