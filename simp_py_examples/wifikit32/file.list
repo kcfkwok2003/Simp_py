@@ -1,5 +1,6 @@
 ch_intro.txt
 ch_intro_font.py
+ch_kung_hei_font.py
 ex001_hello.py
 ex002_random.py
 ex003_remote_songs.py
