@@ -62,6 +62,8 @@ Simp-py 還處於早期開發之中，待改善的地方仍有很多。我們歡
 
 工具程式源碼下載網址: https://github.com/kcfkwok2003/Simp_py
 
+WIFI KIT 32 tutorials: https://github.com/kcfkwok2003/Simp_py/blob/master/tutorials/wifikit32/tutorial1.md
+
 香港門市及演示地點: 九龍紅磡馬頭圍道37-39號紅磡廣場1樓24室
 
 Email : info@tienlink.com
