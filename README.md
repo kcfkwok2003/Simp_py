@@ -60,8 +60,8 @@
 Simp-py 還處於早期開發之中，待改善的地方仍有很多。我們歡迎任何改善的建議。用戶如有實用例子願意分享，可加到我們的例子列表當中，並註明出處。如果有更好的工具想分享我們亦可在新一版的文件中介紹給用戶。
 
 
-工具程式源碼下載網址: https://github.com/kcfkwok2003/Simp_py
-
+工具程式源碼下載網址: https://github.com/kcfkwok2003/Simp_py/tree/master/dist
+Firware 下載網址: https://github.com/kcfkwok2003/Simp_py/tree/master/dist
 WIFI KIT 32 tutorials: https://github.com/kcfkwok2003/Simp_py/blob/master/tutorials/wifikit32/tutorial1.md
 
 香港門市及演示地點: 九龍紅磡馬頭圍道37-39號紅磡廣場1樓24室
