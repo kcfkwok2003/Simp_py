@@ -1,6 +1,22 @@
 # ex_christmas.py
 # author: C.F.Kwok
 # date: 2017-12-12
+from array import array
+from simp_py import tft
+DUTY_ON=5
+DUTY_OFF=0
+PIEZO_PIN=25
+#note
+C=2441
+D=2741
+E=3048
+F=3225
+G=3654
+A=4058
+B=4562
+C2=4882
+SONG=array('H',  [E,E,E,E,E,E,E,G,C,D,E,F,F,F,F,F,E,E,E,E,D,D,E,D,G])
+NOTE_LEN=bytearray([1,1,2,1,1,2,1,1,1,1,4,1,1,1,1,1,1,1,1,1,1,1,1,2,2])
 import framebuf
 mc_width= 128
 mc_height= 63
@@ -90,44 +106,85 @@ mc_bits = bytearray([
    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
 BITM={0: 1, 1: 2, 2:4, 3:8, 4:0x10,5:0x20,6:0x40,7:0x80}
-def draw():
-    global mc_bits,BITM,mc_width,framebuf,mc_height
-    from simp_py import tft
-    import time
-    fbuf = framebuf.FrameBuffer(bytearray(128 * 63 *2),128,63,framebuf.RGB565)
-    fbuf.fill(0)
-    MC_WIDTH=mc_width*2
-    tft.tft.clear()
-    while 1:
+import time
+class Christmas:
+    global PIEZO_PIN, DUTY_OFF,BITM,tft,framebuf,mc_width,mc_height,mc_bits,time
+    def __init__(self):
+        from machine import PWM,Pin
+        self.mute=False
+        self.usr_btn=Pin(39, Pin.IN)
+        piezo_pin=Pin(PIEZO_PIN,Pin.OUT)
+        self.pwm_pin = PWM(piezo_pin)
+        self.pwm_pin.duty(DUTY_OFF)        
+        self.fbuf = framebuf.FrameBuffer(bytearray(128 * 63 *2),128,63,framebuf.RGB565)
+        self.fbuf.fill(0)
+        tft.tft.clear()
+        self.note_idx=0
+        self.note_stt=0
+        
+    def play_melody(self):
+        global DUTY_ON, DUTY_OFF, SONG,NOTE_LEN
+        if self.usr_btn.value()==0:
+            self.mute=True
+            self.pwm_pin.duty(DUTY_OFF)        
+        if self.note_stt==0:
+            self.pwm_pin.freq(SONG[self.note_idx])
+            if not self.mute:
+                self.pwm_pin.duty(DUTY_ON)
+            self.note_tmo=time.ticks_ms() + 400 * NOTE_LEN[self.note_idx]
+            self.note_stt=1
+        elif self.note_stt==1:
+            tick_ms = time.ticks_ms()
+            if tick_ms < self.note_tmo:
+                return
+            self.pwm_pin.duty(DUTY_OFF)
+            self.note_tmo = tick_ms + 50
+            self.note_stt=2
+        elif self.note_stt==2:
+            tick_ms = time.ticks_ms()
+            if tick_ms < self.note_tmo:
+                return
+            self.note_stt=0
+            self.note_idx+=1
+            if self.note_idx>= len(SONG):
+                self.note_idx=0
+                self.note_stt=3
+
+    def show(self):
+        if self.usr_btn.value()==0:
+            self.mute=True
+            self.pwm_pin.duty(DUTY_OFF)
+            
+        for ix in range(mc_width):
+            for iy in range(mc_height):
+                ic = self.fbuf.pixel(ix,iy)
+                tft.tft.pixel(ix*2, iy*2,ic)
+                self.play_melody()
+                
+    def run(self):
         color=0xffff        
         x=0
         y=0
         for bx in mc_bits:
             for j in range(8):
                 b = bx & BITM[j]
+                self.play_melody()
                 if b:
-                    fbuf.pixel(x,y,color)
-                    #tft.tft.pixel(x,y,color)
-                    #color+=40
-                #else:
-                #    tft.tft.pixel(x,y,0)
+                    self.fbuf.pixel(x,y,color)
                 x+=1
-            if x>= mc_width:  #MC_WIDTH:
+            if x>= mc_width: 
                 x=0
                 y+=1
-                #print('x:%d y:%d' % (x,y))
-        for ix in range(mc_width):
-            for iy in range(mc_height):
-                ic = fbuf.pixel(ix,iy)
-                tft.tft.pixel(ix*2, iy*2,ic)
+        self.show()
                 
         time.sleep(1)
         for i in range(128):
             time.sleep(0.1)
-            fbuf.scroll(-1,0)
-            for ix in range(mc_width):
-                for iy in range(mc_height):
-                    ic = fbuf.pixel(ix,iy)
-                    tft.tft.pixel(ix*2, iy*2,ic)            
+            self.fbuf.scroll(-1,0)
+            self.show()
         gc.collect()
-draw()
+
+if __name__=='__main__':
+    test=Christmas()
+    test.run()
+
