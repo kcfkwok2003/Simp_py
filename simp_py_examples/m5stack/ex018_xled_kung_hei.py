@@ -10,10 +10,10 @@ from machine import Pin,SPI
 class XLED_CH:
     global M8x8, CH_FONTS,mon,time,Pin,SPI
     def __init__(self):
-        spi = SPI(spihost=1,sck=Pin(19,Pin.OUT),mosi=Pin(23,Pin.OUT),miso=Pin(21,Pin.IN)) #,firstbit=SPI.LSB)
+        spi = SPI(spihost=1,sck=Pin(2,Pin.OUT),mosi=Pin(5,Pin.OUT),miso=Pin(21,Pin.IN)) #,firstbit=SPI.LSB)
         #spi.init(sck=Pin(12,Pin.OUT),mosi=Pin(13,Pin.OUT)) #,firstbit=SPI.LSB)
         #spi.init(sck=Pin(19,Pin.OUT),mosi=Pin(23,Pin.OUT)) #,firstbit=SPI.LSB)
-        self.mx =M8x8(spi,Pin(18,Pin.OUT),4)        
+        self.mx =M8x8(spi,Pin(17,Pin.OUT),4)        
         #self.mx = M8x8(12,13,14,4,1)
         self.seqs=[u'\u798f',0,u'\u798f',0,u'\u798f',0,]
         self.ch2s = u'\u606d\u559c\u767c\u8ca1'

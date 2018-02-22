@@ -158,10 +158,13 @@ class Christmas:
         for ix in range(mc_width):
             for iy in range(mc_height):
                 ic = self.fbuf.pixel(ix,iy)
+                if ic is None:
+                    ic=0
                 tft.tft.pixel(ix*2, iy*2,ic)
                 self.play_melody()
                 
     def run(self):
+        import gc
         color=0xffff        
         x=0
         y=0
@@ -178,9 +181,9 @@ class Christmas:
         self.show()
                 
         time.sleep(1)
-        for i in range(128):
+        for i in range(13):
             time.sleep(0.1)
-            self.fbuf.scroll(-1,0)
+            self.fbuf.scroll(-7,0)
             self.show()
         gc.collect()
 
