@@ -1,4 +1,4 @@
-# Running the ex020_demo_loop.py on WifiKit32
+# Running the ex020_demo_loop.py or ex021_demo_loop.py on WifiKit32
 
 ## Install instruction:
 

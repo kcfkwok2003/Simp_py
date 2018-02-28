@@ -20,7 +20,7 @@
     按 [Set..] 進入 settings 頁面
     更改Device IP 和wifi kit 32顯示的 ip 一致
     按 [Save] 儲存。
-            按 [Devzinfo], 如果收到回應就表示ok
+    按 [DevInfo], 如果收到回應就表示ok
     ```
     
 ## 如果沒有帶 led matrix (Max7219 驅動), 你可嘗試運行ex020_demo_loop.py
