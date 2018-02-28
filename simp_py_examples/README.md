@@ -1,16 +1,19 @@
 # Simp-py 例子說明
 
 ## 標記說明:
-* [M]: M5stack only
-* [W]: Wifikit32 only
+* [M]: 只適用於 M5stack
+* [W]: 只適用於 Wifikit32
 
 ## 例子簡要說明
 
-### ex001_hello 在顯示器上印出hello world
+### ex001_hello
+在顯示器上印出hello world
 
-### ex002_random 在顯示器上隨機劃出點
+### ex002_random
+    在顯示器上隨機劃出點
 
-### ex003_remote_songs 等待遙距命令，如果收到相符合的曲名，便奏出樂曲。
+### ex003_remote_songs
+    等待遙距命令，如果收到相符合的曲名，便奏出樂曲。
 
 * ex004_fix_me 練習用監察頁找出程式的錯誤。
 * ex005_pwm_led [W] 用pwm 模式使8只led 輪流閃亮。
