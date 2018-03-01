@@ -10,5 +10,11 @@ The kit may contains following content in order to run the examples
 5. wires
 6. led matrix (spi bus drived with MAX7219) x 4
 
-## Wiring information
+## Wiring diagram
+
+![https://github.com/kcfkwok2003/Simp_py/blob/master/manual/images/wifi_kit_32_kit.png](Simp_py/manual/images/wifi_kit_32_kit.png)
+
+## Start up screen
+Connect the components as shown in above diagram
+
 
