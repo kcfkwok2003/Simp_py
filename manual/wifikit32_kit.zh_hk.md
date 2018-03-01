@@ -11,13 +11,20 @@
 5. 電線 若干。
 6. 8x8 led 點陣屏(MAX 7219 驅動) 4塊
 
-## 
+## 接線圖
+
+![https://github.com/kcfkwok2003/Simp_py/blob/master/manual/images/wifi_kit_32_kit.png](images/wifi_kit_32_kit.png)
+
 ## 連接並運行  -> 默認開機頁面
+
 如上圖，把零件安放在麵包板上並連接好，插上USB線供電。
+
 Oled 顯示以下信息:
-SIMP_PY     板本，例如V1.0.2
- Wifi 接入點的名稱 (SSID)
- 網絡地址(IP address)，例如192.168.4.1
+SIMP_PY     板本，例如 1.0.9
+Wifi 接入點的名稱 (SSID) 例如 SIMP_PY-D320
+網絡地址(IP address)，例如 192.168.4.1
+
+
 
 
 

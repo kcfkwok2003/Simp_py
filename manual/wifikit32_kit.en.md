@@ -17,4 +17,7 @@ The kit may contains following content in order to run the examples
 ## Start up screen
 Connect the components as shown in above diagram
 
-
+Oled will show following messages:
+SIMP_PY Version e.g. 1.0.9
+Wifi Access point name (SSID) e.g SIMP_PY-D320
+Network IP Address, e.g. 192.168.4.1

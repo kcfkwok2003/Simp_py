@@ -28,6 +28,7 @@ if __name__=='__main__':
 
     from ex019_intro import INTRO, TEXT_FILE
     t =INTRO(TEXT_FILE)
+    gc.collect()
     t.run()    
     
     machine.reset()
