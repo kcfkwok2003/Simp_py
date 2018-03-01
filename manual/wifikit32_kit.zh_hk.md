@@ -1,4 +1,4 @@
-# Wlfi kit 32 實驗套件
+# Wifi kit 32 實驗套件
 
 ##套件內容
 
@@ -24,7 +24,7 @@ SIMP_PY     板本，例如 1.0.9
 Wifi 接入點的名稱 (SSID) 例如 SIMP_PY-D320
 網絡地址(IP address)，例如 192.168.4.1
 
-
+![https://github.com/kcfkwok2003/Simp_py/blob/master/manual/images/wifikit_start.png](images/wifikit_start.png)
 
 
 

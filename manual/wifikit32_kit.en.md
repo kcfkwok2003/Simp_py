@@ -21,3 +21,5 @@ Oled will show following messages:
 SIMP_PY Version e.g. 1.0.9
 Wifi Access point name (SSID) e.g SIMP_PY-D320
 Network IP Address, e.g. 192.168.4.1
+
+![https://github.com/kcfkwok2003/Simp_py/blob/master/manual/images/wifikit_start.png](images/wifikit_start.png)
