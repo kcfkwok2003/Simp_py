@@ -144,7 +144,78 @@ esp — functions related to the ESP8266
   http://docs.micropython.org/en/latest/esp8266/library/esp.html
 
 
-### 其他有用連結
+## Simp_py 模組簡介
+
+Simp_py 模組是專為 Simp-py 固件應用在特定硬體上而度身定制的.
+它主要兩個功能
+
+### mon 用於監測功能
+
+* mon 支持以下功能
+
+  mon.chk_ureq()     # 檢查有無遙控指示
+  mon.get_ureq()     # 讀取遙控指示
+  mon.put_uresp(msg) # 以msg 回應遙控指示
+  
+  mon.set_hist_len(n) # 設定history 緩衝區長度
+  mon.clean_hist()    # 清除history 緩衝區
+  mon.hist(msg)       # 加 msg 到緩衝區
+  
+  mon.log_exc(exc)    # 配合try except 取得的錯誤 exc 存到日誌中. 
+  mon.data            # 監測字典, 存到監測字典中的數據能在監察頁讀取.
+
+### 板上顯示器驅動
+
+這和硬體有關
+oled 物件, 適用於 Wifi Kit 32
+tft  物件, 適用於 M5Stack
+
+* oled 支持以下功能
+  oled.contrast(contrast)
+  oled.fill(color)
+  oled.invert(invert)
+  oled.pixel(x,y, color)
+  oled.poweroff()
+  oled.scroll(dx,dy)
+  oled.show()
+  oled.text(string, x, y, color=1)
+
+* tft 支持以下功能
+  tft.on()
+  tft.off()
+  tft.tft.pixel(x,y,color)
+  tft.tft.readPixel(x,y)
+  tft.tft.line(x,y,x1,y1,color)
+  tft.tft.lineByAngle(x,y,start,length,angle[,color])
+  tft.tft.triangle(x,y,x1,y1,x2,y2,[,color,fillcolor])
+  tft.tft.circle(x,y,r,[,color,fillcolor])
+  tft.tft.ellipse(x,y,rx,ry[,opt,color,fillcolor])
+  tft.tft.arc(x,y,r,thick,start,end[,color,fillcolor])
+  tft.tft.poly(x,y,r,sides,thick[,color,fillcolor,rotate])
+  tft.tft.rect(x,y,width,height[,color,fillcolor])
+  tft.tft.roundrect(x,y,width,height,r[,color,fillcolor])
+  tft.tft.clear([color])
+  tft.tft.clearWin([color])
+  tft.tft.font(font[,rotate,transparent,fixedwidth,dist,width,outline,color])
+  tft.tft.attrib7seg(dist,width,outline,color)
+  tft.tft.fontSize()
+  tft.tft.print(text[,x,y,color,rotate,transparent,fixedwidth,wrap])
+  tft.tft.text(x,y,text[,color])
+  tft.tft.textWidth(text)
+  tft.tft.textClear(x,y,text[,color])
+  tft.tft.image(x,y,file[,scale,type])
+  tft.tft.setwin(x,y,x1,y1)
+  tft.tft.resetwin()
+  tft.tft.savewin()
+  tft.tft.restorewin()
+  tft.tft.screensize()
+  tft.tft.winsize()
+  tft.hsb2rgb(hue,saturation,brightness)
+  tft.tft.compileFont(file_name[,debug])
+  詳情參考 : https://github.com/m5stack/M5Cloud
+  
+
+## 其他有用連結
 MicroPython tutorial for ESP8266
   (ESP32 是繼承ESP8266 的, 由於Micopython 官方未有ESP32 的文件,請參考 ESP8266的文件)
   http://docs.micropython.org/en/latest/esp8266/
