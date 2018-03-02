@@ -15,3 +15,7 @@ https://github.com/kcfkwok2003/Simp_py/blob/master/manual/m5stack.zh_hk.md
 ## 使用 Android simp-py 編程軟件
 
 https://github.com/kcfkwok2003/Simp_py/blob/master/manual/android_simp_py.zh_hk.md
+
+## 參考資料
+
+https://github.com/kcfkwok2003/Simp_py/blob/master/manual/reference.zh_hk.md
