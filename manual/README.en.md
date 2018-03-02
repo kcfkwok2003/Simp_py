@@ -16,3 +16,6 @@ https://github.com/kcfkwok2003/Simp_py/blob/master/manual/m5stack.en.md
 
 https://github.com/kcfkwok2003/Simp_py/blob/master/manual/android_simp_py.en.md
 
+## Reference
+
+https://github.com/kcfkwok2003/Simp_py/blob/master/manual/reference.en.md
