@@ -26,7 +26,17 @@ List of Keywords in Python
 ## Python 內建函數(built-in functions)
 
 ```
-abs() all()  any() bin() bool() bytearray() bytes() callable() chr() classmethod() compile() complex() delattr() dict() dir() divmod() enumerate() eval() exec() filter() float() frozenset() getattr() globals() hasattr() hash() help() hex() id() input() int() isinstance() issubclass() iter() len() list() locals() map() max() memoryview() min() next() object() oct() open() ord() pow() print() property() range() repr() reversed() round() set() setattr() slice() sorted() staticmethod() str() sum() super() tuple() type() zip() __import__()
+abs() all()  any() bin() bool() bytearray() bytes()
+callable() chr() classmethod() compile() complex()
+delattr() dict() dir() divmod() enumerate() eval() exec()
+filter() float() frozenset() getattr() globals()
+hasattr() hash() help() hex() id() input() int()
+isinstance() issubclass() iter() len() list() locals()
+map() max() memoryview() min() next() object() oct()
+open() ord() pow() print() property() range() repr()
+reversed() round() set() setattr() slice() sorted()
+staticmethod() str() sum() super() tuple() type() zip() \
+__import__()
 
 ```
 
