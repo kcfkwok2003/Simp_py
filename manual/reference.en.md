@@ -167,10 +167,8 @@ Simp_py 模組是專為 Simp-py 固件應用在特定硬體上而度身定制的
 ### 板上顯示器驅動
 
 這和硬體有關
-oled 物件, 適用於 Wifi Kit 32
-tft  物件, 適用於 M5Stack
-
-* oled 支持以下功能
+* oled 物件, 適用於 Wifi Kit 32
+  oled 支持以下功能
   oled.contrast(contrast)
   oled.fill(color)
   oled.invert(invert)
@@ -180,7 +178,8 @@ tft  物件, 適用於 M5Stack
   oled.show()
   oled.text(string, x, y, color=1)
 
-* tft 支持以下功能
+* tft  物件, 適用於 M5Stack
+  tft 支持以下功能
   tft.on()
   tft.off()
   tft.tft.pixel(x,y,color)
