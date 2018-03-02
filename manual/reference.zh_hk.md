@@ -152,7 +152,7 @@ Simp_py 模組是專為 Simp-py 固件應用在特定硬體上而度身定制的
 ### mon 用於監測功能
 
 * mon 支持以下功能
-
+  ```
   mon.chk_ureq()     # 檢查有無遙控指示
   mon.get_ureq()     # 讀取遙控指示
   mon.put_uresp(msg) # 以msg 回應遙控指示
@@ -163,12 +163,15 @@ Simp_py 模組是專為 Simp-py 固件應用在特定硬體上而度身定制的
   
   mon.log_exc(exc)    # 配合try except 取得的錯誤 exc 存到日誌中. 
   mon.data            # 監測字典, 存到監測字典中的數據能在監察頁讀取.
-
+  ```
+  
 ### 板上顯示器驅動
 
 這和硬體有關
 * oled 物件, 適用於 Wifi Kit 32
+
   oled 支持以下功能
+  ```
   oled.contrast(contrast)
   oled.fill(color)
   oled.invert(invert)
@@ -177,9 +180,12 @@ Simp_py 模組是專為 Simp-py 固件應用在特定硬體上而度身定制的
   oled.scroll(dx,dy)
   oled.show()
   oled.text(string, x, y, color=1)
-
+  ```
+  
 * tft  物件, 適用於 M5Stack
+
   tft 支持以下功能
+  ```
   tft.on()
   tft.off()
   tft.tft.pixel(x,y,color)
@@ -211,6 +217,8 @@ Simp_py 模組是專為 Simp-py 固件應用在特定硬體上而度身定制的
   tft.tft.winsize()
   tft.hsb2rgb(hue,saturation,brightness)
   tft.tft.compileFont(file_name[,debug])
+  ```
+  
   詳情參考 : https://github.com/m5stack/M5Cloud
   
 
