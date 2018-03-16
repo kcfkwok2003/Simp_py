@@ -93,4 +93,8 @@ Demonstrate to use monitor page to do remote SD card file operation on MCU
 ### ex029_jpg [M]
 Show a jpeg photograph on screen
 
+### ex030_mpu9250 [M]
+MPU-9250 test, MPU-9250 contains MPU-6500 (3-axis gyroscope and 3-axis accelerometer) and an AK8963 (3-axis digital compass)
 
+### ex031_mqtt [M]
+Mqtt IOT (internet of thing) protocol test

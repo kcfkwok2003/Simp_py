@@ -93,4 +93,8 @@ simp-py簡介文字， 用framebuffer實現螢幕滾動。
 ### ex029_jpg [M]
 在顯示器上顯示jpeg 相片
 
+### ex030_mpu9250 [M]
+MPU-9250 測試, MPU-9250 包含 MPU-6500 (3軸陀螺 和 3軸加速計) 和 AK8963 (3軸羅盤)
 
+### ex031_mqtt [M]
+Mqtt 物聯網協議測試
