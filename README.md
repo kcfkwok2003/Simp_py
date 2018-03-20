@@ -64,7 +64,11 @@ Simp-py 還處於早期開發之中，待改善的地方仍有很多。我們歡
 
 Firmware 下載網址: https://github.com/kcfkwok2003/Simp_py/tree/master/dist
 
-WIFI KIT 32 tutorials: https://github.com/kcfkwok2003/Simp_py/blob/master/tutorials/wifikit32/tutorial1.md
+教程: https://github.com/kcfkwok2003/Simp_py/blob/master/tutorials/README.zh_hk.md
+
+例子說明: https://github.com/kcfkwok2003/Simp_py/blob/master/simp_py_examples/README.zh_hk.md
+
+說明文件: https://github.com/kcfkwok2003/Simp_py/blob/master/manual/README.zh_hk.md
 
 香港門市及演示地點: 九龍紅磡馬頭圍道37-39號紅磡廣場1樓24室
 
