@@ -19,7 +19,8 @@ def work_on_path(path):
 def update_list():
     subpaths= os.listdir(EX_PATH)
     for path in subpaths:
-        print path, '-----------'
-        work_on_path(path)
+        if os.path.isdir(path):
+            print path, '-----------'
+            work_on_path(path)
 
 update_list()

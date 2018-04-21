@@ -1,3 +1,4 @@
+birthday_song.py
 ch_intro.txt
 ch_intro_font.py
 ch_intro_font.py.map
@@ -29,4 +30,8 @@ ex026_uresp.py
 ex027_file_op.py
 ex028_sd_op.py
 ex029_jpg.py
+ex030_mpu9250.py
+ex030a_mpu9250.py
+ex030b_mpu9250.py
+ex031_mqtt.py
 kyoco.jpg
