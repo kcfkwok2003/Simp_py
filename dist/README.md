@@ -11,6 +11,9 @@
 
 進入wifikit32 文件夾內, 參考erflash.sh 及 wrflash.sh 寫入固件往wifi kit 32
 
+## ESP-wrover-kit
+
+進入esp-wrover-kit 文件夾內, 參考erflash.sh 及 wrflash.sh 寫入固件往 esp-wrover-kit
 
 # Android Apps 下載:
 
