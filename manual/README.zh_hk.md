@@ -12,6 +12,10 @@ https://github.com/kcfkwok2003/Simp_py/blob/master/manual/wifikit32_kit.zh_hk.md
 
 https://github.com/kcfkwok2003/Simp_py/blob/master/manual/m5stack.zh_hk.md
 
+## 啟動 ESP-Wrover-kit 示範套件
+
+https://github.com/kcfkwok2003/Simp_py/blob/master/manual/esp_wrover_kit.zh_hk.md
+
 ## 使用 Android simp-py 編程軟件
 
 https://github.com/kcfkwok2003/Simp_py/blob/master/manual/android_simp_py.zh_hk.md
