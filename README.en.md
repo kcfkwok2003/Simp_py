@@ -66,6 +66,6 @@ Firmware 下載網址: https://github.com/kcfkwok2003/Simp_py/tree/master/dist
 
 WIFI KIT 32 tutorials: https://github.com/kcfkwok2003/Simp_py/blob/master/tutorials/wifikit32/tutorial1.md
 
-香港門市及演示地點: 九龍紅磡馬頭圍道37-39號紅磡廣場1樓24室
-
+香港門市及演示地點: 九龍紅磡馬頭圍道37-39號紅磡廣場1樓31B室
+(請電郵預約)
 Email : info@tienlink.com

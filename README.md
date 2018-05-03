@@ -72,6 +72,6 @@ Firmware 下載網址: https://github.com/kcfkwok2003/Simp_py/tree/master/dist
 
 常見問題解答: https://github.com/kcfkwok2003/Simp_py/blob/master/manual/FAQ.md
 
-香港門市及演示地點: 九龍紅磡馬頭圍道37-39號紅磡廣場1樓24室
-
+香港門市及演示地點: 九龍紅磡馬頭圍道37-39號紅磡廣場1樓31B室
+(請電郵預約)
 Email : info@tienlink.com
