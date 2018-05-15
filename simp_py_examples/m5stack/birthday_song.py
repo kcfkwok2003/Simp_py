@@ -41,9 +41,9 @@ class SONG:
         newduration = duration / self.SPEE
         self.playTone(self.tones[note], newduration)
 
-    def loop(self):
+    def loop(self,N=1):
         global time
-        while 1:
+        for n in range(N):
             for i in range(self.length):
                 if self.notes[i] ==' ':
                     time.sleep_ms(self.beats[i] * self.tempo)
