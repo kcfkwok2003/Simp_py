@@ -16,7 +16,7 @@ BITM={0: 0x80, 1: 0x40, 2:0x20, 3:0x10, 4:0x8,5:0x4,6:0x2,7:0x1}
 class INTRO:
     global time, oled, mon, SCREEN_WIDTH,SCREEN_HEIGHT,FONT_HEIGHT,CH_FONTS,BITM,LINE_HEIGHT,framebuf
     
-    def __init__(self,fn):
+    def __init__(self,fn, clr=True): # kcf changed
         self.fn=fn
         f = open(fn, 'rb')
         self.lines=f.readlines()
@@ -24,7 +24,8 @@ class INTRO:
         self.buf_size = SCREEN_WIDTH * (SCREEN_HEIGHT+2)
         self.fbuf = framebuf.FrameBuffer(bytearray(SCREEN_WIDTH * 8 * SCREEN_HEIGHT),SCREEN_WIDTH*8,SCREEN_HEIGHT,framebuf.MONO_HLSB)
         self.fbuf.fill(0)
-        tft.tft.clear()
+        if clr:   # kcf changed
+            tft.tft.clear()
         self.buf= bytearray([0] * self.buf_size)
         
     def clear_buf(self):
@@ -169,9 +170,10 @@ class INTRO:
                 ic = self.fbuf.pixel(ix,iy)
                 if ic==1:
                     ic = 0xffff00
+                    tft.tft.pixel(ix*2, iy*2,ic)  # kcf changed
                 else:
                     ic=0
-                tft.tft.pixel(ix*2, iy*2,ic)
+
                 
 if __name__=='__main__':
     intro = INTRO(TEXT_FILE)
