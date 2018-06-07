@@ -3,30 +3,28 @@
 import utime
 from machine import I2C, Pin
 from mpu9250 import MPU9250
+from mpu6500 import MPU6500, SF_G, SF_DEG_S
 from simp_py import tft
 
 i2c = I2C(scl=Pin(22), sda=Pin(21))
-sensor = MPU9250(i2c)
+mpu6500 = MPU6500(i2c, accel_sf=SF_G, gyro_sf=SF_DEG_S)
+sensor = MPU9250(i2c, mpu6500=mpu6500)
 
 print("MPU9250 id: " + hex(sensor.whoami))
 tft.tft.clear()
+tft.tft.text(0,0,"MPU9250 id: " + hex(sensor.whoami))
+
 while True:
-    a1,a2,a3= sensor.acceleration
-    tft.tft.text(0,0,'acceleration')
-    tft.tft.text(0,20,'%.3f      ' % a1)
-    tft.tft.text(0,40,'%.3f      ' % a2)
-    tft.tft.text(0,60,'%.3f      ' % a3)
-    
-    g1,g2,g3 = sensor.gyro
-    tft.tft.text(0,80,'gyro')
-    tft.tft.text(0,100,'%.3f      ' % g1)
-    tft.tft.text(0,120,'%.3f      ' % g2)
-    tft.tft.text(0,140,'%.3f      ' % g3)
-    
-    m1,m2,m3 = sensor.magnetic
-    tft.tft.text(0,160,'magnetic')
-    tft.tft.text(0,180,'%.3f      ' % m1)
-    tft.tft.text(0,200,'%.3f      ' % m2)
-    tft.tft.text(0,220,'%.3f      ' % m3)    
-    
-    utime.sleep_ms(300)
+    print(sensor.acceleration)
+    print(sensor.gyro)
+    print(sensor.magnetic)
+    tft.tft.text(0,40,"a1:%.05f    " % sensor.acceleration[0])
+    tft.tft.text(0,60,"a2:%.05f    " % sensor.acceleration[1])    
+    tft.tft.text(0,80,"a3:%.05f    " % sensor.acceleration[2])        
+    tft.tft.text(0,100,"g1:%.05f    " % sensor.gyro[0])
+    tft.tft.text(0,120,"g2:%.05f    " % sensor.gyro[1])
+    tft.tft.text(0,140,"g3:%.05f    " % sensor.gyro[2])    
+    tft.tft.text(0,160,"m1:%.05f    " % sensor.magnetic[0])
+    tft.tft.text(0,180,"m2:%.05f    " % sensor.magnetic[1])
+    tft.tft.text(0,200,"m3:%.05f    " % sensor.magnetic[2])    
+    utime.sleep_ms(500)

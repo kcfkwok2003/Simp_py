@@ -33,8 +33,6 @@ ex027_file_op.py
 ex028_sd_op.py
 ex029_jpg.py
 ex030_mpu9250.py
-ex030a_mpu9250.py
-ex030b_mpu9250.py
 ex031_mqtt.py
 font8x8.py
 kyoco.jpg
@@ -50,6 +48,3 @@ m5s_xled_intro_song_jpg.py
 m8x8.py
 setup_ap.py
 setup_sta.py
-t301.py
-t302.py
-t303.py
