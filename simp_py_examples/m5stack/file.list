@@ -1,5 +1,6 @@
 ADXL345.py
 birthday_song.py
+btc_price.py
 ch_intro.txt
 ch_intro_font.py
 ch_intro_font.py.map
@@ -34,6 +35,7 @@ ex028_sd_op.py
 ex029_jpg.py
 ex030_mpu9250.py
 ex031_mqtt.py
+ex_btc_price.py
 font8x8.py
 kyoco.jpg
 kyoco.txt
