@@ -38,6 +38,7 @@ ex030_mpu9250.py
 ex031_mqtt.py
 ex_btc1.py
 ex_btc_price.py
+ex_eye.py
 font8x8.py
 kyoco.jpg
 kyoco.txt
