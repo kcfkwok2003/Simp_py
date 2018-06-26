@@ -1,5 +1,3 @@
-#ref : https://gist.github.com/nicksort/4736535
-
 from machine import Pin,PWM
 from simp_py import mon
 from array import array
@@ -11,8 +9,8 @@ f = 349
 g = 391
 gS = 415
 a = 440
-aS = 466
-b = 494
+aS = 455
+b = 466
 cH = 523
 cSH = 554
 dH = 587
