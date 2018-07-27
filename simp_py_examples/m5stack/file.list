@@ -36,6 +36,7 @@ ex028_sd_op.py
 ex029_jpg.py
 ex030_mpu9250.py
 ex031_mqtt.py
+ex_auto_drip.py
 ex_btc1.py
 ex_btc_price.py
 ex_eye.py
@@ -45,6 +46,7 @@ kyoco.txt
 kyoco_fontx.py
 m5s_kyoco.py
 m5s_kyoco_mx2.py
+m5s_kyoco_mx2a.py
 m5s_kyoco_mx3.py
 m5s_xled.py
 m5s_xled_intro.py
@@ -53,4 +55,5 @@ m5s_xled_intro_song_jpg.py
 m8x8.py
 setup_ap.py
 setup_sta.py
+snake.py
 song.py
