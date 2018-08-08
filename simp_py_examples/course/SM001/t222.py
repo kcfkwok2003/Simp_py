@@ -1,0 +1,12 @@
+from simp_py import lcd
+lcd.font(lcd.FONT_DejaVu18)
+lcd.text(0,80,'Hello')
+lcd.font(lcd.FONT_Dejavu24)
+lcd.text(0,100,'Hello')
+lcd.font(lcd.FONT_Comic)
+lcd.text(0,120,'Hello')
+lcd.font(lcd.FONT_Minya)
+lcd.text(0,140,'Hello')
+lcd.font(lcd.FONT_7seg)
+lcd.text(0,160,'1234')
+lcd.font(lcd.FONT_Ubuntu)
