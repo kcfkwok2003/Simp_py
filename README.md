@@ -1,4 +1,4 @@
-# 簡蟒(Simp-py)微型控制器學習套件
+# Simp-py python + IOT 學習工具
 物聯網序幕拉開和近年學校對STEM教育的重視，使人們對MCU(微型控制器)的認識和用處大大提升了。本學習套件的研發就是配合這大趨勢而作出的。
 
 
@@ -8,16 +8,14 @@
 * 使用無線Wifi 進行程式修改和除錯。
 * 可用於開發遙控或物聯網程式。
 * 使用易學易用的Python 編程語言，大大減省開發和維護軟件的時間。
-* 配備顯示器使開發應用更靈活。
-* 套件包括 led (發光二極管)及蜂鳴器 能演示基本的聲光效果。
-* 具備擴展多塊 8x8 led點陣模塊可制作大型圖形及中英文顯示裝飾。
+* 配備顯示器(128x64 oled 或 320x240 tft) 使開發應用更靈活。
 * 大量示範程式，可循序由淺入深進行學習。
 
 ## 支援硬件
 
 * Wifi kit 32
 * M5Stack
-* ESP-Wrover-kit
+
 
 ## 工具程式
 ### Simp-py-programmer 
@@ -30,27 +28,7 @@
 
 註:Kivy 開源版不提供程式編輯器功能，因為市場上已有不少適用於python的編輯器，而且是免費的。例如 notepad++(Windows 平台)、qedit (android 平台)，用戶可按自己喜愛自行選擇安裝。
 
-現時在App store 發佈的是Simp-py-programmer. (只限 中、港、台)
-
-
-## 文件說明
-### 簡蟒(Simp-py) 學習套件使用說明(pdf)
-  本文件講述套件包含的內容和工具程式的使用細節。
-
-### 簡蟒(Simp-py) 實習手冊(pdf)
-  本文件通過四個實習案例，由淺入深引入python 和 simp-py 的知識和除錯技巧。
-  ```
-案例1: 運用python 基本語句，在oled 上顯示英文信息。
-案例2: 定義 python 函式，運用循環語句，在oled 上劃點。遙距監察變數。
-案例3: 定義 python 類別，引用pwm 產生音效，實現遙距選曲。
-案例4: 介紹Simp-py 除錯技巧。及實習為一個有bug的程式除錯。
-```
-
-## Simp-py的銷售型式
-
-1. 購買學習套件
-2. 購買預裝固件(firmware) 的MCU
-3. 購買固件源碼授權，(只適用於專門合作伙伴)
+現時Google play store 已發佈Simp-py 編程工具. (只限 香港)
 
 
 另外用戶也可自備硬件，到github下載固件自行安裝測試。
@@ -64,14 +42,6 @@ Simp-py 還處於早期開發之中，待改善的地方仍有很多。我們歡
 
 Firmware 下載網址: https://github.com/kcfkwok2003/Simp_py/tree/master/dist
 
-教程: https://github.com/kcfkwok2003/Simp_py/blob/master/tutorials/README.zh_hk.md
+WIFI KIT 32 tutorials: https://github.com/kcfkwok2003/Simp_py/blob/master/tutorials/wifikit32/tutorial1.md
 
-例子說明: https://github.com/kcfkwok2003/Simp_py/blob/master/simp_py_examples/README.zh_hk.md
-
-說明文件: https://github.com/kcfkwok2003/Simp_py/blob/master/manual/README.zh_hk.md
-
-常見問題解答: https://github.com/kcfkwok2003/Simp_py/blob/master/manual/FAQ.md
-
-香港門市及演示地點: 九龍紅磡馬頭圍道37-39號紅磡廣場1樓31B室
-(請電郵預約)
 Email : info@tienlink.com
