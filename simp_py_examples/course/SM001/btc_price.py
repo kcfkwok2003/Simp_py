@@ -39,10 +39,10 @@ def get_btc_info():
         if btc < v_min:
           v_min =btc
           mchanged=True
-        if mchanged:
-          f=open('btc_mdt.py','w')
-          f.write('v_min=%.04f\nv_max=%.04f\n' % (v_min, v_max))
-          f.close()
+        #if mchanged:
+        #  f=open('btc_mdt.py','w')
+        #  f.write('v_min=%.04f\nv_max=%.04f\n' % (v_min, v_max))
+        #  f.close()
     else:
       response.close()
       return {'result': response.reason}
