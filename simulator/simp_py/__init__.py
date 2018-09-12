@@ -77,9 +77,12 @@ class LCD:
         self.fg=fg
         self.rect = pygame.Rect(LCD_X0,LCD_Y0,LCD_WIDTH, LCD_HEIGHT)
         self.pixels={}
+        self.FONT_Comic = COMIC24_FONT
+        self.FONT_DejaVu18 = DEJAVU18_FONT
+        self.FONT_Default = DEFAULT_FONT
         
-    def set_surface(self,surface):
-        self.surface = surface
+    def clear(self):
+        self.pixels={}
         
     def draw(self):
         #print('lcd.draw')
@@ -90,8 +93,10 @@ class LCD:
                 #print('gfxdraw.pixel x:%s y:%s c:%s' % (x,y, self.pixels[(x,y)]))
                 gfxdraw.pixel(self.surface,x,y,self.pixels[(x,y)])
             
-    def clear(self):
-        self.pixels={}
+
+    def font(self,fontx, rotate=None,transparent=None,fixedwidth=None,dist=None,width=None,outline=None,color=None):
+        setFont(fontx)
+        
         
     def pixel(self,x,y,color):
         self.pixels[(x+LCD_X0,y+LCD_Y0)]=color
@@ -105,9 +110,7 @@ class LCD:
             #return '#%06x' % cx
         return cx
 
-    def text(self,x,y,text,color=0xff00):
-        self.fg=self.conv_color(color)
-        printStr(text,x,y,self.put_char)
+
 
     def put_char(self,dx):
         x =x1 = dx['x1']
@@ -130,6 +133,9 @@ class LCD:
             return self.fg
         return self.bg
     
+    def set_surface(self,surface):
+        self.surface = surface
+
     def test2(self):
         f=open('send_data.dat','rb')
         lines = f.readlines()
@@ -138,7 +144,11 @@ class LCD:
             dx = eval(line)
             print('dx:%s' % dx)
             self.put_char(dx)
-            
+
+    def text(self,x,y,text,color=0xff00):
+        self.fg=self.conv_color(color)
+        printStr(text,x,y,self.put_char)
+        
 lcd = LCD((30,30,30))    
 
 

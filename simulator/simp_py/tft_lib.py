@@ -1,5 +1,7 @@
 from simp_py.Ubuntu16 import tft_Ubuntu16
 from simp_py.DefaultFont import tft_DefaultFont
+from simp_py.comic24 import tft_Comic24
+
 # === Embedded fonts constants ===
 DEFAULT_FONT =   0
 DEJAVU18_FONT=   1
@@ -246,6 +248,9 @@ def setFont(font):
             if font==UBUNTU16_FONT:
                 cfont.font=tft_Ubuntu16
                 #print('cfont.font:%s' % `cfont.font`)
+            elif font==COMIC24_FONT:
+                cfont.font=tft_Comic24
+                
             else:
                 cfont.font= tft_DefaultFont
             cfont.bitmap=1
