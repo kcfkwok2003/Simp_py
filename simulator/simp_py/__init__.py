@@ -7,7 +7,9 @@ except:
 import pygame    
 from pygame.locals import *
 from pygame import gfxdraw
+from simp_py import tft_lib
 from simp_py.tft_lib import *
+
 #import requests as urequests
 
 
@@ -80,26 +82,13 @@ class LCD:
         self.FONT_Comic = COMIC24_FONT
         self.FONT_DejaVu18 = DEJAVU18_FONT
         self.FONT_Default = DEFAULT_FONT
+        tft_lib.drawPixel = self._pixel
+        tft_lib.TFT_pushColorRep = self.pushColorRep
+        
+        self.BLACK = 0x0
         
     def clear(self):
         self.pixels={}
-        
-    def draw(self):
-        #print('lcd.draw')
-        pygame.draw.rect(self.surface,self.bg,self.rect)
-        poss = self.pixels.keys()
-        if tft.backlit:
-            for x,y in poss:
-                #print('gfxdraw.pixel x:%s y:%s c:%s' % (x,y, self.pixels[(x,y)]))
-                gfxdraw.pixel(self.surface,x,y,self.pixels[(x,y)])
-            
-
-    def font(self,fontx, rotate=None,transparent=None,fixedwidth=None,dist=None,width=None,outline=None,color=None):
-        setFont(fontx)
-        
-        
-    def pixel(self,x,y,color):
-        self.pixels[(x+LCD_X0,y+LCD_Y0)]=color
 
     def conv_color(self,cx):
         if type(cx)==type(1):
@@ -109,9 +98,59 @@ class LCD:
             return (r,g,b)
             #return '#%06x' % cx
         return cx
+    
+    def draw(self):
+        #print('lcd.draw')
+        pygame.draw.rect(self.surface,self.bg,self.rect)
+        poss = self.pixels.keys()
+        if tft.backlit:
+            for x,y in poss:
+                try:
+                    gfxdraw.pixel(self.surface,x,y,self.pixels[(x,y)])
+                except:
+                    print('gfxdraw.pixel x:%s y:%s c:%s' % (x,y, self.pixels[(x,y)]))
+                    raise
 
 
 
+    def font(self,fontx, rotate=None,transparent=None,fixedwidth=None,dist=None,width=None,outline=None,color=None):
+        setFont(fontx)
+
+        
+    def _pixel(self,x,y,color,sel=None):
+        color = self.conv_color(color)
+        #print('pixel color %s' % color)
+        self.pixels[(x+LCD_X0,y+LCD_Y0)]=color
+
+    def pixel(self,x,y,color):
+        x=x*2
+        y=y*2
+        self._pixel(x,y,color)
+        
+    def pushColorRep(self,x1,y1,x2,y2,color, lenx):
+        color = self.conv_color(color)
+        if x1==x2:
+            x=int(x1)
+            y1=int(y1)
+            y2 = int(y2)
+            y= min(y1,y2)
+            ymax = max(y1,y2)
+            while y <= ymax:
+                self.pixels[(x+LCD_X0,y+LCD_Y0)]=color
+                y+=1
+            return
+        if y1==y2:
+            y= int(y1)
+            x1 = int(x1)
+            x2 = int(x2)
+            x = min(x1,x2)
+            xmax = max(x1,x2)
+            while x <= xmax:
+                self.pixels[(x+LCD_X0,y+LCD_Y0)]=color
+                x+=1
+            return
+        print('???pushColorRep(%s,%s,%s,%s,%s,%s)' % (x1,y1,x2,y2,color, lenx))
+        
     def put_char(self,dx):
         x =x1 = dx['x1']
         y = dx['y1']
@@ -119,10 +158,10 @@ class LCD:
         for cx in dx['colorbuf']:
             cx = self.set_color(cx)
             xx=x*2; yy=y*2
-            self.pixel(xx,yy,cx)
-            self.pixel(xx+1,yy,cx)
-            self.pixel(xx,yy+1,cx)
-            self.pixel(xx+1,yy+1,cx)
+            self._pixel(xx,yy,cx)
+            self._pixel(xx+1,yy,cx)
+            self._pixel(xx,yy+1,cx)
+            self._pixel(xx+1,yy+1,cx)
             x+=1
             if x > x2:
                 x= x1
@@ -148,7 +187,21 @@ class LCD:
     def text(self,x,y,text,color=0xff00):
         self.fg=self.conv_color(color)
         printStr(text,x,y,self.put_char)
-        
+
+    def triangle(self,x0,y0,x1,y1,x2,y2,color=0xff00,fillcolor=None):
+        x0=x0*2
+        y0=y0*2
+        x1=x1*2
+        y1=y1*2
+        x2=x2*2
+        y2=y2*2
+        if fillcolor:
+            self.fg = self.conv_color(fillcolor)
+            TFT_fillTriangle(x0,y0,x1,y1,x2,y2,fillcolor)
+        self.fg = self.conv_color(color)
+        TFT_drawTriangle(x0,y0,x1,y1,x2,y2, color)
+
+            
 lcd = LCD((30,30,30))    
 
 

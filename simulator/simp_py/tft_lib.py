@@ -1,7 +1,23 @@
-from simp_py.Ubuntu16 import tft_Ubuntu16
-from simp_py.DefaultFont import tft_DefaultFont
-from simp_py.comic24 import tft_Comic24
-
+try:
+    from simp_py.Ubuntu16 import tft_Ubuntu16
+    from simp_py.DefaultFont import tft_DefaultFont
+    from simp_py.comic24 import tft_Comic24
+    from simp_py.def_small import tft_def_small
+    from simp_py.DejaVuSans18 import tft_Dejavu18
+    from simp_py.DejaVuSans24 import tft_Dejavu24
+    from simp_py.minya24 import tft_minya24
+    from simp_py.SmallFont import tft_SmallFont
+    from simp_py.tooney32 import tft_tooney32
+except:
+    from Ubuntu16 import tft_Ubuntu16
+    from DefaultFont import tft_DefaultFont
+    from comic24 import tft_Comic24
+    from def_small import tft_def_small
+    from DejaVuSans18 import tft_Dejavu18
+    from DejaVuSans24 import tft_Dejavu24
+    from minya24 import tft_minya24
+    from SmallFont import tft_SmallFont
+    from tooney32 import tft_tooney32    
 # === Embedded fonts constants ===
 DEFAULT_FONT =   0
 DEJAVU18_FONT=   1
@@ -23,8 +39,8 @@ LASTY = 8000
 CENTER = -9003
 RIGHT = -9004
 BOTTOM = -9004
-DEFAULT_TFT_DISPLAY_WIDTH = 240
-DEFAULT_TFT_DISPLAY_HEIGHT=320
+DEFAULT_TFT_DISPLAY_WIDTH = 640
+DEFAULT_TFT_DISPLAY_HEIGHT=480
 
 class DispWin:
     def __init__(self):
@@ -250,7 +266,18 @@ def setFont(font):
                 #print('cfont.font:%s' % `cfont.font`)
             elif font==COMIC24_FONT:
                 cfont.font=tft_Comic24
-                
+            elif font==DEF_SMALL_FONT:
+                cfont.font=tft_def_small
+            elif font==DEJAVU18_FONT:
+                cfont.font=tft_Dejavu18
+            elif font==DEJAVU24_FONT:
+                cfont.font=tft_Dejavu24
+            elif font==MINYA24_FONT:
+                cfont.font=tft_minya24
+            elif font==SMALL_FONT:
+                cfont.font=tft_SmallFont
+            elif font==TOONEY32_FONT:
+                cfont.font=tft_tooney32
             else:
                 cfont.font= tft_DefaultFont
             cfont.bitmap=1
@@ -429,7 +456,312 @@ def printStr(st, x,y,callback=None):
                         # 7seg
                         _draw7seg(TFT_X, TFT_Y,ch, cfont.y_size, cfont.x_size, _fg)
                         TFT_X += tmpw+2
-                
+
+# ================================================================
+# === Main function to send data to display ======================
+# If  rep==true:  repeat sending color data to display 'len' times
+# If rep==false:  send 'len' color data from color buffer to display
+# ** Device must already be selected and address window set **
+# ================================================================
+#----------------------------------------------------------------------------------------------
+def _TFT_pushColorRep(color,  lenx, rep, wait):
+    print('_TFT_pushColorRep(%s, %s, %s, %s)' % (color,lenx,rep,wait))
+    if (len == 0):
+        return;
+
+# override this
+# Write 'len' color data to TFT 'window' (x1,y2),(x2,y2)
+#-----------------------------------------------------------------------------------------------
+def TFT_pushColorRep( x1,  y1,  x2, y2, color,  lenx):
+    print('TFT_pushColorRep(%s,%s,%s,%s,%s,%s)' % ( x1,  y1,  x2, y2, color,  lenx))
+
+    
+# override this 
+def drawPixel(x, y, color, sel):
+    print('drawPixel(%s,%s,%s,%s)' % (x,y,color,sel))
+
+    
+# draw color pixel on screen
+#------------------------------------------------------------------------
+def  _drawPixel( x, y,  color, sel):
+    if ((x < dispWin.x1) or (y < dispWin.y1) or (x > dispWin.x2) or (y > dispWin.y2)):
+        return
+    drawPixel(x, y, color, sel)
+
+#====================================================================
+def TFT_drawPixel(x,  y,  color,  sel):
+    _drawPixel(x+dispWin.x1, y+dispWin.y1, color, sel);
+
+
+#===========================================
+def TFT_readPixel( x, y) :
+    if ((x < dispWin.x1) or (y < dispWin.y1) or (x > dispWin.x2) or (y > dispWin.y2)):
+        return TFT_BLACK;
+    return readPixel(x, y);
+
+#--------------------------------------------------------------------------
+def _drawFastVLine( x,  y,  h, color) :
+    # clipping
+    if ((x < dispWin.x1) or (x > dispWin.x2) or (y > dispWin.y2)):
+        return;
+    if (y < dispWin.y1):
+        h -= (dispWin.y1 - y);
+        y = dispWin.y1;
+        
+    if (h < 0):
+        h = 0;
+    if ((y + h) > (dispWin.y2+1)):
+        h = dispWin.y2 - y + 1;
+    if (h == 0):
+        h = 1;
+    TFT_pushColorRep(x, y, x, y+h-1, color, h);
+
+#---------------------------------------------------------------------------
+def _drawFastVLine_( x,  y, h, color):
+    # clipping
+    if ((x < dispWin.x1) or (x > dispWin.x2) or (y > dispWin.y2)):
+        return;
+    if (y < dispWin.y1):
+        h -= (dispWin.y1 - y);
+        y = dispWin.y1;
+        
+    if (h < 0):
+        h = 0;
+    if ((y + h) > (dispWin.y2+1)):
+        h = dispWin.y2 - y + 1;
+    if (h == 0):
+        h = 1;
+    TFT_pushColorRep_nocs(x, y, x, y+h-1, color, h);
+
+#--------------------------------------------------------------------------
+def _drawFastHLine( x,  y,  w, color):
+    # clipping
+    if ((y < dispWin.y1) or (x > dispWin.x2) or (y > dispWin.y2)):
+        return;
+    if (x < dispWin.x1):
+        w -= (dispWin.x1 - x);
+        x = dispWin.x1;
+        
+    if (w < 0):
+        w = 0;
+    if ((x + w) > (dispWin.x2+1)):
+        w = dispWin.x2 - x + 1;
+    if (w == 0):
+        w = 1;
+
+    TFT_pushColorRep(x, y, x+w-1, y, color, w);
+
+
+#======================================================================
+def TFT_drawFastVLine( x, y,  h, color):
+    _drawFastVLine(x+dispWin.x1, y+dispWin.y1, h, color);
+
+
+#======================================================================
+def TFT_drawFastHLine( x,  y,  w,  color) :
+    _drawFastHLine(x+dispWin.x1, y+dispWin.y1, w, color);
+
+# Bresenham's algorithm - thx wikipedia - speed enhanced by Bodmer this uses
+# the eficient FastH/V Line draw routine for segments of 2 pixels or more
+#----------------------------------------------------------------------------------
+def _drawLine(x0, y0, x1, y1, color):
+    #print('_drawLine(%s,%s,%s,%s,%s)' % (x0, y0, x1, y1, color))
+    if (x0 == x1):
+        if (y0 <= y1):
+            _drawFastVLine(x0, y0, y1-y0, color);
+        else:
+            _drawFastVLine(x0, y1, y0-y1, color);
+        return;
+  
+    if (y0 == y1):
+        if (x0 <= x1):
+            _drawFastHLine(x0, y0, x1-x0, color);
+        else:
+            _drawFastHLine(x1, y0, x0-x1, color);
+        return;
+    steep = 0;
+    if (abs(y1 - y0) > abs(x1 - x0)):
+        steep = 1;
+    if (steep):
+        x0,y0 = y0,x0 #swap(x0, y0);
+        x1,y1 = y1,x1  #swap(x1, y1);
+  
+    if (x0 > x1):
+        x0,x1 = x1,x0 #swap(x0, x1);
+        y0,y1 = y1,y0 #swap(y0, y1);
+
+    dx = x1 - x0
+    dy = abs(y1 - y0);
+    err = dx >> 1
+    ystep = -1
+    xs = x0
+    dlen = 0;
+
+    if (y0 < y1):
+        ystep = 1;
+
+    # Split into steep and not steep for FastH/V separation
+    if (steep):
+        while x0<=x1:
+            dlen+=1;
+            err -= dy;
+            if (err < 0):
+                err += dx;
+                if (dlen == 1):
+                    _drawPixel(y0, xs, color, 1);
+                else:
+                    _drawFastVLine(y0, xs, dlen, color);
+                dlen = 0; y0 += ystep; xs = x0 + 1;
+      
+            x0+=1
+            
+        if (dlen):
+            _drawFastVLine(y0, xs, dlen, color);
+    else:
+        while x0 <=x1: 
+            dlen+=1;
+            err -= dy;
+            if (err < 0):
+                err += dx;
+                if (dlen == 1):
+                    _drawPixel(xs, y0, color, 1);
+                else:
+                    _drawFastHLine(xs, y0, dlen, color);
+                dlen = 0; y0 += ystep; xs = x0 + 1;
+            x0+=1
+        if (dlen):
+            _drawFastHLine(xs, y0, dlen, color);
+
+
+#==============================================================================
+def TFT_drawLine( x0, y0, x1, y1, color):
+    _drawLine(x0+dispWin.x1, y0+dispWin.y1, x1+dispWin.x1, y1+dispWin.y1, color);
+
+
+                        
+# Draw a triangle
+#--------------------------------------------------------------------------------------------------------------------
+def _drawTriangle(x0, y0, x1, y1, x2, y2,color):
+    _drawLine(x0, y0, x1, y1, color)
+    _drawLine(x1, y1, x2, y2, color)
+    _drawLine(x2, y2, x0, y0, color)
+
+
+#================================================================================================================
+def TFT_drawTriangle( x0,  y0,  x1,  y1,  x2,  y2,  color):
+    x0 += dispWin.x1;
+    y0 += dispWin.y1;
+    x1 += dispWin.x1;
+    y1 += dispWin.y1;
+    x2 += dispWin.x1;
+    y2 += dispWin.y1;
+    
+    _drawLine(x0, y0, x1, y1, color);
+    _drawLine(x1, y1, x2, y2, color);
+    _drawLine(x2, y2, x0, y0, color);
+    
+
+# Fill a triangle
+#--------------------------------------------------------------------------------------------------------------------
+def _fillTriangle( x0,  y0,  x1,  y1,  x2,  y2,  color):
+  # Sort coordinates by Y order (y2 >= y1 >= y0)
+    if (y0 > y1):
+        y0,y1 = y1,y0 #swap(y0, y1);
+        x0,x1 = x1,x0 #swap(x0, x1);
+  
+    if (y1 > y2):
+        y2,y1 = y1,y2 #swap(y2, y1);
+        x2,x1 = x1,x2 #swap(x2, x1);
+  
+    if (y0 > y1):
+        y0,y1 = y1,y0 #swap(y0, y1);
+        x0,x1 = x1,x0 #swap(x0, x1);
+  
+
+    if(y0 == y2) : # Handle awkward all-on-same-line case as its own thing
+        a = b = x0;
+        if(x1 < a):
+            a = x1
+        elif (x1 > b):
+            b = x1
+        if (x2 < a):
+            a = x2;
+        elif (x2 > b):
+            b = x2;
+        #print('_drawFastHLine(a, y0, b-a+1, color)')
+        _drawFastHLine(a, y0, b-a+1, color);
+        return
+    
+    dx01 = x1 - x0
+    dy01 = y1 - y0
+    dx02 = x2 - x0
+    dy02 = y2 - y0
+    dx12 = x2 - x1
+    dy12 = y2 - y1
+
+    sa   = 0
+    sb   = 0
+
+    # For upper part of triangle, find scanline crossings for segments
+    # 0-1 and 0-2.  If y1=y2 (flat-bottomed triangle), the scanline y1
+    # is included here (and second loop will be skipped, avoiding a /0
+    # error there), otherwise scanline y1 is skipped here and handled
+    # in the second loop...which also avoids a /0 error here if y0=y1
+    # (flat-topped triangle).
+    if(y1 == y2):
+        last = y1;   # Include y1 scanline
+    else:
+        last = y1-1; # Skip it
+
+    y=y0
+    while y <= last:
+        a   = x0 + sa / dy01;
+        b   = x0 + sb / dy02;
+        sa += dx01;
+        sb += dx02;
+        skip=''' longhand:
+        a = x0 + (x1 - x0) * (y - y0) / (y1 - y0);
+        b = x0 + (x2 - x0) * (y - y0) / (y2 - y0);
+        '''
+        if(a > b):
+            a,b = b,a #swap(a,b);
+        #print('bbb _drawFastHLine(%s,  %s,  %s,  %s)' % (a, y, b-a+1, color))
+        _drawFastHLine(a, y, b-a+1, color);
+        y+=1
+
+    # For lower part of triangle, find scanline crossings for segments
+    # 0-2 and 1-2.  This loop is skipped if y1=y2.
+    #print('y:%s y1:%s y0:%s dx12:%s dx02:%s sa:%s sb:%s' % (y,y1,y0,dx12,dx02,sa,sb))
+    sa = dx12 * (y - y1);
+    sb = dx02 * (y - y0);
+    while y <=y2:
+        a   = x1 + sa / dy12;
+        b   = x0 + sb / dy02;
+        #print('x0:%s x1:%s sa:%s sb:%s dy12:%s dy02:%d a:%s  b:%s' % (x0,x1,sa,sb,dy12,dy02,a,b))
+        sa += dx12;
+        sb += dx02;
+        skip=''' longhand:
+        a = x1 + (x2 - x1) * (y - y1) / (y2 - y1);
+        b = x0 + (x2 - x0) * (y - y0) / (y2 - y0);
+        '''
+        if (a > b):
+            a,b = b,a #swap(a,b);
+        #print('ccc _drawFastHLine(%s,  %s,  %s,  %s)' % (a, y, b-a+1, color))
+        _drawFastHLine(a, y, b-a+1, color);
+        y+=1
+
+
+#================================================================================================================
+def  TFT_fillTriangle(x0, y0, x1, y1, x2, y2, color):
+    _fillTriangle(
+	x0 + dispWin.x1, y0 + dispWin.y1,
+	x1 + dispWin.x1, y1 + dispWin.y1,
+	x2 + dispWin.x1, y2 + dispWin.y1,
+	color);
+
+
 if __name__=='__main__':
     setFont(UBUNTU16_FONT)
     printStr('hello',5,20)
+    TFT_drawLine(0,0,10,10,(0,255,0))
+    TFT_drawTriangle(0,0,10,10,20,20,(0,255,0))

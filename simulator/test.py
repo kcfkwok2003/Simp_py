@@ -1,7 +1,7 @@
 from simp_py import lcd
 from btc_price import get_btc_info
 pv=0
-while True:
+while 1:
   btc_info= get_btc_info()
   if btc_info['result']=='OK':
     btc = btc_info['btc']
@@ -21,8 +21,10 @@ while True:
       lcd.text(0,200,ts,0x888888)
       if pv>0:
         if btc >= pv:
+          print('up')
           lcd.triangle(280,90,270,110,290,110,0xff00,0xff00)
         else:
+          print('down')
           lcd.triangle(270,130,290,130,280,150,0xff0000,0xff0000)
       pv= btc      
   else:
