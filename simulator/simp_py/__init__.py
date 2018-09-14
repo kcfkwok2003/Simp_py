@@ -74,10 +74,12 @@ class TFT:
 tft=TFT()
 
 class LCD:
-    def __init__(self,bg, fg=(0,255,0)):
+    def __init__(self,bg,fg=(0,255,0)):
+        global LCD_X0
         self.bg=bg
         self.fg=fg
-        self.rect = pygame.Rect(LCD_X0,LCD_Y0,LCD_WIDTH, LCD_HEIGHT)
+        self.LCD_X0= LCD_X0
+        self.rect = pygame.Rect(self.LCD_X0,LCD_Y0,LCD_WIDTH, LCD_HEIGHT)
         self.pixels={}
         self.FONT_Comic = COMIC24_FONT
         self.FONT_DejaVu18 = DEJAVU18_FONT
@@ -86,6 +88,10 @@ class LCD:
         tft_lib.TFT_pushColorRep = self.pushColorRep
         
         self.BLACK = 0x0
+
+    def refit(self,x0):
+        self.LCD_X0=x0
+        self.rect = pygame.Rect(self.LCD_X0,LCD_Y0,LCD_WIDTH, LCD_HEIGHT)
         
     def clear(self):
         self.pixels={}
@@ -120,7 +126,7 @@ class LCD:
     def _pixel(self,x,y,color,sel=None):
         color = self.conv_color(color)
         #print('pixel color %s' % color)
-        self.pixels[(x+LCD_X0,y+LCD_Y0)]=color
+        self.pixels[(x+self.LCD_X0,y+LCD_Y0)]=color
 
     def pixel(self,x,y,color):
         x=x*2
@@ -136,7 +142,7 @@ class LCD:
             y= min(y1,y2)
             ymax = max(y1,y2)
             while y <= ymax:
-                self.pixels[(x+LCD_X0,y+LCD_Y0)]=color
+                self.pixels[(x+self.LCD_X0,y+LCD_Y0)]=color
                 y+=1
             return
         if y1==y2:
@@ -146,7 +152,7 @@ class LCD:
             x = min(x1,x2)
             xmax = max(x1,x2)
             while x <= xmax:
-                self.pixels[(x+LCD_X0,y+LCD_Y0)]=color
+                self.pixels[(x+self.LCD_X0,y+LCD_Y0)]=color
                 x+=1
             return
         print('???pushColorRep(%s,%s,%s,%s,%s,%s)' % (x1,y1,x2,y2,color, lenx))

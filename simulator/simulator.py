@@ -95,9 +95,22 @@ install()
 
 class SIMULATOR:
     def __init__(self):
+        global APP_NAME
+        dinfo = pygame.display.Info()
         self.fpsClock=pygame.time.Clock()
+        w = dinfo.current_w
+        h = dinfo.current_h
+        if w > 720:
+            w=720
+        if h > 800:
+            h=800
+        if w> 640:
+            x0 = (w-640)//2
+            lcd.refit(x0)
+        APP_NAME = APP_NAME +'(%s,%s)' % (w,h)
         pygame.display.set_caption(APP_NAME)
-        self.surface = pygame.display.set_mode((800,600))
+
+        self.surface = pygame.display.set_mode((w,h))
         self.bg = pygame.Color(*BG)
         #self.Lcd = pygame.Rect(LCD_X0, LCD_Y0, LCD_WIDTH, LCD_HEIGHT)
         self.font = pygame.font.Font(None, 32)
@@ -131,6 +144,7 @@ class SIMULATOR:
         for btnx in [buttonA, buttonB, buttonC,RstBtn]:
             btnx.draw(self.surface)
         lcd.draw()
+        
         #pygame.draw.rect(self.surface, [30,30,30], self.Lcd)
         self.titleRect = self.titleImg.get_rect()
         self.titleRect.centery = TITLE_Y_C
