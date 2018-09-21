@@ -132,6 +132,9 @@ class LCD:
         x=x*2
         y=y*2
         self._pixel(x,y,color)
+        self._pixel(x+1,y,color)
+        self._pixel(x,y+1,color)
+        self._pixel(x+1,y+1,color)        
         
     def pushColorRep(self,x1,y1,x2,y2,color, lenx):
         color = self.conv_color(color)

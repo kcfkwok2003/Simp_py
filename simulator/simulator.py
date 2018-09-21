@@ -155,6 +155,7 @@ class SIMULATOR:
 
 
 if __name__=='__main__':
+    import sys
     simulator = SIMULATOR()
     x=0
     y=0
@@ -165,13 +166,17 @@ if __name__=='__main__':
             f=open('test.py')
             cont=f.read()
             exec(cont)
+            s ="test.py end"
+            lcd.text(2,200,s)
+            break
         except FileNotFoundError:
-            s="test.py not found"
-            lcd.text(5,20,s)
+            s="No test.py"
+            lcd.text(2,120,s)
         except:
             s ="test.py has exc"
-            lcd.text(5,20,s)
-            raise
-            
+            lcd.text(2,200,s)
+    while True:
+        simulator.run()
+        
     
     
