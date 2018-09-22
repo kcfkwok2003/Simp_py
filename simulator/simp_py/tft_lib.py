@@ -17,8 +17,16 @@ except:
     from DejaVuSans24 import tft_Dejavu24
     from minya24 import tft_minya24
     from SmallFont import tft_SmallFont
-    from tooney32 import tft_tooney32    
+    from tooney32 import tft_tooney32
+from math import sin, cos
 # === Embedded fonts constants ===
+MIN_POLIGON_SIDES=3
+MAX_POLIGON_SIDES=60
+deg_to_rad = 0.01745329252 + 3.14159265359
+DEG_TO_RAD = 0.01745329252
+
+_angleOffset = DEFAULT_ANGLE_OFFSET= 90
+_arcAngleMax = DEFAULT_ARC_ANGLE_MAX =360
 DEFAULT_FONT =   0
 DEJAVU18_FONT=   1
 DEJAVU24_FONT=   2
@@ -41,6 +49,11 @@ RIGHT = -9004
 BOTTOM = -9004
 DEFAULT_TFT_DISPLAY_WIDTH = 640
 DEFAULT_TFT_DISPLAY_HEIGHT=480
+TFT_ELLIPSE_UPPER_RIGHT= 0x01
+TFT_ELLIPSE_UPPER_LEFT = 0x02
+TFT_ELLIPSE_LOWER_LEFT = 0x04
+TFT_ELLIPSE_LOWER_RIGHT= 0x08
+PI= 3.14159265359
 
 class DispWin:
     def __init__(self):
@@ -82,6 +95,35 @@ class FONT:
 cfont =FONT(tft_DefaultFont, 0, 0x0B, 0, 95,1)
 font_buffered_char=1
 font_transparent=0
+
+def _fillRect( x,  y,  w,  h, color): #{
+    #// clipping
+    if ((x >= dispWin.x2) or (y > dispWin.y2)):
+        return;
+
+    if (x < dispWin.x1): # {
+        w -= (dispWin.x1 - x);
+        x = dispWin.x1;
+    #}
+    if (y < dispWin.y1): # {
+        h -= (dispWin.y1 - y);
+        y = dispWin.y1;
+    #}
+    if (w < 0):
+        w = 0;
+    if (h < 0):
+        h = 0;
+
+    if ((x + w) > (dispWin.x2+1)):
+        w = dispWin.x2 - x + 1;
+    if ((y + h) > (dispWin.y2+1)):
+        h = dispWin.y2 - y + 1;
+    if (w == 0):
+        w = 1;
+    if (h == 0):
+        h = 1;
+    TFT_pushColorRep(x, y, x+w-1, y+h-1, color,(h*w));
+#}
 
 def send_data(x1,y1,x2, y2, lenx, colorbuf,callback=None):
     #print('send_data x1:%s y1:%s x2:%s y2:%s len:%s colorbuf:%s' % (x1,y1,x2, y2, lenx, len(colorbuf)))
@@ -457,6 +499,35 @@ def printStr(st, x,y,callback=None):
                         _draw7seg(TFT_X, TFT_Y,ch, cfont.y_size, cfont.x_size, _fg)
                         TFT_X += tmpw+2
 
+
+# Compare two colors; return 0 if equal
+#============================================
+def TFT_compare_colors(c1, c2):
+    print('c1:%s c2:%s' % (c1,c2))
+    if ((c1[0] & 0xFC) != (c2[0] & 0xFC)):
+        return 1;
+    if ((c1[1] & 0xFC) != (c2[1] & 0xFC)):
+        return 1;
+    if ((c1[2] & 0xFC) != (c2[2] & 0xFC)):
+        return 1;
+
+    return 0;
+
+
+def TFT_fillRoundRect(x,y,w,h,r,color):
+    x += dispWin.x1;
+    y += dispWin.y1;
+
+    #// smarter version
+    _fillRect(x + r, y, w - 2 * r, h, color);
+
+    #// draw four corners
+    fillCircleHelper(x + w - r - 1, y + r, r, 1, h - 2 * r - 1, color);
+    fillCircleHelper(x + r, y + r, r, 2, h - 2 * r - 1, color);
+#}
+
+
+
 # ================================================================
 # === Main function to send data to display ======================
 # If  rep==true:  repeat sending color data to display 'len' times
@@ -489,15 +560,486 @@ def  _drawPixel( x, y,  color, sel):
     drawPixel(x, y, color, sel)
 
 #====================================================================
+
+
+def _draw_ellipse_section( x,  y, x0, y0,  color, option):
+    #disp_select();
+    #// upper right
+    if ( option & TFT_ELLIPSE_UPPER_RIGHT ):
+        _drawPixel(x0 + x, y0 - y, color, 0);
+    #// upper left
+    if ( option & TFT_ELLIPSE_UPPER_LEFT ):
+        _drawPixel(x0 - x, y0 - y, color, 0);
+    #// lower right
+    if ( option & TFT_ELLIPSE_LOWER_RIGHT ):
+        _drawPixel(x0 + x, y0 + y, color, 0);
+    #// lower left
+    if ( option & TFT_ELLIPSE_LOWER_LEFT ):
+        _drawPixel(x0 - x, y0 + y, color, 0)
+    #disp_deselect();
+
+
+#//-----------------------------------------------------------------------------------------------------------------------
+def _draw_filled_ellipse_section( x,  y,  x0,  y0, color,  option):
+    #// upper right
+    if ( option & TFT_ELLIPSE_UPPER_RIGHT ):
+        _drawFastVLine(x0+x, y0-y, y+1, color);
+    #// upper left
+    if ( option & TFT_ELLIPSE_UPPER_LEFT ):
+        _drawFastVLine(x0-x, y0-y, y+1, color);
+    #// lower right
+    if ( option & TFT_ELLIPSE_LOWER_RIGHT ):
+        _drawFastVLine(x0+x, y0, y+1, color);
+    #// lower left
+    if ( option & TFT_ELLIPSE_LOWER_LEFT ):
+        _drawFastVLine(x0-x, y0, y+1, color)
+
+
+def _fillArcOffsetted( cx, cy,  radius, thickness,  start, end,color):
+    try:
+        __fillArcOffsetted( cx, cy,  radius, thickness,  start, end,color)
+    except:
+        pass
+
+def __fillArcOffsetted( cx, cy,  radius, thickness,  start, end,color):    
+    #//float sslope = (float)cos_lookup(start) / (float)sin_lookup(start);
+    #//float eslope = (float)cos_lookup(end) / (float)sin_lookup(end);
+    sslope = (cos(start/_arcAngleMax * 2 * PI) * _arcAngleMax) / (sin(start/_arcAngleMax * 2 * PI) * _arcAngleMax) ;
+    eslope = (cos(end/_arcAngleMax * 2 * PI) * _arcAngleMax) / (sin(end/_arcAngleMax * 2 * PI) * _arcAngleMax);
+
+    if (end == 360):
+        eslope = -1000000;
+
+    ir2 = (radius - thickness) * (radius - thickness);
+    or2 = radius * radius;
+
+    #disp_select();
+    #for (int x = -radius; x <= radius; x++): # {
+    x= -radius
+    while x<= radius:
+        #for (int y = -radius; y <= radius; y++) {
+        y= -radius
+        while y <= radius:
+            x2 = x * x;
+            y2 = y * y;
+            
+            if (
+                                (x2 + y2 < or2 and x2 + y2 >= ir2) and
+                                (
+                                (y > 0 and start < 180 and x <= y * sslope) or
+                                (y < 0 and start > 180 and x >= y * sslope) or
+                                (y < 0 and start <= 180) or
+                                (y == 0 and start <= 180 and x < 0) or
+                                (y == 0 and start == 0 and x > 0)
+                                ) and
+                                (
+                                (y > 0 and end < 180 and x >= y * eslope) or
+                                (y < 0 and end > 180 and x <= y * eslope) or
+                                (y > 0 and end >= 180) or
+                                (y == 0 and end >= 180 and x < 0) or
+                                (y == 0 and start == 0 and x > 0)
+                                )
+                                ):
+                _drawPixel(cx+x, cy+y, color, 0);
+            #}
+            y+=1
+            
+        #}
+        x+=1
+    #disp_deselect();
+#}
+
+# Used to do circles and roundrects
+#----------------------------------------------------------------------------------------------------------------
+def  fillCircleHelper(x0, y0,  r, cornername, delta,  color):
+    f = 1 - r;
+    ddF_x = 1;
+    ddF_y = -2 * r;
+    x = 0;
+    y = r;
+    ylm = x0 - r;
+    v = 0;
+    if (cornername == 3):
+        v = 1;
+
+    #disp_select();
+    while (x < y):
+        if (f >= 0):
+            if (cornername & 0x1):
+                _drawFastVLine_(x0 + y, y0 - x, 2 * x + 1 + delta, color);
+            if (cornername & 0x2):
+                _drawFastVLine_(x0 - y, y0 - x, 2 * x + 1 + delta, color);
+            ylm = x0 - y;
+            y-=1;
+            ddF_y += 2;
+            f += ddF_y;
+        
+        if (v):
+            _drawFastVLine_(x0 - x, y0 - y, 2 * y + 1 + delta, color);
+            v = 0;
+        
+        x+=1;
+        ddF_x += 2;
+        f += ddF_x;
+        
+        if ((x0 - x) > ylm): 
+            if (cornername & 0x1):
+                _drawFastVLine_(x0 + x, y0 - y, 2 * y + 1 + delta, color);
+            if (cornername & 0x2):
+                _drawFastVLine_(x0 - x, y0 - y, 2 * y + 1 + delta, color);
+            
+
+def TFT_fillEllipse( x0, y0, rx, ry, color,  option):
+    x0 += dispWin.x1;
+    y0 += dispWin.y1;
+
+    #uint16_t x, y;
+    #int32_t xchg, ychg;
+    #int32_t err;
+    #int32_t rxrx2;
+    #int32_t ryry2;
+    #int32_t stopx, stopy;
+
+    rxrx2 = rx;
+    rxrx2 *= rx;
+    rxrx2 *= 2;
+
+    ryry2 = ry;
+    ryry2 *= ry;
+    ryry2 *= 2;
+
+    x = rx;
+    y = 0;
+
+    xchg = 1;
+    xchg -= rx;
+    xchg -= rx;
+    xchg *= ry;
+    xchg *= ry;
+
+    ychg = rx;
+    ychg *= rx;
+
+    err = 0;
+
+    stopx = ryry2;
+    stopx *= rx;
+    stopy = 0;
+    while( stopx >= stopy ):  #{
+        _draw_filled_ellipse_section(x, y, x0, y0, color, option);
+        y+=1;
+        stopy += rxrx2;
+        err += ychg;
+        ychg += rxrx2;
+        if ( 2*err+xchg > 0 ): # {
+            x-=1;
+            stopx -= ryry2;
+            err += xchg;
+            xchg += ryry2;
+        #}
+    #}
+    
+    x = 0;
+    y = ry;
+    
+    xchg = ry;
+    xchg *= ry;
+
+    ychg = 1;
+    ychg -= ry;
+    ychg -= ry;
+    ychg *= rx;
+    ychg *= rx;
+
+    err = 0;
+    
+    stopx = 0;
+    
+    stopy = rxrx2;
+    stopy *= ry;
+    while( stopx <= stopy ): # {
+        _draw_filled_ellipse_section(x, y, x0, y0, color, option);
+        x+=1;
+        stopx += ryry2;
+        err += xchg;
+        xchg += ryry2;
+        if ( 2*err+ychg > 0 ): # {
+            y-=1;
+            stopy -= rxrx2;
+            err += ychg;
+            ychg += rxrx2;
+        #}
+    #}
+
+
+def fmodf(a,b):
+    return a % b
+
+def TFT_drawArc(cx,cy,r,th,start,end,color,fillcolor):
+    cx += dispWin.x1;
+    cy += dispWin.y1;
+
+    if (th < 1):
+        th = 1;
+    if (th > r):
+        th = r;
+
+    f = TFT_compare_colors(fillcolor, color);
+
+    astart = fmodf(start, _arcAngleMax);
+    aend = fmodf(end, _arcAngleMax);
+
+    astart += _angleOffset;
+    aend += _angleOffset;
+
+    if (astart < 0):
+        astart += 360;
+    if (aend < 0):
+        aend += 360;
+
+    if (aend == 0):
+        aend = 360;
+
+    if (astart > aend): # {
+        _fillArcOffsetted(cx, cy, r, th, astart, _arcAngleMax, fillcolor);
+        _fillArcOffsetted(cx, cy, r, th, 0, aend, fillcolor);
+        if (f): # {
+            _fillArcOffsetted(cx, cy, r, 1, astart, _arcAngleMax, color);
+            _fillArcOffsetted(cx, cy, r, 1, 0, aend, color);
+            _fillArcOffsetted(cx, cy, r-th, 1, astart, _arcAngleMax, color);
+            _fillArcOffsetted(cx, cy, r-th, 1, 0, aend, color);
+            #}
+            #}
+    else:  # {
+        _fillArcOffsetted(cx, cy, r, th, astart, aend, fillcolor);
+        if (f): # {
+            _fillArcOffsetted(cx, cy, r, 1, astart, aend, color);
+            _fillArcOffsetted(cx, cy, r-th, 1, astart, aend, color);
+        #}
+    #}
+    if (f): # {
+        _drawLine(cx + (r-th) * cos(astart * DEG_TO_RAD), cy + (r-th) * sin(astart * DEG_TO_RAD),
+                  cx + (r-1) * cos(astart * DEG_TO_RAD), cy + (r-1) * sin(astart * DEG_TO_RAD), color);
+        _drawLine(cx + (r-th) * cos(aend * DEG_TO_RAD), cy + (r-th) * sin(aend * DEG_TO_RAD),
+                  cx + (r-1) * cos(aend * DEG_TO_RAD), cy + (r-1) * sin(aend * DEG_TO_RAD), color);
+    #}
+#}
+
+
+
+def TFT_drawCircle(x,y,radius, color):
+    x += dispWin.x1;
+    y += dispWin.y1;
+    f = 1 - radius;
+    ddF_x = 1;
+    ddF_y = -2 * radius;
+    x1 = 0;
+    y1 = radius;
+
+    #disp_select();
+    _drawPixel(x, y + radius, color, 0);
+    _drawPixel(x, y - radius, color, 0);
+    _drawPixel(x + radius, y, color, 0);
+    _drawPixel(x - radius, y, color, 0);
+    while(x1 < y1): # {
+        if (f >= 0): # {
+            y1-=1;
+            ddF_y += 2;
+            f += ddF_y;
+        #}
+        x1+=1;
+        ddF_x += 2;
+        f += ddF_x;
+        _drawPixel(x + x1, y + y1, color, 0);
+        _drawPixel(x - x1, y + y1, color, 0);
+        _drawPixel(x + x1, y - y1, color, 0);
+        _drawPixel(x - x1, y - y1, color, 0);
+        _drawPixel(x + y1, y + x1, color, 0);
+        _drawPixel(x - y1, y + x1, color, 0);
+        _drawPixel(x + y1, y - x1, color, 0);
+        _drawPixel(x - y1, y - x1, color, 0);
+        #}
+
+
+def drawCircleHelper( x0,  y0,  r, cornername, color):
+    f = 1 - r;
+    ddF_x = 1;
+    ddF_y = -2 * r;
+    x = 0;
+    y = r;
+
+    #disp_select();
+    while (x < y): # {
+        if (f >= 0): # {
+            y-=1;
+            ddF_y += 2;
+            f += ddF_y;
+        #}
+        x+=1;
+        ddF_x += 2;
+        f += ddF_x;
+        if (cornername & 0x4): # {
+            _drawPixel(x0 + x, y0 + y, color, 0);
+            _drawPixel(x0 + y, y0 + x, color, 0);
+        #}
+        if (cornername & 0x2): # {
+            _drawPixel(x0 + x, y0 - y, color, 0);
+            _drawPixel(x0 + y, y0 - x, color, 0);
+        #}
+        if (cornername & 0x8): # {
+            _drawPixel(x0 - y, y0 + x, color, 0);
+            _drawPixel(x0 - x, y0 + y, color, 0);
+        #}
+        if (cornername & 0x1): # {
+            _drawPixel(x0 - y, y0 - x, color, 0);
+            _drawPixel(x0 - x, y0 - y, color, 0);
+        #}
+    #}
+    #disp_deselect();
+#}
+       
+def TFT_drawEllipse(x0,y0,rx,ry,color,option):
+    x0 += dispWin.x1;
+    y0 += dispWin.y1;
+
+    #uint16_t x, y;
+    #int32_t xchg, ychg;
+    #int32_t err;
+    #int32_t rxrx2;
+    #int32_t ryry2;
+    #int32_t stopx, stopy;
+
+    rxrx2 = rx;
+    rxrx2 *= rx;
+    rxrx2 *= 2;
+
+    ryry2 = ry;
+    ryry2 *= ry;
+    ryry2 *= 2;
+
+    x = rx;
+    y = 0;
+
+    xchg = 1;
+    xchg -= rx;
+    xchg -= rx;
+    xchg *= ry;
+    xchg *= ry;
+
+    ychg = rx;
+    ychg *= rx;
+
+    err = 0;
+
+    stopx = ryry2;
+    stopx *= rx;
+    stopy = 0;
+    while( stopx >= stopy ): # {
+        _draw_ellipse_section(x, y, x0, y0, color, option);
+        y+=1;
+        stopy += rxrx2;
+        err += ychg;
+        ychg += rxrx2;
+        if ( 2*err+xchg > 0 ): # {
+            x-=1;
+            stopx -= ryry2;
+            err += xchg;
+            xchg += ryry2;
+        #}
+    #}
+    
+    x = 0;
+    y = ry;
+
+    xchg = ry;
+    xchg *= ry;
+
+    ychg = 1;
+    ychg -= ry;
+    ychg -= ry;
+    ychg *= rx;
+    ychg *= rx;
+
+    err = 0;
+
+    stopx = 0;
+
+    stopy = rxrx2;
+    stopy *= ry;
+
+    while( stopx <= stopy ): # {
+        _draw_ellipse_section(x, y, x0, y0, color, option);
+        x+=1;
+        stopx += ryry2;
+        err += xchg;
+        xchg += ryry2;
+        if ( 2*err+ychg > 0 ): # {
+            y-=1;
+            stopy -= rxrx2;
+            err += ychg;
+            ychg += rxrx2;
+        #}
+    #}
+
 def TFT_drawPixel(x,  y,  color,  sel):
     _drawPixel(x+dispWin.x1, y+dispWin.y1, color, sel);
 
 
+def TFT_drawPolygon(cx, cy, sides, diameter, color, fill, rot, th):
+    cx += dispWin.x1
+    cy += dispWin.y1
+    deg = rot - _angleOffset
+    f = TFT_compare_colors(fill, color)
+    if sides < MIN_POLIGON_SIDES:
+        sides = MIN_POLIGON_SIDES # This ensures the minimun side number
+    if sides > MAX_POLIGON_SIDES:
+        sides = MAX_POLIGON_SIDES
+
+    #Xpoints[sides], Ypoints[sides];
+    Xpoints=[0] * sides
+    Ypoints=[0] * sides
+    # Set the arrays based on the number of sides entered
+    rads = 360 / sides;                                                
+    # This equally spaces the points.
+    for idx in range(sides):   # (int idx = 0; idx < sides; idx++) {
+        Xpoints[idx] =int( cx + sin(float(idx*rads + deg) * deg_to_rad) * diameter)
+        Ypoints[idx] =int( cy + cos(float(idx*rads + deg) * deg_to_rad) * diameter)
+        
+
+    # Draw the polygon on the screen.
+    if f: 
+        for idx in range(sides):  #(int idx = 0; idx < sides; idx++) {
+            if ((idx+1) < sides):
+                _fillTriangle(cx,cy,Xpoints[idx],Ypoints[idx],Xpoints[idx+1],Ypoints[idx+1], fill);
+            else:
+                _fillTriangle(cx,cy,Xpoints[idx],Ypoints[idx],Xpoints[0],Ypoints[0], fill);
+    if th:
+        for n in range(th):  #(int n=0; n<th; n++) {
+            if (n > 0):  # {
+                for  idx in range(sides):  #(int idx = 0; idx < sides; idx++) {
+                    Xpoints[idx] =int( cx + sin(float(idx*rads + deg) * deg_to_rad) * (diameter-n))
+                    Ypoints[idx] =int( cy + cos(float(idx*rads + deg) * deg_to_rad) * (diameter-n))
+
+                for idx in range(sides): #(int idx = 0; idx < sides; idx++) {
+                    if( (idx+1) < sides):
+                        _drawLine(Xpoints[idx],Ypoints[idx],Xpoints[idx+1],Ypoints[idx+1], color); # draw the lines
+                    else:
+                        _drawLine(Xpoints[idx],Ypoints[idx],Xpoints[0],Ypoints[0], color); # finishes the last line to close up the polygon.
+
+
+    
 #===========================================
+def TFT_fillCircle(x, y, radius, color):
+    x += dispWin.x1
+    y += dispWin.y1
+    fillCircleHelper(x,y, radius, 3,0,color)
+
+
 def TFT_readPixel( x, y) :
     if ((x < dispWin.x1) or (y < dispWin.y1) or (x > dispWin.x2) or (y > dispWin.y2)):
         return TFT_BLACK;
     return readPixel(x, y);
+
 
 #--------------------------------------------------------------------------
 def _drawFastVLine( x,  y,  h, color) :
@@ -531,7 +1073,8 @@ def _drawFastVLine_( x,  y, h, color):
         h = dispWin.y2 - y + 1;
     if (h == 0):
         h = 1;
-    TFT_pushColorRep_nocs(x, y, x, y+h-1, color, h);
+    #TFT_pushColorRep_nocs(x, y, x, y+h-1, color, h);
+    TFT_pushColorRep(x, y, x, y+h-1, color, h);
 
 #--------------------------------------------------------------------------
 def _drawFastHLine( x,  y,  w, color):
@@ -590,7 +1133,7 @@ def _drawLine(x0, y0, x1, y1, color):
         x0,x1 = x1,x0 #swap(x0, x1);
         y0,y1 = y1,y0 #swap(y0, y1);
 
-    dx = x1 - x0
+    dx = int(x1 - x0)
     dy = abs(y1 - y0);
     err = dx >> 1
     ystep = -1
@@ -637,6 +1180,23 @@ def _drawLine(x0, y0, x1, y1, color):
 def TFT_drawLine( x0, y0, x1, y1, color):
     _drawLine(x0+dispWin.x1, y0+dispWin.y1, x1+dispWin.x1, y1+dispWin.y1, color);
 
+
+def TFT_drawRoundRect( x,  y,  w,  h,  r, color):
+    x += dispWin.x1;
+    y += dispWin.y1;
+
+    #// smarter version
+    _drawFastHLine(x + r, y, w - 2 * r, color);           #          // Top
+    _drawFastHLine(x + r, y + h - 1, w - 2 * r, color);    # // Bottom
+    _drawFastVLine(x, y + r, h - 2 * r, color);            #         // Left
+    _drawFastVLine(x + w - 1, y + r, h - 2 * r, color);    # // Right
+
+    #// draw four corners
+    drawCircleHelper(x + r, y + r, r, 1, color);
+    drawCircleHelper(x + w - r - 1, y + r, r, 2, color);
+    drawCircleHelper(x + w - r - 1, y + h - r - 1, r, 4, color);
+    drawCircleHelper(x + r, y + h - r - 1, r, 8, color);
+#}
 
                         
 # Draw a triangle

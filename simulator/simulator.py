@@ -175,6 +175,8 @@ if __name__=='__main__':
         except:
             s ="test.py has exc"
             lcd.text(2,200,s)
+            simulator.run()
+            raise
     while True:
         simulator.run()
         

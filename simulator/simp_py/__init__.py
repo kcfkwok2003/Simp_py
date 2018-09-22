@@ -88,7 +88,39 @@ class LCD:
         tft_lib.TFT_pushColorRep = self.pushColorRep
         
         self.BLACK = 0x0
+        self.NAVY = 0x80
+        self.DARKGREEN = 0x008000
+        self.DARKCYAN = 0x008080
+        self.MAROON = 0x800000
+        self.PURPLE = 0x800080
+        self.OLIVE = 0x808000
+        self.LIGHTGREY = 0xc0c0c0
+        self.DARKGREY = 0x808080
+        self.BLUE = 0x0000ff
+        self.GREEN = 0xff00
+        self.CYAN = 0Xffff
+        self.RED = 0xfc0000
+        self.MAGENTA = 0xfc00ff
+        self.YELLOW = 0xfcfc00
+        self.WHITE = 0xfcfcfc
+        self.ORANGE = 0xfca400
+        self.GREENYELLOW = 0xacfc2c
+        self.PINK = 0xfcc0ca
 
+    def arc(self, x,y,r,thick,start,end,color=None, fillcolor=None):
+        x=x*2
+        y=y*2
+        r=r*2
+        thick=thick *2
+        if color is None:
+            color = self._fg
+        if fillcolor is None:
+            fillcolor = self._fg
+        color = self.conv_color(color)
+        fillcolor = self.conv_color(fillcolor)
+        TFT_drawArc(x,y,r,thick,start,end,color,fillcolor)
+        
+    
     def refit(self,x0):
         self.LCD_X0=x0
         self.rect = pygame.Rect(self.LCD_X0,LCD_Y0,LCD_WIDTH, LCD_HEIGHT)
@@ -96,6 +128,19 @@ class LCD:
     def clear(self):
         self.pixels={}
 
+    def circle(self, x,y,radius,color=None,fillcolor=None):
+        x=x*2
+        y=y*2
+        radius=radius*2
+        if not color:
+            color = self._fg
+        if fillcolor is not None:
+            TFT_fillCircle(x,y,radius, fillcolor)
+            if color:
+                TFT_drawCircle(x,y,radius,color)
+        else:
+            TFT_drawCircle(x,y,radius,color)
+            
     def conv_color(self,cx):
         if type(cx)==type(1):
             r = (cx >> 16 ) & 0xff 
@@ -118,7 +163,18 @@ class LCD:
                     raise
 
 
-
+    def ellipse(self, x,y, rx,ry, opt=15,color=None, fillcolor=None):
+        x=x*2
+        y=y*2
+        rx=rx*2
+        ry=ry*2
+        if color is None:
+            color = self._fg
+        if fillcolor:
+            TFT_fillEllipse(x,y,rx,ry,fillcolor,opt)
+        TFT_drawEllipse(x,y,rx,ry,color,opt)
+        
+    
     def font(self,fontx, rotate=None,transparent=None,fixedwidth=None,dist=None,width=None,outline=None,color=None):
         setFont(fontx)
 
@@ -135,7 +191,22 @@ class LCD:
         self._pixel(x+1,y,color)
         self._pixel(x,y+1,color)
         self._pixel(x+1,y+1,color)        
+
+    def polygon(self,cx,cy,r,sides,thick, color=0xff00, fill=0, rot=0):
+        if color is None:
+            color = self._fg
+        if fill is None:
+            fill = self._fg
+            
+        color = self.conv_color(color)
+        fill = self.conv_color(fill)
+        diameter = r*2
+        cx = cx*2
+        cy= cy*2
+        th=thick *2
+        TFT_drawPolygon(cx,cy,sides,diameter,color,fill,rot,th)
         
+    
     def pushColorRep(self,x1,y1,x2,y2,color, lenx):
         color = self.conv_color(color)
         if x1==x2:
@@ -158,7 +229,17 @@ class LCD:
                 self.pixels[(x+self.LCD_X0,y+LCD_Y0)]=color
                 x+=1
             return
-        print('???pushColorRep(%s,%s,%s,%s,%s,%s)' % (x1,y1,x2,y2,color, lenx))
+        x = min(x1,x2)
+        xmax = max(x1,x2)
+        ymin = min(y1,y2)
+        ymax = max(y1,y2)
+        while x <= xmax:
+            y = ymin
+            while y <= ymax:
+                self.pixels[(x+self.LCD_X0,y+LCD_Y0)]=color
+                y+=1
+            x+=1
+        #print('???pushColorRep(%s,%s,%s,%s,%s,%s)' % (x1,y1,x2,y2,color, lenx))
         
     def put_char(self,dx):
         x =x1 = dx['x1']
@@ -176,6 +257,19 @@ class LCD:
                 x= x1
                 y+=1
 
+    def roundrect(self,x,y,w,h,r,color=None,fillcolor=None):
+        x=x*2
+        y=y*2
+        w=w*2
+        h=h*2
+        
+        if color is None:
+            color = self._fg
+        if fillcolor is not None:
+            TFT_fillRoundRect(x,y,w,h,r,fillcolor)
+        TFT_drawRoundRect(x,y,w,h,r,color)
+        
+    
     def set_color(self,cx):
         if cx:
             return self.fg
