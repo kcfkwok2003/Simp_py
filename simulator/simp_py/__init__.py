@@ -9,7 +9,8 @@ from pygame.locals import *
 from pygame import gfxdraw
 from simp_py import tft_lib
 from simp_py.tft_lib import *
-
+#from simp_py.machine import Pin
+import dbm
 #import requests as urequests
 
 
@@ -309,7 +310,8 @@ lcd = LCD((30,30,30))
 
 
 class Button:
-    def __init__(self,name,color,x0,y0,w,h):
+    def __init__(self,pid, name,color,x0,y0,w,h):
+        self.pid=pid
         self.name = name
         self.color=color
         self.x0=x0
@@ -323,6 +325,8 @@ class Button:
         self.fontRect.centerx = self.rect.centerx
         self.fontRect.centery = self.rect.centery
         self.state=False
+        with dbm.open('pin_states','c') as ps:
+            ps[str(self.pid)]='1'
         
     def draw(self, surface):
         pygame.draw.rect(surface,self.color,self.rect)
@@ -334,17 +338,23 @@ class Button:
 
     def set(self):
         self.state=True
-
+        with dbm.open('pin_states','c') as ps:
+            ps[str(self.pid)]='0'
+        #print ('pin_states:' , Pin.states)
+        
     def clear(self):
         self.state=False
-
+        with dbm.open('pin_states','c') as ps:
+            ps[str(self.pid)]='1'        
+        #print ('pin_states:' , Pin.states)
+        
     def isPressed(self):
         return self.state
     
 
-RstBtn = Button('Exit',(255,0,0),RST_X0,RST_Y0,RST_WIDTH,RST_HEIGHT)
-buttonA = Button('A', (250,250,250),BTNA_X0,BTN_Y0,BTN_WIDTH, BTN_HEIGHT)
-buttonB = Button('B', (250,250,250),BTNB_X0,BTN_Y0,BTN_WIDTH, BTN_HEIGHT)
-buttonC = Button('C', (250,250,250),BTNC_X0,BTN_Y0,BTN_WIDTH, BTN_HEIGHT)    
+RstBtn = Button(0,'Exit',(255,0,0),RST_X0,RST_Y0,RST_WIDTH,RST_HEIGHT)
+buttonA = Button(39,'A', (250,250,250),BTNA_X0,BTN_Y0,BTN_WIDTH, BTN_HEIGHT)
+buttonB = Button(38,'B', (250,250,250),BTNB_X0,BTN_Y0,BTN_WIDTH, BTN_HEIGHT)
+buttonC = Button(37,'C', (250,250,250),BTNC_X0,BTN_Y0,BTN_WIDTH, BTN_HEIGHT)    
     
 

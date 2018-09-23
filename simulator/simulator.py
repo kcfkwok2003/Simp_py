@@ -155,6 +155,7 @@ class SIMULATOR:
 
 
 if __name__=='__main__':
+    global pin_states
     import sys
     simulator = SIMULATOR()
     x=0
@@ -165,7 +166,7 @@ if __name__=='__main__':
         try:
             f=open('test.py')
             cont=f.read()
-            exec(cont)
+            exec(cont, globals())
             s ="test.py end"
             lcd.text(2,200,s)
             break
