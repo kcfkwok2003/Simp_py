@@ -234,6 +234,7 @@ def getCharPtr(c):
 
 
 def printProportionalChar(x,y,callback=None):
+    #print('printProportionalChar')
     ch=0
     char_width=fontChar.xDelta
     if fontChar.width > fontChar.xDelta:
@@ -275,10 +276,11 @@ def printProportionalChar(x,y,callback=None):
         return char_width
     if not font_transparent:
         _fillRect(x,y,char_width+1, cfont.y_size,_bg)
+    #print('***')
     # draw Glyph
     mask = 0x80
     #disp_select()
-    for j in range(fonChar.height):
+    for j in range(fontChar.height):
         for i in range(fontChar.width):
             if ((i+(j* fontChar.width)) % 8)==0:
                 mask=0x80
@@ -287,12 +289,16 @@ def printProportionalChar(x,y,callback=None):
             if (ch & mask) !=0:
                 cx = x+fontChar.xOffset +i
                 cy = y + j +fontChar.adjYOffset
-                _drawPixel(cx,cy,_fg,0)
+                #print('_drawPixel _fg:%s' % _fg)
+                _txt_drawPixel(cx,cy,_fg,0)
             mask >>=1
     #disp_deselect()
     return char_width
 
-def setFont(font):
+def setFont(font, rotate=None,transparent=None,fixedwidth=None,dist=None,width=None,outline=None, color=None):
+    global font_transparent
+    if transparent is not None:
+        font_transparent=transparent
     if 1:
         #print('setFont %s' % str(font))
         cfont.font=None
@@ -551,6 +557,10 @@ def TFT_pushColorRep( x1,  y1,  x2, y2, color,  lenx):
 def drawPixel(x, y, color, sel):
     print('drawPixel(%s,%s,%s,%s)' % (x,y,color,sel))
 
+# override this 
+def txt_drawPixel(x, y, color, sel):
+    print('txt_drawPixel(%s,%s,%s,%s)' % (x,y,color,sel))    
+
     
 # draw color pixel on screen
 #------------------------------------------------------------------------
@@ -558,6 +568,11 @@ def  _drawPixel( x, y,  color, sel):
     if ((x < dispWin.x1) or (y < dispWin.y1) or (x > dispWin.x2) or (y > dispWin.y2)):
         return
     drawPixel(x, y, color, sel)
+
+def  _txt_drawPixel( x, y,  color, sel):
+    if ((x < dispWin.x1) or (y < dispWin.y1) or (x > dispWin.x2) or (y > dispWin.y2)):
+        return
+    txt_drawPixel(x, y, color, sel)    
 
 #====================================================================
 

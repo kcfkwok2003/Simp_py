@@ -1,5 +1,10 @@
 #raise NotImplementedError
-import dbm
+#import dbm
+class GDATA1:
+    def __init__(self):
+        pass
+
+gdata1 = GDATA1()
 
 class Pin:
     PULL_UP=0
@@ -17,14 +22,11 @@ class Pin:
         if mode is not None:
             self.mode = mode        
 
-    def value(self,x=None):
-        v='1'
-        with dbm.open('pin_states','c') as ps:
-            if x is not None:
-                ps[str(self.pid)] = str(x)
-            v = ps.get(str(self.pid), 1)
-        #print('value: %s' % v)
-        return int(v) 
+    def value(self, x=None):
+        if x is not None:
+            gdata1.pins.set(self.pid, x)
+        return gdata1.pins.get(self.pid)
+    
     
     def irq(self):
         pass
@@ -37,5 +39,21 @@ class Pin:
 
     def mode(self,mode=None):
         pass
+
+class PINS:
+    states={}
+    def __init__(self):
+        pass
+        
+    def set(self, p, v):
+        self.states[p]=v
+        #print('pins set:%s' % self.states)
+
+    def get(self, p):
+        v = self.states.get(p,1)
+        return int(v)
+
+pins=PINS()
+gdata1.pins=pins
 
     

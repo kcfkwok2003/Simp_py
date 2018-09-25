@@ -10,9 +10,11 @@ from pygame import gfxdraw
 
 import os, sys
 import time
+
 from simp_py import RstBtn,buttonA,buttonB,buttonC,LCD_Y0,BG,FG,lcd,tft,gdata
 APP_NAME='Simpy-py M5Stack Simulator'
 
+network=None
 t_sleep= time.sleep
 def _sleep(t):
     now = time.time()
@@ -22,6 +24,10 @@ def _sleep(t):
         if gdata is not None:
             if gdata.run is not None:
                 gdata.run()
+        if network:
+            if network.gdata2.run is not None:
+                network.gdata2.run()
+                #print ('gdata2:%s' % network.gdata2.run)
         if time.time() > tout:
             #print('wake @%s' % time.time())
             break
@@ -155,8 +161,12 @@ class SIMULATOR:
 
 
 if __name__=='__main__':
-    global pin_states
+    import machine
+    import network
     import sys
+    buttonA.set_gdata1(machine.gdata1)
+    buttonB.set_gdata1(machine.gdata1)
+    buttonC.set_gdata1(machine.gdata1)
     simulator = SIMULATOR()
     x=0
     y=0
@@ -166,7 +176,7 @@ if __name__=='__main__':
         try:
             f=open('test.py')
             cont=f.read()
-            exec(cont, globals())
+            exec(cont, {'gdata1':machine.gdata1})
             s ="test.py end"
             lcd.text(2,200,s)
             break

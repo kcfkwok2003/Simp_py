@@ -9,8 +9,9 @@ from pygame.locals import *
 from pygame import gfxdraw
 from simp_py import tft_lib
 from simp_py.tft_lib import *
-#from simp_py.machine import Pin
-import dbm
+from simp_py import machine
+
+#import dbm
 #import requests as urequests
 
 
@@ -40,6 +41,7 @@ class GDATA:
         
 
 gdata=GDATA()
+
 
 class Logging:
     def __init__(self):
@@ -85,7 +87,8 @@ class LCD:
         self.FONT_Comic = COMIC24_FONT
         self.FONT_DejaVu18 = DEJAVU18_FONT
         self.FONT_Default = DEFAULT_FONT
-        tft_lib.drawPixel = self._pixel
+        tft_lib.drawPixel = self.drawPixel   #_pixel
+        tft_lib.txt_drawPixel = self.txt_drawPixel
         tft_lib.TFT_pushColorRep = self.pushColorRep
         
         self.BLACK = 0x0
@@ -108,6 +111,26 @@ class LCD:
         self.GREENYELLOW = 0xacfc2c
         self.PINK = 0xfcc0ca
 
+    def drawPixel(self, x,y,color,sel):
+        #print('**drawPixel(%s,%s,%s,%s)' % (x,y,color,sel))
+        #x=x*2
+        #y=y*2
+        color = self.set_color(color)
+        self._pixel(x,y,color,sel)
+        self._pixel(x+1,y,color,sel)
+        self._pixel(x,y+1,color,sel)
+        self._pixel(x+1,y+1,color,sel)
+
+    def txt_drawPixel(self, x,y,color,sel):
+        #print('**txt_drawPixel(%s,%s,%s,%s)' % (x,y,color,sel))
+        x=x*2
+        y=y*2
+        color = self.set_color(color)
+        self._pixel(x,y,color,sel)
+        self._pixel(x+1,y,color,sel)
+        self._pixel(x,y+1,color,sel)
+        self._pixel(x+1,y+1,color,sel)                
+        
     def arc(self, x,y,r,thick,start,end,color=None, fillcolor=None):
         x=x*2
         y=y*2
@@ -177,12 +200,12 @@ class LCD:
         
     
     def font(self,fontx, rotate=None,transparent=None,fixedwidth=None,dist=None,width=None,outline=None,color=None):
-        setFont(fontx)
+        setFont(fontx,rotate,transparent,fixedwidth,dist,width,outline,color)
 
         
     def _pixel(self,x,y,color,sel=None):
         color = self.conv_color(color)
-        #print('pixel color %s' % color)
+        #print('pixel color x:%s y:%s %s' % (x,y,str(color)))
         self.pixels[(x+self.LCD_X0,y+LCD_Y0)]=color
 
     def pixel(self,x,y,color):
@@ -325,8 +348,10 @@ class Button:
         self.fontRect.centerx = self.rect.centerx
         self.fontRect.centery = self.rect.centery
         self.state=False
-        with dbm.open('pin_states','c') as ps:
-            ps[str(self.pid)]='1'
+        #machine.gdata1.pins.set(self.pid, 1)
+
+    def set_gdata1(self, gdata1):
+        self.gdata1=gdata1
         
     def draw(self, surface):
         pygame.draw.rect(surface,self.color,self.rect)
@@ -338,15 +363,13 @@ class Button:
 
     def set(self):
         self.state=True
-        with dbm.open('pin_states','c') as ps:
-            ps[str(self.pid)]='0'
-        #print ('pin_states:' , Pin.states)
+        if self.gdata1:
+            self.gdata1.pins.set(self.pid, 0)
         
     def clear(self):
         self.state=False
-        with dbm.open('pin_states','c') as ps:
-            ps[str(self.pid)]='1'        
-        #print ('pin_states:' , Pin.states)
+        if self.gdata1:
+            self.gdata1.pins.set(self.pid, 1)
         
     def isPressed(self):
         return self.state
