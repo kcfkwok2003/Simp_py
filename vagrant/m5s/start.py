@@ -8,7 +8,7 @@ import time
 import _thread
 
 mach_id = machine.unique_id()
-HEADER = 'SIMP_PY 1.1.1'
+HEADER = 'SIMP_PY 1.1.1a'  # try to fix readPixel problem
 BOARD = 'm5stk'
 SERVER_PORT=8080
 STA_ESSID ='testssid'

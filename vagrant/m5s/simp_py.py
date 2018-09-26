@@ -8,6 +8,7 @@ import m5stack
 tft = m5stack.Display()
 lcd = tft.tft
 
+
 class MON:
     def __init__(self):
         self.history=[]
