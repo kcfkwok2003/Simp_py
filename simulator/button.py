@@ -7,9 +7,9 @@ class Button:
     self.inp = Pin(pin, Pin.IN)
     self.name = name
 
-  def pressed(self):
+  def isPressed(self):
     return self.inp.value()==0
 
 if __name__=='__main__':
   btnA = Button(39,'A')
-  lcd.text(0,15,'%s pressed:%s' % (btnA.name, btnA.pressed()))
+  lcd.text(0,15,'%s pressed:%s' % (btnA.name, btnA.isPressed()))

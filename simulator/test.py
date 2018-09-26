@@ -4,8 +4,6 @@ from simp_py import lcd
 from button import Button
 buttonA= Button(39,'a')
 buttonB = Button(38,'b')
-buttonA.isPressed=buttonA.pressed
-buttonB.isPressed=buttonB.pressed
 
 connected=False
 def connected_cb(task):
