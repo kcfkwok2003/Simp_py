@@ -6,6 +6,22 @@ class GDATA1:
 
 gdata1 = GDATA1()
 
+SIM_MAX=1022
+SIM_STEP=30
+class ADC:
+    def __init__(self,pin):
+        self.pin=pin
+        self.v=0
+        self.dir=SIM_STEP
+        
+    def read(self):
+        self.v+=self.dir
+        if self.v> SIM_MAX:
+            self.dir=-SIM_STEP
+        if self.v==0:
+            self.dir=SIM_STEP
+        return self.v
+
 class Pin:
     PULL_UP=0
     PULL_DOWN=1

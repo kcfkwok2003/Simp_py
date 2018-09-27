@@ -1,5 +1,5 @@
-# t016.py
-from machine import Pin,ADC
+# t017.py
+from machine import Pin,ADC, RTC
 from simp_py import lcd
 import time
 
@@ -12,11 +12,18 @@ relay_off()
 lcd.clear()
 lcd.circle(270,50,30,0xffffff, lcd.NAVY)
 
+rtc=RTC()
+timex = rtc.now()
+msg = 'started@%s   ' % timex
+lcd.text(0,0,msg)
 while True:
     v = sensor.read()
     lcd.text(0,0,'sensor:%s     ' % v)
     if v > 1000:
         relay_on()
+        timex = rtc.now()
+        msg = 'drip@%s    ' % timex
+        lcd.text(0,0,msg)
         lcd.circle(270,50,30,0xffffff, lcd.CYAN)
     else:
         relay_off()
