@@ -12,7 +12,7 @@ import os, sys
 import time
 
 from simp_py import RstBtn,buttonA,buttonB,buttonC,LCD_Y0,BG,FG,lcd,tft,gdata
-APP_NAME='Simpy-py M5Stack Simulator'
+APP_NAME='Simpy-py IOT Simulator'
 
 network=None
 t_sleep= time.sleep
@@ -176,7 +176,7 @@ if __name__=='__main__':
         try:
             f=open('test.py')
             cont=f.read()
-            exec(cont, {'gdata1':machine.gdata1})
+            exec(cont, {'gdata1':machine.gdata1, '__name__':'__main__'})
             s ="test.py end"
             lcd.text(2,200,s)
             break

@@ -29,13 +29,17 @@ class RTC:
         DD = tx[2]
         hh = tx[3]
         mm = tx[4]
-        s ='%d-%d-%d %02d:%02d' % (YYYY,MM,DD,hh,mm)
+        ss = tx[5]
+        s ='%d-%d-%d %02d:%02d:%02d' % (YYYY,MM,DD,hh,mm,ss)
         return s
     
 if __name__=='__main__':
     import time
+    from simp_py import lcd
     x = RTC()
-    s = x.now()
-    print('now:%s' % s)
+    while True:
+        s = x.now()
+        lcd.text(0,0,s)
+        time.sleep(1)
 
         

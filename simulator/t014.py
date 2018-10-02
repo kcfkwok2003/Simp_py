@@ -2,6 +2,7 @@
 from network import mqtt
 from simp_py import lcd
 from machine import Pin
+import time
 
 led = Pin(26,Pin.OUT)
 led.value(0)

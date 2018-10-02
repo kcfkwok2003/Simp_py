@@ -1,5 +1,6 @@
 #raise NotImplementedError
 #import dbm
+import time
 class GDATA1:
     def __init__(self):
         pass
@@ -44,7 +45,7 @@ class Pin:
         return gdata1.pins.get(self.pid)
     
     
-    def irq(self):
+    def irq(self, trigger=None, handler=None):
         pass
 
     def on(self):
@@ -69,6 +70,16 @@ class PINS:
         v = self.states.get(p,1)
         return int(v)
 
+class RTC:
+    def __init__(self):
+        pass
+
+    def ntp_sync(self, host):
+        pass
+
+    def now(self):
+        return time.localtime()
+    
 pins=PINS()
 gdata1.pins=pins
 
