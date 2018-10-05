@@ -4,7 +4,6 @@ coins_pr.py
 ex_btc_price.py
 kcf_mqtt1.py
 rtc.py
-simp_py
 simulator.py
 t223.py
 t_mqtt.py
