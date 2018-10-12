@@ -1,5 +1,7 @@
 # t005.py
-from simp_py import buttonA, buttonB, buttonC
+from simp_py import lcd
+from button import Button
+buttonA=Button(39); buttonB=Button(38); buttonC=Button(37)
 import time
 names = ['A','B','C']   # list
 buttons ={ 'A': buttonA, 'B': buttonB, 

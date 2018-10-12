@@ -1,5 +1,8 @@
 # t006.py
-from simp_py import buttonA, buttonB
+from simp_py import lcd
+from button import Button
+buttonA=Button(39)
+buttonB=Button(38)
 import time
 while True:
   if buttonA.isPressed() and buttonB.isPressed():
