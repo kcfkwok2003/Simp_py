@@ -1,28 +1,79 @@
-# t_rtc.py
-from machine import RTC
+# t014.py
+from network import mqtt
 from simp_py import lcd
-import time as t
-rtc = RTC()
-synced=False
+from machine import Pin
+import time
+
+led = Pin(26,Pin.OUT)
+led.value(0)
 lcd.clear()
-td=0
-tz=28800
+lcd.circle(100,100,30,lcd.RED,lcd.BLUE)
+
+connected =False
+def connected_cb(task):
+    global connected
+    connected=True
+
+lights_changed=0
+def data_cb(msg):
+    global lights_changed
+    name=msg[0]
+    topic=msg[1]
+    cont=msg[2]
+    if cont=='on' or cont==b'on':
+        lights_changed=1
+    elif cont=='off' or cont==b'off':
+        lights_changed=-1
+    return lights_changed
+
+from button import Button
+buttonA = Button(39)
+buttonB = Button(38)
+lcd.font(lcd.FONT_Comic, transparent=True, fixedwidth=False)
+lcd.roundrect(10,150,80,40,5,lcd.RED,lcd.LIGHTGREY)
+lcd.text(13,155,'ON',lcd.BLACK)
+lcd.roundrect(100,150,80,40,5,lcd.RED,lcd.LIGHTGREY)
+lcd.text(13+100,155,'OFF',lcd.BLACK)
+
+mqttc = mqtt('lights','iot.eclipse.org',secure=False,connected_cb=connected_cb, data_cb=data_cb)
+while not connected:
+    time.sleep(0.1)
+
+mqttc.subscribe('/lights')
+apressed=False
+bpressed=False
 while True:
-    lcd.clear()
-    if not synced:
-        try:
-            lcd.text(10,10,'syncing')
-            rtc.ntp_sync('pool.ntp.org')
-            td = int(t.mktime(t.localtime()) - t.mktime(t.gmtime()))
-            print('td:%d' % td)
-            synced=True
-        except:
-            pass
+    if buttonA.isPressed():
+        if not apressed:
+            apressed=True
+            mqttc.publish('/lights','on')
+            lcd.roundrect(10,150,80,40,5,lcd.RED,lcd.YELLOW)
+            lcd.text(13,155,'ON',lcd.BLACK)
     else:
-        tx=t.localtime(int(t.time())- td +tz)
-        YYYY=tx[0]; MM=tx[1]; DD=tx[2]
-        hh=tx[3]; mm=tx[4]; ss=tx[5]
-        lcd.text(10,10,'%d-%d-%d %02d:%02d:%02d' % (YYYY,MM,DD,hh,mm,ss))
-    t.sleep(1)
-        
-        
+        if apressed:
+            apressed=False
+            lcd.roundrect(10,150,80,40,5,lcd.RED,lcd.LIGHTGREY)
+            lcd.text(13,155,'ON',lcd.BLACK)
+
+    if buttonB.isPressed():
+        if not bpressed:
+            bpressed=True
+            mqttc.publish('/lights','off')
+            lcd.roundrect(100,150,80,40,5,lcd.RED,lcd.YELLOW)
+            lcd.text(13+100,155,'OFF',lcd.BLACK)
+            time.sleep(0.1)
+    else:
+        if bpressed:
+            bpressed=False
+            lcd.roundrect(100,150,80,40,5,lcd.RED,lcd.LIGHTGREY)
+            lcd.text(13+100,155,'OFF',lcd.BLACK)
+            
+    if lights_changed !=0:
+        if lights_changed==1:
+            led.value(1)
+            lcd.circle(100,100,30,lcd.RED,lcd.YELLOW)            
+        elif lights_changed==-1:
+            led.value(0)
+            lcd.circle(100,100,30,lcd.RED,lcd.BLUE)            
+        lights_changed=0
+    time.sleep(0.1)

@@ -7,6 +7,8 @@ rtc.py
 simulator.py
 t223.py
 t_mqtt.py
+t_random.py
+t_rtc.py
 test.py
 test_mqtt.py
 test_mqtt_pub.py
