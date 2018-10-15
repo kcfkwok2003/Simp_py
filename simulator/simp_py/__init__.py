@@ -81,6 +81,8 @@ class LCD:
         global LCD_X0
         self.bg=bg
         self.fg=fg
+        self._fg=fg
+        self._bg=bg
         self.LCD_X0= LCD_X0
         self.rect = pygame.Rect(self.LCD_X0,LCD_Y0,LCD_WIDTH, LCD_HEIGHT)
         self.pixels={}
@@ -149,8 +151,11 @@ class LCD:
         self.LCD_X0=x0
         self.rect = pygame.Rect(self.LCD_X0,LCD_Y0,LCD_WIDTH, LCD_HEIGHT)
         
-    def clear(self):
+    def clear(self,color=None):
         self.pixels={}
+        if color is None:
+            color=self._bg
+        TFT_fillScreen(color)
 
     def circle(self, x,y,radius,color=None,fillcolor=None):
         x=x*2
@@ -315,6 +320,9 @@ class LCD:
         self.fg=self.conv_color(color)
         printStr(text,x,y,self.put_char)
 
+    def textClear(self,x,y,text,color=0xff00):
+        TFT_clearStringRect(x,y,text)
+        
     def triangle(self,x0,y0,x1,y1,x2,y2,color=0xff00,fillcolor=None):
         x0=x0*2
         y0=y0*2
