@@ -10,6 +10,14 @@ def work_on_path(path):
     for fn in files:
         if fn=='file.list':
             continue
+        if fn=='__pycache__':
+            continue
+        if fn[-1]=='~':
+            continue
+        if fn[-3:]=='pyc':
+            continue
+        if fn[-1]=='#':
+            continue
         if not os.path.isfile(EX_PATH+'/'+path+'/'+fn):
             continue
         print fn
@@ -24,6 +32,8 @@ def update_list():
     subpaths= os.listdir(EX_PATH)
     print 'subpaths:', subpaths
     for path in subpaths:
+        if path=='__pycache__':
+            continue
         if os.path.isdir(EX_PATH+'/'+path):
             print path, '-----------'
             work_on_path(path)
