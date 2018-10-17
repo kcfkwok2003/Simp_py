@@ -1,45 +1,79 @@
-# t018.py
-
-from machine import Pin,ADC
+# t017.py
+from network import mqtt
 from simp_py import lcd
+from machine import Pin
 import time
 
-from rtc import RTC
-rtc_server= RTC()
+led = Pin(26,Pin.OUT)
+led.value(0)
+lcd.clear()
+lcd.circle(100,100,30,lcd.RED,lcd.BLUE)
 
-from network import mqtt
 connected =False
 def connected_cb(task):
     global connected
     connected=True
 
+lights_changed=0
+def data_cb(msg):
+    global lights_changed
+    name=msg[0]
+    topic=msg[1]
+    cont=msg[2]
+    if cont=='on' or cont==b'on':
+        lights_changed=1
+    elif cont=='off' or cont==b'off':
+        lights_changed=-1
+    return lights_changed
 
-mqttc = mqtt('/plant/drip','iot.eclipse.org',secure=False,connected_cb=connected_cb)
+from button import Button
+buttonA = Button(39)
+buttonB = Button(38)
+lcd.font(lcd.FONT_Comic, transparent=True, fixedwidth=False)
+lcd.roundrect(10,150,80,40,5,lcd.RED,lcd.LIGHTGREY)
+lcd.text(13,155,'ON',lcd.BLACK)
+lcd.roundrect(100,150,80,40,5,lcd.RED,lcd.LIGHTGREY)
+lcd.text(13+100,155,'OFF',lcd.BLACK)
+
+mqttc = mqtt('lights','iot.eclipse.org',secure=False,connected_cb=connected_cb, data_cb=data_cb)
 while not connected:
     time.sleep(0.1)
 
-sensor = ADC(Pin(35,Pin.IN))
-relay = Pin(26,Pin.OPEN_DRAIN)
-relay_off = lambda : relay.value(1)
-relay_on  = lambda : relay.value(0)
-relay_off()
-
-lcd.clear()
-lcd.circle(270,50,30,0xffffff, lcd.NAVY)
-published=False
+mqttc.subscribe('/lights')
+apressed=False
+bpressed=False
 while True:
-    v = sensor.read()
-    lcd.text(0,0,'sensor:%s     ' % v)
-    if v > 1000:
-        relay_on()
-        lcd.circle(270,50,30,0xffffff, lcd.CYAN)
-        if not published:
-            time_stamp = rtc_server.now()
-            lcd.text(0,50,time_stamp)
-            mqttc.publish('/plant/drip',time_stamp)
-            published=True
+    if buttonA.isPressed():
+        if not apressed:
+            apressed=True
+            mqttc.publish('/lights','on')
+            lcd.roundrect(10,150,80,40,5,lcd.RED,lcd.YELLOW)
+            lcd.text(13,155,'ON',lcd.BLACK)
     else:
-        published=False
-        relay_off()
-        lcd.circle(270,50,30,0xffffff, lcd.NAVY)
+        if apressed:
+            apressed=False
+            lcd.roundrect(10,150,80,40,5,lcd.RED,lcd.LIGHTGREY)
+            lcd.text(13,155,'ON',lcd.BLACK)
+
+    if buttonB.isPressed():
+        if not bpressed:
+            bpressed=True
+            mqttc.publish('/lights','off')
+            lcd.roundrect(100,150,80,40,5,lcd.RED,lcd.YELLOW)
+            lcd.text(13+100,155,'OFF',lcd.BLACK)
+            time.sleep(0.1)
+    else:
+        if bpressed:
+            bpressed=False
+            lcd.roundrect(100,150,80,40,5,lcd.RED,lcd.LIGHTGREY)
+            lcd.text(13+100,155,'OFF',lcd.BLACK)
+            
+    if lights_changed !=0:
+        if lights_changed==1:
+            led.value(1)
+            lcd.circle(100,100,30,lcd.RED,lcd.YELLOW)            
+        elif lights_changed==-1:
+            led.value(0)
+            lcd.circle(100,100,30,lcd.RED,lcd.BLUE)            
+        lights_changed=0
     time.sleep(0.1)
