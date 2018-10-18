@@ -50,8 +50,9 @@ class Logging:
     def debug(self,msg):
         import time
         now = time.time()
+        ds = ('%.03f' % now).split('.')[1]
         YYYY,MM,DD,hh,mm,ss,_,_,_=time.localtime(now)
-        print('%02d:%02d:%02d %s' % (hh,mm,ss,msg))
+        print('%02d:%02d:%02d.%s %s' % (hh,mm,ss,ds,msg))
 
 logging = Logging()
 

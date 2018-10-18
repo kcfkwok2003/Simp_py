@@ -11,7 +11,7 @@ from pygame import gfxdraw
 import os, sys
 import time
 
-from simp_py import RstBtn,buttonA,buttonB,buttonC,LCD_Y0,BG,FG,lcd,tft,gdata
+from simp_py import RstBtn,buttonA,buttonB,buttonC,LCD_Y0,BG,FG,lcd,tft,gdata,logging
 APP_NAME='Simpy-py IOT Simulator'
 
 network=None
@@ -138,7 +138,7 @@ class SIMULATOR:
                     sys.exit()
                 for btnx in [buttonA, buttonB,buttonC]:
                     if btnx.collidepoint(mouse_pos):
-                        print('%s pressed' % btnx.name)
+                        logging.debug('%s pressed' % btnx.name)
                         btnx.set()
                         
             if event.type==pygame.MOUSEBUTTONUP:
@@ -156,8 +156,10 @@ class SIMULATOR:
         self.titleRect.centery = TITLE_Y_C
         self.titleRect.left = TITLE_X
         self.surface.blit(self.titleImg, self.titleRect) 
-        pygame.display.update()
-        self.fpsClock.tick(30)
+        #pygame.display.update()
+        #self.fpsClock.tick(10)
+        #testing
+        pygame.display.flip()
 
 
 if __name__=='__main__':
