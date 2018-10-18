@@ -79,7 +79,10 @@ class RTC:
 
     def now(self):
         return time.localtime()
-    
+
+def unique_id():
+    return None
+
 pins=PINS()
 gdata1.pins=pins
 
