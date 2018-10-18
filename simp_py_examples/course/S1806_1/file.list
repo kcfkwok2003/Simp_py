@@ -1,4 +1,6 @@
 button.py
+mqtt_robust.py
+mqtt_simple.py
 t001_hello.py
 t002_dot.py
 t003_hline.py
@@ -6,3 +8,4 @@ t004_sline.py
 t005_abc.py
 t006_a_b.py
 t017_mqtt_demo.py
+t017a_mqtt_demo.py
