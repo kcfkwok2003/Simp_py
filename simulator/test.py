@@ -1,9 +1,9 @@
 # t017.py
 from network import mqtt
 from simp_py import lcd
-from machine import Pin
+from machine import Pin,unique_id
 import time
-
+mqtt_id = str(unique_id())
 led = Pin(26,Pin.OUT)
 led.value(0)
 lcd.clear()
@@ -35,7 +35,7 @@ lcd.text(13,155,'ON',lcd.BLACK)
 lcd.roundrect(100,150,80,40,5,lcd.RED,lcd.LIGHTGREY)
 lcd.text(13+100,155,'OFF',lcd.BLACK)
 
-mqttc = mqtt('lights','iot.eclipse.org',secure=False,connected_cb=connected_cb, data_cb=data_cb)
+mqttc = mqtt('lights','iot.eclipse.org',secure=False,connected_cb=connected_cb, data_cb=data_cb,clientid=mqtt_id)
 while not connected:
     time.sleep(0.1)
 
