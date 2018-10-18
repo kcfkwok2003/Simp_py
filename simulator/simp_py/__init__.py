@@ -14,11 +14,19 @@ from simp_py import machine
 #import dbm
 #import requests as urequests
 
-
 LCD_X0 = 0
 LCD_Y0= 55
-LCD_HEIGHT = 480
-LCD_WIDTH= 640
+LCD_HEIGHT=240
+LCD_WIDTH=320
+BTNA_X0= 20
+BTNB_X0= 120
+BTNC_X0= 220
+if SCALE==2:
+    LCD_HEIGHT = 480
+    LCD_WIDTH= 640
+    BTNA_X0= 20
+    BTNB_X0= 220
+    BTNC_X0= 420
 
 RST_X0=5
 RST_Y0=5
@@ -27,9 +35,7 @@ RST_WIDTH=60
 BTN_HEIGHT=50
 BTN_WIDTH=60
 BTN_Y0 = LCD_Y0+LCD_HEIGHT+10
-BTNA_X0= 20
-BTNB_X0= 220
-BTNC_X0= 420
+
 BG = (0xc0,0xd1,0xc9) #(100,149,237) # CRONFLOWER BLUE
 FG = (0,0,0)
 
@@ -126,19 +132,20 @@ class LCD:
 
     def txt_drawPixel(self, x,y,color,sel):
         #print('**txt_drawPixel(%s,%s,%s,%s)' % (x,y,color,sel))
-        x=x*2
-        y=y*2
+        x=x* SCALE_X
+        y=y* SCALE_Y
         color = self.set_color(color)
         self._pixel(x,y,color,sel)
-        self._pixel(x+1,y,color,sel)
-        self._pixel(x,y+1,color,sel)
-        self._pixel(x+1,y+1,color,sel)                
+        if SCALE==2:
+            self._pixel(x+1,y,color,sel)
+            self._pixel(x,y+1,color,sel)
+            self._pixel(x+1,y+1,color,sel)                
         
     def arc(self, x,y,r,thick,start,end,color=None, fillcolor=None):
-        x=x*2
-        y=y*2
-        r=r*2
-        thick=thick *2
+        x=x* SCALE_X
+        y=y* SCALE_Y
+        r=r* SCALE
+        thick=thick * SCALE
         if color is None:
             color = self._fg
         if fillcolor is None:
@@ -159,9 +166,9 @@ class LCD:
         TFT_fillScreen(color)
 
     def circle(self, x,y,radius,color=None,fillcolor=None):
-        x=x*2
-        y=y*2
-        radius=radius*2
+        x=x* SCALE_X
+        y=y* SCALE_Y
+        radius=radius* SCALE
         if not color:
             color = self._fg
         if fillcolor is not None:
@@ -194,10 +201,10 @@ class LCD:
 
 
     def ellipse(self, x,y, rx,ry, opt=15,color=None, fillcolor=None):
-        x=x*2
-        y=y*2
-        rx=rx*2
-        ry=ry*2
+        x=x* SCALE_X
+        y=y* SCALE_Y
+        rx=rx* SCALE_X
+        ry=ry* SCALE_Y
         if color is None:
             color = self._fg
         if fillcolor:
@@ -215,12 +222,13 @@ class LCD:
         self.pixels[(x+self.LCD_X0,y+LCD_Y0)]=color
 
     def pixel(self,x,y,color):
-        x=x*2
-        y=y*2
+        x=x* SCALE_X
+        y=y* SCALE_Y
         self._pixel(x,y,color)
-        self._pixel(x+1,y,color)
-        self._pixel(x,y+1,color)
-        self._pixel(x+1,y+1,color)        
+        if SCALE==2:
+            self._pixel(x+1,y,color)
+            self._pixel(x,y+1,color)
+            self._pixel(x+1,y+1,color)        
 
     def polygon(self,cx,cy,r,sides,thick, color=0xff00, fill=0, rot=0):
         if color is None:
@@ -230,10 +238,10 @@ class LCD:
             
         color = self.conv_color(color)
         fill = self.conv_color(fill)
-        diameter = r*2
-        cx = cx*2
-        cy= cy*2
-        th=thick *2
+        diameter = r* SCALE
+        cx = cx* SCALE_X
+        cy= cy* SCALE_Y
+        th=thick * SCALE
         TFT_drawPolygon(cx,cy,sides,diameter,color,fill,rot,th)
         
     
@@ -277,21 +285,22 @@ class LCD:
         x2 =dx['x2']
         for cx in dx['colorbuf']:
             cx = self.set_color(cx)
-            xx=x*2; yy=y*2
+            xx=x* SCALE_X; yy=y* SCALE_Y
             self._pixel(xx,yy,cx)
-            self._pixel(xx+1,yy,cx)
-            self._pixel(xx,yy+1,cx)
-            self._pixel(xx+1,yy+1,cx)
+            if SCALE==2:
+                self._pixel(xx+1,yy,cx)
+                self._pixel(xx,yy+1,cx)
+                self._pixel(xx+1,yy+1,cx)
             x+=1
             if x > x2:
                 x= x1
                 y+=1
 
     def roundrect(self,x,y,w,h,r,color=None,fillcolor=None):
-        x=x*2
-        y=y*2
-        w=w*2
-        h=h*2
+        x=x* SCALE_X
+        y=y* SCALE_Y
+        w=w* SCALE_X
+        h=h* SCALE_Y
         
         if color is None:
             color = self._fg
@@ -325,12 +334,12 @@ class LCD:
         TFT_clearStringRect(x,y,text)
         
     def triangle(self,x0,y0,x1,y1,x2,y2,color=0xff00,fillcolor=None):
-        x0=x0*2
-        y0=y0*2
-        x1=x1*2
-        y1=y1*2
-        x2=x2*2
-        y2=y2*2
+        x0=x0* SCALE_X
+        y0=y0* SCALE_Y
+        x1=x1* SCALE_X
+        y1=y1* SCALE_Y
+        x2=x2* SCALE_X
+        y2=y2* SCALE_Y
         if fillcolor:
             self.fg = self.conv_color(fillcolor)
             TFT_fillTriangle(x0,y0,x1,y1,x2,y2,fillcolor)

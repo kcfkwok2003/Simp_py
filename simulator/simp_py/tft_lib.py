@@ -20,6 +20,9 @@ except:
     from tooney32 import tft_tooney32
 from math import sin, cos
 # === Embedded fonts constants ===
+SCALE_X=1
+SCALE_Y=1
+SCALE=1
 MIN_POLIGON_SIDES=3
 MAX_POLIGON_SIDES=60
 deg_to_rad = 0.01745329252 + 3.14159265359
@@ -47,8 +50,11 @@ LASTY = 8000
 CENTER = -9003
 RIGHT = -9004
 BOTTOM = -9004
-DEFAULT_TFT_DISPLAY_WIDTH = 640
-DEFAULT_TFT_DISPLAY_HEIGHT=480
+DEFAULT_TFT_DISPLAY_WIDTH = 320
+DEFAULT_TFT_DISPLAY_HEIGHT=240
+if SCALE==2:
+    DEFAULT_TFT_DISPLAY_WIDTH = 640
+    DEFAULT_TFT_DISPLAY_HEIGHT=480
 TFT_ELLIPSE_UPPER_RIGHT= 0x01
 TFT_ELLIPSE_UPPER_LEFT = 0x02
 TFT_ELLIPSE_LOWER_LEFT = 0x04
@@ -509,10 +515,10 @@ def printStr(st, x,y,callback=None):
 
 
 def TFT_clearStringRect(x,y,strx):
-    w = TFT_getStringWidth(strx) *2
-    h = TFT_getfontheight() *2
-    x=x*2
-    y=y*2
+    w = TFT_getStringWidth(strx) * SCALE_X
+    h = TFT_getfontheight() * SCALE_Y
+    x=x* SCALE_X
+    y=y* SCALE_Y
     TFT_fillRect(x+dispWin.x1, y+dispWin.y1,w,h,_bg)
     
 # Compare two colors; return 0 if equal

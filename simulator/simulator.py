@@ -11,7 +11,7 @@ from pygame import gfxdraw
 import os, sys
 import time
 
-from simp_py import RstBtn,buttonA,buttonB,buttonC,LCD_Y0,BG,FG,lcd,tft,gdata,logging
+from simp_py import RstBtn,buttonA,buttonB,buttonC,LCD_Y0,BG,FG,lcd,tft,gdata,logging,SCALE
 APP_NAME='Simpy-py IOT Simulator'
 
 network=None
