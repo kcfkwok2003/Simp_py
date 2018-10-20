@@ -43,6 +43,7 @@ FONT_7SEG     =          9
 USER_FONT     =          10  
 font_forceFixed=0
 font_rotate=0
+text_wrap=0
 _fg = 1
 _bg = 0
 LASTX= 7000

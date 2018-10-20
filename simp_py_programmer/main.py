@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 VERSION='1.0.6'
 YEAR ='2018'
+
 ABOUT_MSG='''
 Simp-py-programmer V%s
 Copyright %s TienLink Creation
 All rights reserved
 ''' % (VERSION, YEAR)
+SEND_EXEC=True
 
 from kivy.app import App
 from kivy.base import EventLoop
@@ -322,7 +324,10 @@ class MainApp(App):
         monRoot = self.sm.get_screen('monScreen').monRoot
         out_msg = monRoot.out_msg.text
         if out_msg !='':
-            cont = '\x02\nureq\n%s\n\x03\n' % out_msg
+            if SEND_EXEC:
+                cont = '\x02\nexec\n%s\n\x03\n\x04\n' % out_msg
+            else:
+                cont = '\x02\nureq\n%s\n\x03\n' % out_msg
             #if not self.mon_mode:
             #    cont +='\x04\n'
             self.mon_tx_cnt+=1

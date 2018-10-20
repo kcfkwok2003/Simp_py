@@ -77,22 +77,27 @@ class FileRoot(BoxLayout):
         npages = int(math.ceil(float(data_len) / nrec_per_page))
         r_end = start + nrec_per_page
         r_end = min(r_end, data_len)
+        print('rec:%s' % records[start:r_end+2])
+        print('len:%s start:%s r_end:%s' % (data_len,start,r_end))
         return start, records[start:r_end],npages
     
     def get_files(self,page):
         fxs = os.listdir(self.datapath)
+        #print('fxs: %s' % fxs)
         fs=[]
+        
         for fn in fxs:
             if fn[-3:]=='.py' or fn[-4:]=='.txt':
                 fs.append(fn)
         fs.sort()
+        #print ('s: %s' % fs)
         return self.ret_data_page(fs, self.nrec_per_page,page)
 
     def get_files_len(self):
         fxs = os.listdir(self.datapath)
         fs=[]
         for fn in fxs:
-            if fn[-3:]=='.py':
+            if fn[-3:]=='.py' or fn[-4:]=='.txt':
                 fs.append(fn)
         return len(fs)
 
@@ -152,6 +157,7 @@ class FileRoot(BoxLayout):
     def on_file_next_1(self,dt):
         all_end = self.get_files_len()
         page = self.get_next_page_n(all_end, self.nrec_per_page, self.page)
+        print('all_end:%s page:%s self.page:%s' % (all_end,page,self.page))
         if page > self.page:
             self.content.clear_widgets()
             self.show_file_list(page=page)

@@ -350,7 +350,7 @@ class LCD:
 lcd = LCD((30,30,30))    
 
 
-class Button:
+class GButton:
     def __init__(self,pid, name,color,x0,y0,w,h):
         self.pid=pid
         self.name = name
@@ -393,9 +393,9 @@ class Button:
         return self.state
     
 
-RstBtn = Button(0,'Exit',(255,0,0),RST_X0,RST_Y0,RST_WIDTH,RST_HEIGHT)
-buttonA = Button(39,'A', (250,250,250),BTNA_X0,BTN_Y0,BTN_WIDTH, BTN_HEIGHT)
-buttonB = Button(38,'B', (250,250,250),BTNB_X0,BTN_Y0,BTN_WIDTH, BTN_HEIGHT)
-buttonC = Button(37,'C', (250,250,250),BTNC_X0,BTN_Y0,BTN_WIDTH, BTN_HEIGHT)    
+RstBtn = GButton(0,'Exit',(255,0,0),RST_X0,RST_Y0,RST_WIDTH,RST_HEIGHT)
+buttonA = GButton(39,'A', (250,250,250),BTNA_X0,BTN_Y0,BTN_WIDTH, BTN_HEIGHT)
+buttonB = GButton(38,'B', (250,250,250),BTNB_X0,BTN_Y0,BTN_WIDTH, BTN_HEIGHT)
+buttonC = GButton(37,'C', (250,250,250),BTNC_X0,BTN_Y0,BTN_WIDTH, BTN_HEIGHT)    
     
 
