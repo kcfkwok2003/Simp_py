@@ -234,7 +234,6 @@ class MainApp(App):
             self.download_idx=0
             fname= self.download_list[self.download_idx]
             self.textScreen.textRoot.status.text='%s/%s %s' % (self.download_cnt, self.download_total,fname)
-            self.download_sim_cont=True
             Clock.schedule_once(self.url_download,0.1)            
             
     def on_download_gnufont(self):
@@ -816,7 +815,7 @@ class MainApp(App):
         os.makedirs(self.datapath)
         Logger.info('kcf: makedirs %s' % self.datapath)
         if os.path.isdir(self.datapath):
-            self.cp_examples()
+            #self.cp_examples()
             return True        
         Logger.info('kcf: makdirs fail')
         return False

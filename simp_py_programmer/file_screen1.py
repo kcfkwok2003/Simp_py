@@ -14,6 +14,7 @@ import re
 import os
 import math
 from kivy.clock import Clock
+from exc import get_exc_details
 
 r_file_no=r'test(\d+).py'
 re_file_no=re.compile(r_file_no)
@@ -88,7 +89,15 @@ class FileRoot(BoxLayout):
         return start, records[start:r_end],npages
     
     def get_files(self,page):
-        fxs = os.listdir(self.datapath)
+        fxs=[]
+        try:
+            fxs = os.listdir(self.datapath)
+        except:
+            exc = get_exc_details()
+            Logger.info('exc:%s' % exc)
+            #status.text='Download fail'
+            #self.textScreen.textRoot.status.text+='..Download fail'
+            
         #print('fxs: %s' % fxs)
         fs=[]
         

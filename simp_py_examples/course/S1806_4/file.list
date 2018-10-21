@@ -11,7 +11,6 @@ t015_ab_led.py
 t016_mqtt_led.py
 t017_mqtt_demo.py
 t018_adc.py
-t018_adc.py~
 t019_snsrly.py
 t020_rtc.py
 t021_drip.py
