@@ -7,7 +7,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
 from kivy.uix.togglebutton import ToggleButton
-
+from kivy.uix.checkbox import CheckBox
 from kivy.uix.label import Label
 from font_path import FONT_PATH
 import string
@@ -84,15 +84,29 @@ class SettingsRoot(BoxLayout):
         self.layouts=layouts
         self.tinputs=tinputs
         
-        label2 = Label(text='')
-        self.layout0.add_widget(label2)        
+        #label2 = Label(text='')
+        #self.layout0.add_widget(label2)        
         self.add_widget(self.layout0)
 
-        self.layout1 = BoxLayout(orientation='vertical',size_hint_y=0.1)
+        self.layout1 = BoxLayout(orientation='vertical',size_hint_y=0.3)
         self.status = TextInput(text='',disabled=True)
         self.status.text=''
         self.layout1.add_widget(self.status)
         self.add_widget(self.layout1)
+
+        self.layout2 = BoxLayout(orientation='horizontal',size_hint_y=0.1)
+        self.chk_pwd=CheckBox(size_hint_x=0.1,color=[1,1,1,4])
+        self.chk_pwd.bind(on_press=self.on_show_pwd)
+        self.layout2.add_widget(self.chk_pwd)
+        self.layout2.add_widget(Label(text='View station password',size_hint_x=0.2))
+        self.layout2.add_widget(Label(text='  ',size_hint_x=0.2))
+        self.chk_ap_pwd=CheckBox(size_hint_x=0.1,color=[1,1,1,4])
+        self.chk_ap_pwd.bind(on_press=self.on_show_ap_pwd)
+        self.layout2.add_widget(self.chk_ap_pwd)
+        self.layout2.add_widget(Label(text='View ap password',size_hint_x=0.2))
+        self.layout2.add_widget(Label(text='  ',size_hint_x=0.2))
+        self.add_widget(self.layout2)
+        
         self.btns_layout = BoxLayout(orientation='horizontal',size_hint_y=0.1)
         for btn_name in self.operation_buttons:
             btn = Button(text=btn_name)
