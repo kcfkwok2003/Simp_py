@@ -29,7 +29,8 @@ APP_OPERATIONS={
     }
 
 OPERATION_BUTTONS=['Open','Prev','Next','Cancel']
-DATA_PATH ='/storage/emulated/0/data/simp_py_dat'
+DATA_PATH ='/data/simp_py_dat'
+EX_PATH='/data/simp_py_ex/course'
 
 class FileRoot(BoxLayout):
     def __init__(self, **kwargs):
@@ -51,6 +52,15 @@ class FileRoot(BoxLayout):
         self.layout = BoxLayout(orientation='horizontal', size_hint_y=0.1)
         self.title=Label(text=title, size_hint_x=0.9)
         self.layout.add_widget(self.title)
+        self.btn_up = Button(text='  ^  ',size_hint_x=0.1)
+        self.btn_up.bind(on_press=self.on_file_prev)
+        self.layout.add_widget(self.btn_up)
+        self.btn_dn = Button(text='  v  ',size_hint_x=0.1)
+        self.btn_dn.bind(on_press=self.on_file_next)
+        self.layout.add_widget(self.btn_dn)
+        self.btn_bk = Button(text='  <  ',size_hint_x=0.1)
+        self.btn_bk.bind(on_press=self.file_cancel)
+        self.layout.add_widget(self.btn_bk)        
         self.p_page = Label(text='P', size_hint_x=0.1)
         self.layout.add_widget(self.p_page)
         self.add_widget(self.layout)
@@ -256,7 +266,7 @@ if __name__=='__main__':
         def build(self):
             #self.kv_text= kv_text_for_test
             #self.kv_text+='\n%s\n' % FONT_PATH
-            self.fileScreen = FileScreen(name='fileScreen',datapath='/data/simp_py_dat',handler=self.on_new,title='Simp-py [course]')
+            self.fileScreen = FileScreen(name='fileScreen',datapath=EX_PATH,handler=self.on_new,title='Simp-py [course]')
             screenManager = ScreenManager(transition=FadeTransition())
             screenManager.add_widget(self.fileScreen)
             return screenManager

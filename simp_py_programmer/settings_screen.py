@@ -14,14 +14,15 @@ import string
 
 APP_OPERATIONS={
     'Save': 'on_settings_ok',
-    'Ping': 'on_ping',
+    'DevInfo': 'on_devinfo',
     'Upload wifi config': 'on_upload_wifi_config',
     'Rst' : 'on_reset',
+    'Passkey':'on_passkey',
     'Back': 'on_settings_cancel',
 }
 
 
-OPERATION_BUTTONS =['Save','Ping','Upload wifi config','Rst','Back']
+OPERATION_BUTTONS =['Save','DevInfo','Upload wifi config','Rst','Passkey','Back']
 
 SETTINGS_TITLE={
     'ip':'Device IP',

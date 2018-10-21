@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
+from kivy.core.window import Window
+Window.clearcolor=(0.6,0.6,0.6,1)
 VERSION='1.0.6'
 YEAR ='2018'
-
+APP_NAME='Simp-py'
 ABOUT_MSG='''
 Simp-py-programmer V%s
 Copyright %s TienLink Creation
@@ -25,6 +27,10 @@ RADIO_HELP_NAMES=['Help content        ',
                   'Clean course        ',
                   'Download Simulator  ',
                   ]
+RADIO_UPLOAD_NAMES=['Upload as test.py',
+                    'Upload           ',
+                    'Upload binary    ',
+                    ]
 from kivy.app import App
 from kivy.base import EventLoop
 from kivy.uix.screenmanager import ScreenManager,Screen,FadeTransition
@@ -54,7 +60,7 @@ APP_OPERATIONS={
     'Ping': 'on_ping',
     'File': 'on_file_m',   #'on_file',    
     'Set..': 'on_settings',
-    'Upld':'on_upload',
+    'Upld':'on_upload_m',   #'on_upload',
     'Rst':'on_reset',
     'Mon': 'on_monitor',
     'Up':'on_cursor_up',
@@ -75,17 +81,19 @@ MON_OPERATIONS={
     'Pdn': 'on_mon_page_down',
     'Back': 'on_mon_exit',
     'Send': 'on_out_msg',
+    'Clr': 'on_clr_msg',
     }
 
-MON_BUTTONS=['Start','Stop','Send','Back']
+MON_BUTTONS=['Start','Stop','Clr','Back']
 class MainApp(App):
     def build(self):
-        self.title='Simp-py-programmer'
+        self.title=APP_NAME
         self.filename=''
         Logger.info('kcf: chk_settings_path')
         self.mon_mode=False
         self.mon_rx_cnt=0
         self.mon_tx_cnt=0
+        self.download_sim_cont=False
         if self.chk_settings_path():
             self.get_settings()
             self.textScreen = TextScreen(name='textScreen',app_operations=APP_OPERATIONS, operation_buttons = OPERATION_BUTTONS)
@@ -119,7 +127,7 @@ class MainApp(App):
         callbacks={}
         callbacks['OK']=self.on_help_m_ok
         callbacks['CANCEL']=self.on_help_m_can
-        self.dlg = MButDialog(title='Help operation',message='Please select operation',button_names=button_names,callbacks=callbacks,size_hint=(0.8,0.9),radio_names=RADIO_HELP_NAMES)
+        self.dlg = MButDialog(title='Help operation',message='Please select operation',button_names=button_names,callbacks=callbacks,size_hint=(0.5,0.7),radio_names=RADIO_HELP_NAMES)
         self.dlg.open()
 
     def on_help_m_ok(self,v):
@@ -128,16 +136,7 @@ class MainApp(App):
         for keyx in keys:
             print('%s:%s' % (keyx,self.dlg.radios[keyx].state)) # dir(self.dlg.radios[keyx])))
             if self.dlg.radios[keyx].state=='down':
-                #if keyx=='Save':
-                #    print('not implemented Save')
-                if keyx=='Save as':
-                    print('not implemented Save as')
-                elif keyx=='New file':
-                    print('not implemented New file')
-                elif keyx=='Font py':
-                    print('not implemented Font py')
-                else:
-                    self.on_help_m_op(keyx)
+                self.on_help_m_op(keyx)
                 break
         self.dlg.dismiss()
         
@@ -237,7 +236,9 @@ class MainApp(App):
             Clock.schedule_once(self.url_download,0.1)            
             
     def on_download_gnufont(self):
-        print('on_download_gnufont not-imp')
+        msg = 'Download GNUFont not implemented'
+        print(msg)
+        self.textScreen.textRoot.status.text=msg
 
     def on_download_course(self):
         course_code = self.settings['course_code']
@@ -306,7 +307,6 @@ class MainApp(App):
         
         
     def on_clean_course(self):
-        print('on_clean_course not-imp')
         fnames=os.listdir(EX_PATH)
         for fname in fnames:
             fpath ='%s/%s' % (EX_PATH,fname)
@@ -394,6 +394,21 @@ class MainApp(App):
                 status.text=txt
                 self.dev_com.close()
             elif current=='settingsScreen':
+                devinfo={}
+                if nlines[1][:3]=='inf':
+                    if nlines[3]=='ok':
+                        status.text+='\nok'
+                        ss =nlines[1][3:].split(':')
+                        devinfo['Board']=ss[0]
+                        devinfo['Header']=ss[1]
+                        if nlines[2][:3]=='psk':
+                            ss=nlines[2][3:].split(':')
+                            devinfo['UID']=ss[0]
+                            devinfo['Passkey']=ss[1]
+                        self.devinfo=devinfo
+                        Clock.schedule_once(self.show_devinfo,0.2)
+                        self.dev_com.close()
+                        return
                 status.text=txt
                 self.dev_com.close()
             return
@@ -433,12 +448,26 @@ class MainApp(App):
                     if line=='':
                         nlines.remove(line)
                 nlines.sort()
-                nlines.insert(0,'_rx:%d _tx:%d' % (self.mon_rx_cnt,self.mon_tx_cnt)) 
+                nlines.insert(0,'_rx:%d' % self.mon_rx_cnt) 
                 msg = string.join(nlines,'\n')
                 monRoot.text_input.text=msg
-                status.text='rx:%s' % self.mon_rx_cnt                
+                #status.text='rx:%s' % self.mon_rx_cnt                
                 Clock.schedule_once(self.nxt_mon_ka, 0.3)
 
+    def show_devinfo(self,dt):
+        print('show_devinfo')
+        from msg_dlg import MSG_DLG_KV, MsgDialog 
+        from kivy.lang.builder import Builder
+        from kivy.factory import Factory
+        from kivy.uix.popup import Popup
+        Builder.load_string(MSG_DLG_KV)
+        Factory.register('MsgDialog',cls=MsgDialog)
+        text="Board:%(Board)s\nHeader:%(Header)s\nUID:%(UID)s\nPasskey:%(Passkey)s" % self.devinfo
+        content = MsgDialog(cancel=self.dismiss_popup, text=text)
+        self._popup = Popup(title="Device info",content=content,size_hint=(0.5,0.5))
+        self._popup.open()
+        return self._popup
+        
     def timeout_close(self,dt):
         if not self.uresped:
             Logger.info('kcf:timeout_close')
@@ -488,7 +517,8 @@ class MainApp(App):
         monScreen = self.sm.get_screen('monScreen')
         monScreen.monRoot.btns['Back'].disabled=True
         status = monScreen.monRoot.status
-        status.text='Monitor start'
+        status.text='Start monitoring of device ip: %s' % self.settings['ip']
+        monScreen.monRoot.mon_label.text='Monitoring'
         cont ='\x02\nstmon\n\x03\n\x02\nkamon\n\x03\n'
         self.dev_com.send(cont,self.settings['ip'])
         Clock.schedule_once(self.mon_ka_tmo,MON_KA_TIMEOUT)
@@ -511,7 +541,8 @@ class MainApp(App):
         monScreen = self.sm.get_screen('monScreen')
         monScreen.monRoot.btns['Back'].disabled=False        
         status = monScreen.monRoot.status
-        status.text='Monitor stop'
+        status.text='Stop Monitoring'
+        monScreen.monRoot.mon_label.text='Not connected'
         Clock.schedule_once(self.end_mon)
 
     def end_mon(self,dt):
@@ -537,6 +568,12 @@ class MainApp(App):
         Logger.info('kcf: on_mon_exit')                        
         self.sm.current='textScreen'
 
+    def on_clr_msg(self,v):
+        monRoot = self.sm.get_screen('monScreen').monRoot
+        monRoot.out_msg.text=''
+        monRoot.status.text=''
+        monRoot.text_input.text=''
+        
     def on_out_msg(self,v):
         Logger.info('kcf: on_out_msg')
         monRoot = self.sm.get_screen('monScreen').monRoot
@@ -551,7 +588,8 @@ class MainApp(App):
             self.mon_tx_cnt+=1
             monRoot.status.text='Send out msg'
             self.dev_com.send(cont, self.settings['ip'])
-        
+        else:
+            self.monScreen.monRoot.status.text='No content!'
         # testing
         #if self.mon_mode:
         #    self.mon_mode=False
@@ -593,11 +631,11 @@ class MainApp(App):
 
     def on_file_m(self,v):
         from radio_dlg import MButDialog
-        button_names =['CANCEL','OK']
+        button_names =[' ','CANCEL','OK']
         callbacks={}
         callbacks['OK']=self.on_file_m_ok
         callbacks['CANCEL']=self.on_file_m_can
-        self.dlg = MButDialog(title='File operation',message='Please select operation',button_names=button_names,callbacks=callbacks,size_hint=(0.8,0.9),radio_names=RADIO_FILE_NAMES)
+        self.dlg = MButDialog(title='File operation',message='Please select operation',button_names=button_names,callbacks=callbacks,size_hint=(0.5,0.7),radio_names=RADIO_FILE_NAMES)
         self.dlg.open()
 
     def on_file_m_ok(self,v):
@@ -606,16 +644,7 @@ class MainApp(App):
         for keyx in keys:
             print('%s:%s' % (keyx,self.dlg.radios[keyx].state)) # dir(self.dlg.radios[keyx])))
             if self.dlg.radios[keyx].state=='down':
-                #if keyx=='Save':
-                #    print('not implemented Save')
-                if keyx=='Save as':
-                    print('not implemented Save as')
-                elif keyx=='New file':
-                    print('not implemented New file')
-                elif keyx=='Font py':
-                    print('not implemented Font py')
-                else:
-                    self.on_file_m_op(keyx)
+                self.on_file_m_op(keyx)
                 break
         self.dlg.dismiss()
         
@@ -624,7 +653,7 @@ class MainApp(App):
 
     def on_file_m_op(self, opx):
         screen = self.sm.get_screen('textScreen')
-        screen.textRoot.status.text='opening file list...'
+        #screen.textRoot.status.text='opening file list...'
         self.m_op_sch=opx
         Clock.schedule_once(self.on_file_m_op_sch)
 
@@ -644,7 +673,17 @@ class MainApp(App):
             self.datapath=DATA_PATH
             self.on_file_save(self.filename)
             return
+        elif self.m_op_sch=='Save as':
+            self.datapath=DATA_PATH
+            self.on_file_save_as(self.filename)
+            return
+        elif self.m_op_sch=='New file':
+            self.datapath=DATA_PATH
+            self.on_file_new_m()
+            return
         else:
+            msg ='%s not implemented' % self.m_op_sch
+            self.textScreen.textRoot.status.text=msg
             print('m_op_sch :%s not implemented' % self.m_op_sch)
             return
         if self.sm.has_screen('fileScreen'):
@@ -652,11 +691,61 @@ class MainApp(App):
         self.fileScreen=FileScreen(name='fileScreen',datapath=self.datapath,handler=handler,title=title)
         self.sm.add_widget(self.fileScreen)
         self.sm.current = 'fileScreen'
+
+    def on_file_new_m(self):
+        from inp_dlg import MButDialog
+        button_names=[' ','CANCEL','OK']
+        callbacks={}
+        callbacks['OK']=self.new_file
+        self.dlg=MButDialog(title='New file',message='Input new file name',button_names=button_names,callbacks=callbacks,size_hint=(0.8,0.5))
+        self.dlg.open()
+
+    def new_file(self,v):
+        self.filename=filename =self.dlg.ti.text        
+        textScreen =self.sm.get_screen('textScreen')
+        textScreen.textRoot.status.text = 'New file'
+        textScreen.textRoot.text_input.text =''
+        self.sm.current='textScreen'
+        self.dlg.dismiss()
+        self.title='%s [%s]'  % (APP_NAME,self.filename)
         
+        
+    def on_file_save_as(self,fn):
+        from inp_dlg import MButDialog
+        button_names=[' ','CANCEL','OK']
+        callbacks={}
+        callbacks['OK']=self.save_as
+        self.dlg=MButDialog(title='Save as',message='Input file name to save',button_names=button_names,callbacks=callbacks,size_hint=(0.8,0.5))
+        self.dlg.open()        
+
+    def save_as(self,v):
+        fname =self.dlg.ti.text
+        self.datapath=DATA_PATH
+        print('save as fname:%s' % fname)
+        fpath='%s/%s' % (DATA_PATH, fname)
+        textScreen = self.sm.get_screen('textScreen')
+        try:
+            f =open(fpath,'wb')
+            filecont= self.sm.get_screen('textScreen').textRoot.text_input.text
+            f.write(filecont)
+            f.close()
+            textScreen.textRoot.status.text='Saved to %s' % (fpath)
+        except:
+            exc = get_exc_details()
+            Logger.info('kcf: save_as exc:%s' % exc)
+            textScreen.textRoot.status.text='Save to %s failed' % fpath
+            self.sm.current='textScreen'
+            self.dlg.dismiss()
+            return
+        self.sm.current='textScreen'        
+        self.dlg.dismiss()
+        self.filename=fname
+        self.title='%s [%s]'  % (APP_NAME,self.filename)
+                
     def on_file(self,v):
         print('on_file ...')
         screen = self.sm.get_screen('textScreen')
-        screen.textRoot.status.text='opening file list...'
+        #screen.textRoot.status.text='opening file list...'
         Clock.schedule_once(self.on_file_1)
 
     def on_file_1(self,v):
@@ -687,11 +776,16 @@ class MainApp(App):
         except:
             exc = get_exc_details()
             Logger.info('kcf: on_file_open exc:%s' % exc)
-            
+            textScreen.textRoot.text_input.text=filecont
+            textScreen.textRoot.text_input.cursor=(0,0)
+            self.sm.current='textScreen'
+            return
+        
         textScreen.textRoot.text_input.text=filecont
         textScreen.textRoot.text_input.cursor=(0,0)
         self.sm.current='textScreen'
-
+        self.title='%s [%s]'  % (APP_NAME,self.filename)
+        
     def on_file_open_ex(self,filename):
         self.filename = filename
         fileScreen = self.sm.get_screen('fileScreen')
@@ -710,17 +804,22 @@ class MainApp(App):
         except:
             exc = get_exc_details()
             Logger.info('kcf: on_file_open exc:%s' % exc)
-            
+            textScreen.textRoot.text_input.text=filecont
+            textScreen.textRoot.text_input.cursor=(0,0)
+            self.sm.current='textScreen'
+            return
         textScreen.textRoot.text_input.text=filecont
         textScreen.textRoot.text_input.cursor=(0,0)
         self.sm.current='textScreen'        
-
+        self.title='%s [%s]'  % (APP_NAME,self.filename)
+        skip='''
     def on_file_new(self,filename):
         self.filename=filename
         textScreen =self.sm.get_screen('textScreen')
         textScreen.textRoot.file_label.text = filename
         textScreen.textRoot.text_input.text =''
         self.sm.current='textScreen'
+        '''
         
     def on_file_save(self,filename):
         print('on_file_save %s' % filename)
@@ -768,7 +867,8 @@ class MainApp(App):
             return
         self.sm.current='textScreen'
         self.dlg.dismiss()
-        
+        self.title='%s [%s]'  % (APP_NAME,self.filename)
+                
     def on_reset(self,v):
         screen_name = self.sm.current
         screen = self.sm.get_screen(screen_name)
@@ -864,6 +964,42 @@ class MainApp(App):
     def on_settings_cancel(self,v):
         self.sm.current =self.back
 
+    def on_upload_m(self,cont):
+        from radio_dlg import MButDialog
+        self.cont=cont
+        button_names=[' ','CANCEL','OK']
+        callbacks={}
+        callbacks['OK']=self.on_upload_m_cont
+        callbacks['CANCEL']=self.on_upload_m_can
+        self.dlg = MButDialog(title='Upload operation',message='Please select operation',button_names=button_names,callbacks=callbacks,size_hint=(0.5,0.7),radio_names=RADIO_UPLOAD_NAMES)
+        self.dlg.open()
+
+    def on_upload_m_cont(self,v):
+        print('on_upload_m_cont')
+        keys = self.dlg.radios
+        for keyx in keys:
+            print('%s:%s' % (keyx,self.dlg.radios[keyx].state))
+            if self.dlg.radios[keyx].state=='down':
+                if keyx=='Upload as test.py':
+                    self.upload_test(v)
+                elif keyx=='Upload':
+                    self.upload_only(v)
+                elif keyx=='Upload binary':
+                    msg='Upload binary not implemented'
+                    self.textScreen.textRoot.status.text=msg
+                    print(msg)
+                else:
+                    msg='%s not implemented' % keyx
+                    self.textScreen.textRoot.status.text=msg
+                    print(msg)                    
+                    #self.on_upload(self.cont)
+                break
+        self.dlg.dismiss()
+        
+                
+    def on_upload_m_can(self,v):
+        self.dlg.dismiss()        
+        
     def on_upload(self,cont):
         self.cont=cont
         button_names=['Upload file','Upload as test.py', 'cancel']
@@ -888,6 +1024,26 @@ class MainApp(App):
         status.text='Sending test to %s' % self.settings['ip']
         Clock.schedule_once(self.upload_cont_and_run)
 
+    def on_devinfo(self,v):
+        print('on_devinfo')
+        screen_name = self.sm.current
+        screen = self.sm.get_screen(screen_name)
+        status =None
+        if screen_name=='textScreen':
+            status = screen.textRoot.status
+        elif screen_name=='settingsScreen':
+            status = screen.settingsRoot.status
+        if status:
+            status.text='Send ginfo to %s' % self.settings['ip']
+            Clock.schedule_once(self.ginfo)
+
+    def ginfo(self,dt):
+        textScreen = self.sm.get_screen('textScreen')
+        status = textScreen.textRoot.status
+        cont = '\x02\nginfo\n\x03\n\x04\n'
+        self.dev_com.send(cont, self.settings['ip'])
+        self.wait_resp(status, 5)
+        
     def on_ping(self,v):
         screen_name = self.sm.current
         screen = self.sm.get_screen(screen_name)
@@ -928,7 +1084,7 @@ class MainApp(App):
     def upload_cont_and_run(self,dt):
         textScreen = self.sm.get_screen('textScreen')
         status = textScreen.textRoot.status
-        f=open('%s/%s' % (DATA_PATH,self.filename),'rb')
+        f=open('%s/%s' % (self.datapath,self.filename),'rb')
         self.cont = f.read()
         f.close()
         cont = '\x02\nsvtest\n'+ self.cont +'\n\x03\n\x04\n'
