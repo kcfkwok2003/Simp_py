@@ -20,7 +20,7 @@ class TextRoot(BoxLayout):
         self.app = App.get_running_app()
         #self.scrollv = ScrollView()
         #self.blayout=BoxLayout()
-        self.text_input = TextInput(text='', font_name=FONT_PATH, readonly=True)
+        self.text_input = TextInput(text='', font_name=FONT_PATH) #, readonly=True)
         self.text_input.bind(focus=self.on_focus)
         self.text_input.bind(on_double_tap=self.on_double_tap)
         #self.blayout.add_widget(self.text_input)

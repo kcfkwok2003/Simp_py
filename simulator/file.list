@@ -1,6 +1,5 @@
 button.py
 light.py
-pgtest.py
 rtc.py
 simulator.py
 test.py

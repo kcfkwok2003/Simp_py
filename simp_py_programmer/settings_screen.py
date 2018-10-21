@@ -26,13 +26,15 @@ OPERATION_BUTTONS =['Save','Ping','Upload wifi config','Rst','Back']
 SETTINGS_TITLE={
     'ip':'Device IP',
     'wifi_config':'WIFI Configuration',
-    'STA_ESSID': 'WIFI Station ESSID',
-    'STA_PASSW': 'WIFI Station password',
+    'STA_ESSID': 'Station ESSID',
+    'STA_PASSW': 'Station password',
     'AP_DEFAULT': 'AP Default',
     'AP_PASSW': 'AP password',
+    'course_config':'Course Configuration',
+    'course_code':'Course Code',
     }
 
-SETTINGS_ORDER=['ip','wifi_config','STA_ESSID','STA_PASSW','AP_DEFAULT','AP_PASSW']
+SETTINGS_ORDER=['ip','wifi_config','STA_ESSID','STA_PASSW','AP_DEFAULT','AP_PASSW','course_config','course_code']
 
 class SettingsRoot(BoxLayout):
     
@@ -47,7 +49,12 @@ class SettingsRoot(BoxLayout):
         layouts={}
         tinputs={}
         for key in SETTINGS_ORDER:
-            if key=='wifi_config':
+            if key=='course_config':
+                layouts[key]=BoxLayout(orientation='horizontal',size_hint_y=0.1
+)
+                lb =Button(text=SETTINGS_TITLE[key],disabled=True)
+                layouts[key].add_widget(lb)                
+            elif key=='wifi_config':
                 layouts[key]=BoxLayout(orientation='horizontal',size_hint_y=0.1
 )
                 lb =Button(text=SETTINGS_TITLE[key],disabled=True)
@@ -129,6 +136,8 @@ class SettingsRoot(BoxLayout):
         for key in SETTINGS_ORDER:
             if key=='wifi_config':
                 continue
+            elif key=='course_config':
+                continue
             vx = self.tinputs[key].text
             text+='%s:%s\n' % (key,vx)
             self.settings[key]=string.strip(vx)
@@ -163,6 +172,9 @@ if __name__=='__main__':
                 'ip':'ip',
                 'STA_ESSID': 'sta_essid',
                 'STA_PASSW': 'sta_pass',
+                'AP_DEFAULT':'1',
+                'AP_PASSW':'12345678',
+                'course_code':'S1801',
                 }
             self.settingsScreen = SettingsScreen(name='settingsScreen',app_operations=APP_OPERATIONS,operation_buttons=OPERATION_BUTTONS,settings=self.settings)
             screenManager = ScreenManager(transition=FadeTransition())
