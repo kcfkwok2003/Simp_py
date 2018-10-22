@@ -13,4 +13,8 @@ class Button(DigitalInput):
 if __name__=='__main__':
   from simp_py import lcd
   btnA = Button(39)
-  lcd.text(0,15,'%s pressed:%s' % (btnA.name, btnA.pressed()))
+  while True:
+    if btnA.isPressed():
+      lcd.text(0,15,'buttonA pressed')
+    else:
+      lcd.text(0,15,'buttonA not pressed')

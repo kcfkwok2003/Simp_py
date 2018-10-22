@@ -1,9 +1,9 @@
 # t017.py
 from network import mqtt
-from simp_py import lcd
-from machine import Pin
+from simp_py import lcd,tft
+from machine import Pin,unique_id
 import time
-
+mqtt_id = str(unique_id())
 led = Pin(26,Pin.OUT)
 led.value(0)
 lcd.clear()
@@ -29,13 +29,14 @@ def data_cb(msg):
 from button import Button
 buttonA = Button(39)
 buttonB = Button(38)
+buttonC = Button(37)
 lcd.font(lcd.FONT_Comic, transparent=True, fixedwidth=False)
 lcd.roundrect(10,150,80,40,5,lcd.RED,lcd.LIGHTGREY)
 lcd.text(13,155,'ON',lcd.BLACK)
 lcd.roundrect(100,150,80,40,5,lcd.RED,lcd.LIGHTGREY)
 lcd.text(13+100,155,'OFF',lcd.BLACK)
 
-mqttc = mqtt('lights','iot.eclipse.org',secure=False,connected_cb=connected_cb, data_cb=data_cb)
+mqttc = mqtt('lights','iot.eclipse.org',secure=False,connected_cb=connected_cb, data_cb=data_cb,clientid=mqtt_id)
 while not connected:
     time.sleep(0.1)
 
@@ -46,6 +47,7 @@ while True:
     if buttonA.isPressed():
         if not apressed:
             apressed=True
+            tft.on()
             mqttc.publish('/lights','on')
             lcd.roundrect(10,150,80,40,5,lcd.RED,lcd.YELLOW)
             lcd.text(13,155,'ON',lcd.BLACK)
@@ -69,6 +71,7 @@ while True:
             lcd.text(13+100,155,'OFF',lcd.BLACK)
             
     if lights_changed !=0:
+        tft.on()
         if lights_changed==1:
             led.value(1)
             lcd.circle(100,100,30,lcd.RED,lcd.YELLOW)            
@@ -76,4 +79,6 @@ while True:
             led.value(0)
             lcd.circle(100,100,30,lcd.RED,lcd.BLUE)            
         lights_changed=0
+    if buttonC.isPressed():
+        tft.off()
     time.sleep(0.1)

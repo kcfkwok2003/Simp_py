@@ -9,7 +9,9 @@ from kivy.uix.button import Button
 from kivy.uix.label import Label
 from font_path import FONT_PATH
 from kivy.uix.scrollview import ScrollView
+from kivy.uix.checkbox import CheckBox
 from kivy.properties import ObjectProperty
+
 
 APP_OPERATIONS={
     'Start': 'on_mon_start',
@@ -21,7 +23,8 @@ APP_OPERATIONS={
     'Exit': 'on_mon_exit',
     }
 
-OPERATION_BUTTONS=['Start','Stop','Up','Dn','Pup','Pdn','Exit']
+#OPERATION_BUTTONS=['Start','Stop','Up','Dn','Pup','Pdn','Exit']
+OPERATION_BUTTONS=['Start','Stop','Clr','Back']
 
 
 class MonRoot(BoxLayout):
@@ -41,16 +44,23 @@ class MonRoot(BoxLayout):
         #self.scrollv.bind(on_scroll_start=self.on_scroll_start)
         #self.scrollv.bind(on_scroll_move=self.on_scroll_move)
         #self.scrollv.bind(on_scroll_stop=self.on_scroll_stop)
-
-        self.slayout=  BoxLayout(orientation='horizontal',size_hint_y=0.1)
-        self.status = TextInput(text='', disabled=True)
+        self.s0layout=  BoxLayout(orientation='horizontal',size_hint_y=0.1, spacing=(20,20),padding=(3,3))
+        self.out_msg= TextInput(text='',size_hint_x=0.8)
+        self.s0layout.add_widget(self.out_msg)
+        self.snd_btn = Button(text='Send',size_hint_x=0.2)
+        self.snd_btn.bind(on_press=self.on_op)
+        self.s0layout.add_widget(self.snd_btn)
+        self.add_widget(self.s0layout)       
+        self.slayout=  BoxLayout(orientation='horizontal',size_hint_y=0.1, padding=(3,3))
+        self.status = TextInput(text='', disabled=True,size_hint_x=0.8)
         self.slayout.add_widget(self.status)
-        self.out_msg= TextInput(text='')
-        self.slayout.add_widget(self.out_msg)
+        self.user_cbox = CheckBox(size_hint_x=0.1,color=(1,1,1,4))
+        self.slayout.add_widget(self.user_cbox)
+        self.slayout.add_widget(Label(text='User',size_hint_x=0.1))
         self.add_widget(self.slayout)
         
-        self.btns_layout = BoxLayout(orientation='horizontal',size_hint_y=0.1)
-        self.mon_label = Label(text='Monitor',size_hint_x=2)
+        self.btns_layout = BoxLayout(orientation='horizontal',size_hint_y=0.1,spacing=(3,3))
+        self.mon_label = Label(text='Not connected',size_hint_x=2)
         self.btns_layout.add_widget(self.mon_label)
         self.btns={}
         for btn_name in self.operation_buttons:

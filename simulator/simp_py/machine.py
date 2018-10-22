@@ -46,8 +46,10 @@ class Pin:
     
     
     def irq(self, trigger=None, handler=None):
-        pass
-
+        print('irq trigger:%s handler:%s' % (trigger, handler))
+        if handler is not None:
+            gdata1.pins.set_callback(self.pid,trigger,handler,self)
+            
     def on(self):
         pass
 
@@ -59,15 +61,31 @@ class Pin:
 
 class PINS:
     states={}
+    handlers={}
     def __init__(self):
         pass
+
+    def set_callback(self,p,trigger,handler,pinx):
+        PINS.handlers[p]= (trigger,handler,pinx)
         
     def set(self, p, v):
-        self.states[p]=v
-        #print('pins set:%s' % self.states)
+        #print('PINS.set %s:%s' % (p,v))
+        if p in PINS.handlers:
+            trigger, handler,pinx = PINS.handlers[p]
+            if trigger & pinx.IRQ_FALLING==pinx.IRQ_FALLING:
+                if v==0:
+                    handler(pinx)
+            if trigger & pinx.IRQ_RISING==pinx.IRQ_RISING:
+                if v==1:
+                    if p in PINS.states:
+                        if PINS.states[p]==0:
+                            handler(pinx)
+        PINS.states[p]=v            
+
 
     def get(self, p):
-        v = self.states.get(p,1)
+        #v = self.states.get(p,1)
+        v = PINS.states.get(p,1)
         return int(v)
 
 class RTC:
@@ -79,7 +97,10 @@ class RTC:
 
     def now(self):
         return time.localtime()
-    
+
+def unique_id():
+    return None
+
 pins=PINS()
 gdata1.pins=pins
 

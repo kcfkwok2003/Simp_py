@@ -1,4 +1,5 @@
 button.py
+light.py
 rtc.py
 simulator.py
 test.py

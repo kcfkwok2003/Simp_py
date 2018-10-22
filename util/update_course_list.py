@@ -10,6 +10,16 @@ def work_on_path(path):
     for fn in files:
         if fn=='file.list':
             continue
+        if fn=='__pycache__':
+            continue
+        if fn[-1]=='~':
+            continue
+        if fn[-3:]=='pyc':
+            continue
+        if fn[-1]=='#':
+            continue
+        if not os.path.isfile(EX_PATH+'/'+path+'/'+fn):
+            continue        
         print fn
         flist.append(fn)
     flist_path= '%s/%s/file.list' % (EX_PATH,path)   

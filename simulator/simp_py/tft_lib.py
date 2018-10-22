@@ -20,6 +20,9 @@ except:
     from tooney32 import tft_tooney32
 from math import sin, cos
 # === Embedded fonts constants ===
+SCALE_X=1
+SCALE_Y=1
+SCALE=1
 MIN_POLIGON_SIDES=3
 MAX_POLIGON_SIDES=60
 deg_to_rad = 0.01745329252 + 3.14159265359
@@ -40,6 +43,7 @@ FONT_7SEG     =          9
 USER_FONT     =          10  
 font_forceFixed=0
 font_rotate=0
+text_wrap=0
 _fg = 1
 _bg = 0
 LASTX= 7000
@@ -47,13 +51,18 @@ LASTY = 8000
 CENTER = -9003
 RIGHT = -9004
 BOTTOM = -9004
-DEFAULT_TFT_DISPLAY_WIDTH = 640
-DEFAULT_TFT_DISPLAY_HEIGHT=480
+DEFAULT_TFT_DISPLAY_WIDTH = 320
+DEFAULT_TFT_DISPLAY_HEIGHT=240
+if SCALE==2:
+    DEFAULT_TFT_DISPLAY_WIDTH = 640
+    DEFAULT_TFT_DISPLAY_HEIGHT=480
 TFT_ELLIPSE_UPPER_RIGHT= 0x01
 TFT_ELLIPSE_UPPER_LEFT = 0x02
 TFT_ELLIPSE_LOWER_LEFT = 0x04
 TFT_ELLIPSE_LOWER_RIGHT= 0x08
 PI= 3.14159265359
+_width = DEFAULT_TFT_DISPLAY_WIDTH
+_height = DEFAULT_TFT_DISPLAY_HEIGHT
 
 class DispWin:
     def __init__(self):
@@ -506,6 +515,13 @@ def printStr(st, x,y,callback=None):
                         TFT_X += tmpw+2
 
 
+def TFT_clearStringRect(x,y,strx):
+    w = TFT_getStringWidth(strx) * SCALE_X
+    h = TFT_getfontheight() * SCALE_Y
+    x=x* SCALE_X
+    y=y* SCALE_Y
+    TFT_fillRect(x+dispWin.x1, y+dispWin.y1,w,h,_bg)
+    
 # Compare two colors; return 0 if equal
 #============================================
 def TFT_compare_colors(c1, c2):
@@ -519,7 +535,13 @@ def TFT_compare_colors(c1, c2):
 
     return 0;
 
-
+def TFT_fillRect(x,y,w,h,color):
+    _fillRect(x+dispWin.x1, y+dispWin.y1, w,h, color)
+    
+def TFT_fillScreen(color):
+    TFT_pushColorRep(0,0,_width-1, _height-1,color, _height*_width)
+    
+    
 def TFT_fillRoundRect(x,y,w,h,r,color):
     x += dispWin.x1;
     y += dispWin.y1;
@@ -532,7 +554,36 @@ def TFT_fillRoundRect(x,y,w,h,r,color):
     fillCircleHelper(x + r, y + r, r, 2, h - 2 * r - 1, color);
 #}
 
+def _7seg_width():
+    return (2* (2 * cfont.y_size +1)) + (2 * cfont.x_size)
 
+def _7seg_height():
+    return (3 * (2 * cfont.y_size +1)) + (2 * cfont.x_size)
+
+def TFT_getfontheight():
+    if cfont.bitmap ==1:
+        return cfont.y_size
+    elif cfont.bitmap==2:
+        return _7seg_height()
+    return 0
+        
+def TFT_getStringWidth(strx):
+    strWidth=0
+    if (cfont.bitmap==2):
+        strWidth = ((_7seg_width()+2) * len(strx)) - 2
+        # 7-segment font
+    elif (cfont.x_size !=0):
+        strWidth = strlen(strx) * cfont.x_size
+    else:
+        # calculate the width of the string of proportional characters
+        for chx in strx:
+            if getCharPtr(chx):
+                if fontChar.width > fontChar.xDelta:
+                    strWidth += fontChar.width +1
+                else:
+                    strWidth += fontChar.xDelta +1
+        strWidth-=1
+    return strWidth
 
 # ================================================================
 # === Main function to send data to display ======================
