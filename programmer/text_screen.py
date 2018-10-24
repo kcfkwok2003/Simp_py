@@ -16,11 +16,14 @@ class TextRoot(BoxLayout):
         kwargs['orientation']='vertical'
         self.app_operations = kwargs.get('app_operations',{})
         self.operation_buttons=kwargs.get('operation_buttons',[])
+        self.filename=''
         super(TextRoot, self).__init__(**kwargs)
         self.app = App.get_running_app()
         #self.scrollv = ScrollView()
         #self.blayout=BoxLayout()
-        self.text_input = TextInput(text='', font_name=FONT_PATH) #, readonly=True)
+        self.text_input=None
+        self.set_text("")
+        #self.text_input = TextInput(text='', font_name=FONT_PATH) #, readonly=True)
         self.text_input.bind(focus=self.on_focus)
         self.text_input.bind(on_double_tap=self.on_double_tap)
         #self.blayout.add_widget(self.text_input)
@@ -44,6 +47,13 @@ class TextRoot(BoxLayout):
             self.btns_layout.add_widget(btn)
         self.add_widget(self.btns_layout)
 
+    def set_text(self,text):
+        #print('text_screen set_text:"%s"' % text)
+        if self.text_input is None:
+            self.text_input = TextInput(text='', font_name=FONT_PATH) #, readonly=True)
+        else:
+            self.text_input.text=text
+            
     def on_double_tap(self,v):
         Logger.info('kcf: on_double_tag')
         self.status.text='Line:%s' % (self.text_input.cursor[1] + 1)
@@ -92,9 +102,17 @@ class TextRoot(BoxLayout):
 
     def on_upload(self,v):
         self.app.on_upload(self.text_input.text)
-        
+
+    def is_jpg(self,filename):
+        if filename[-4:].lower()=='.jpg':
+            return True
+        return False
+    
     def refresh(self):
+        print('text_screen.refresh %s %s' % (self.app.datapath,self.app.filename))
         self.status.text=''
+        if self.is_jpg(self.app.filename):
+            self.set_text('jpg file %s/%s cannot be displayed\nBut you can upload it' % (self.app.datapath, self.app.filename))
         #self.text_input.text= self.app.kv_text
         
 class TextScreen(Screen):

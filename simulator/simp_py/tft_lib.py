@@ -20,6 +20,8 @@ except:
     from tooney32 import tft_tooney32
 from math import sin, cos
 # === Embedded fonts constants ===
+IMAGE_TYPE_JPG =1
+IMAGE_TYPE_BMP =2
 SCALE_X=1
 SCALE_Y=1
 SCALE=1
@@ -585,6 +587,13 @@ def TFT_getStringWidth(strx):
         strWidth-=1
     return strWidth
 
+def TFT_bmp_image(x,y,scale,fn,n1,n2):
+    print('TFT_bmp_image not implemented')    
+
+
+def TFT_jpg_image(x,y,scale,fname,buf,size):
+    print('TFT_jpg_image not implemented')
+    
 # ================================================================
 # === Main function to send data to display ======================
 # If  rep==true:  repeat sending color data to display 'len' times

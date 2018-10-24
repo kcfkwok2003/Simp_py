@@ -83,9 +83,24 @@ class TFT:
 
 tft=TFT()
 
+class IMAGE:
+    global LCD_X0,LCD_Y0
+    def __init__(self,x,y,scale,fn,buf,size):
+        self.x=x
+        self.y=y
+        self.scale=scale
+        self.fname=fn
+        self.buf=buf
+        self.size=size
+        self.img = pygame.image.load(fn)
+        
+    def blit(self, surface,x0,y0):
+        surface.blit(self.img,(self.x+x0,self.y+y0))
+                     
 class LCD:
     def __init__(self,bg,fg=(0,255,0)):
         global LCD_X0
+        self.images=[]
         self.bg=bg
         self.fg=fg
         self._fg=fg
@@ -190,6 +205,8 @@ class LCD:
     def draw(self):
         #print('lcd.draw')
         pygame.draw.rect(self.surface,self.bg,self.rect)
+        for imgx in self.images:
+            imgx.blit(self.surface,self.LCD_X0,LCD_Y0)        
         poss = self.pixels.keys()
         if tft.backlit:
             for x,y in poss:
@@ -332,6 +349,33 @@ class LCD:
 
     def textClear(self,x,y,text,color=0xff00):
         TFT_clearStringRect(x,y,text)
+
+    def image(self,x,y,fn,scale=0,img_type=-1,image_debug=0):
+        if img_type<0:
+            # try to determine image type
+            ext=fn.split('.')[-1].upper()
+            if ext=='JPG':
+                img_type=IMAGE_TYPE_JPG
+            elif ext=='BMP':
+                img_type=IMAGE_TYPE_BMP
+        if img_type<0:
+            raise OSError('Cannot determine image type')
+        if img_type==IMAGE_TYPE_BMP:
+            TFT_bmp_image(x,y,scale,fn,None,0)
+        elif img_type==IMAGE_TYPE_JPG:
+            #TFT_jpg_image(x,y,scale,fn,None,0)
+            self.tft_jpg_image(x,y,scale,fn,None,0)
+        else:
+            raise OSError('Unsupported image type')
+        
+
+    def tft_jpg_image(self,x,y,scale,fn,buf,size):
+        print('tft_jpg_image')
+        img = IMAGE(x,y,scale,fn,buf,size)
+        self.images.append(img)
+        #imgx = pygame.image.load(fn)
+        #self.surface.blit(imgx,(x,y))
+        print('tft_jpg_image done')
         
     def triangle(self,x0,y0,x1,y1,x2,y2,color=0xff00,fillcolor=None):
         x0=x0* SCALE_X
@@ -346,9 +390,9 @@ class LCD:
         self.fg = self.conv_color(color)
         TFT_drawTriangle(x0,y0,x1,y1,x2,y2, color)
 
-            
+     
 lcd = LCD((30,30,30))    
-
+tft.tft=lcd
 
 class GButton:
     def __init__(self,pid, name,color,x0,y0,w,h):

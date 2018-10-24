@@ -5,6 +5,8 @@ import thread
 from Queue import Queue
 import time
 
+BUFFER_SIZE=1024
+
 class DEV_COM:
     def __init__(self,ip=None, dev_com_cb=None):
         self.ip=ip
@@ -101,6 +103,7 @@ class DEV_COM:
             self.ip=ip
         self.server_addr=(self.ip, 8080)
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sock.setsockopt(socket.SOL_SOCKET,socket.SO_SNDBUF,BUFFER_SIZE)
         if ping:
             self.sock.settimeout(5)
         else:

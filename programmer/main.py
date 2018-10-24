@@ -42,6 +42,7 @@ from font_path import FONT_PATH
 from text_screen import TextScreen
 #from file_screen import FileScreen, DATA_PATH
 from file_screen1 import FileScreen
+import binascii
 
 from mbutdialog import MButDialog
 from exc import get_exc_details
@@ -704,7 +705,8 @@ class MainApp(App):
         self.filename=filename =self.dlg.ti.text        
         textScreen =self.sm.get_screen('textScreen')
         textScreen.textRoot.status.text = 'New file'
-        textScreen.textRoot.text_input.text =''
+        textScreen.textRoot.set_text('')
+        #textScreen.textRoot.text_input.text =''
         self.sm.current='textScreen'
         self.dlg.dismiss()
         self.title='%s [%s]'  % (APP_NAME,self.filename)
@@ -758,12 +760,30 @@ class MainApp(App):
         if self.sm.current != 'textScreen':
             self.sm.current='textScreen'
 
+    def is_jpg(self,filename):
+        if filename[-4:].lower()=='.jpg':
+            return True
+        return False
+    
     def on_file_open(self,filename):
         self.filename = filename
-        fileScreen = self.sm.get_screen('fileScreen')
+        if self.is_jpg(filename):
+            Clock.schedule_once(self.on_file_open_jpg_1)
+            return
+        #fileScreen = self.sm.get_screen('fileScreen')
         #fileScreen.fileRoot.status.text='opening file...'
         Clock.schedule_once(self.on_file_open_1)
 
+    def on_file_open_jpg_1(self,dt):
+        from photo_screen import PhotoScreen
+        if self.sm.has_screen('photoScreen'):
+            photoScreen = self.sm.get_screen('photoScreen')
+            self.sm.remove_widget(photoScreen)
+        self.photoScreen = PhotoScreen(name='photoScreen',datapath=DATA_PATH,filename=self.filename)
+        self.sm.add_widget(self.photoScreen)
+        self.sm.current='photoScreen'
+        self.title='%s [%s]'  % (APP_NAME,self.filename)        
+        
     def on_file_open_1(self,dt):
         textScreen = self.sm.get_screen('textScreen')
         file_label = textScreen.textRoot.file_label
@@ -776,12 +796,14 @@ class MainApp(App):
         except:
             exc = get_exc_details()
             Logger.info('kcf: on_file_open exc:%s' % exc)
-            textScreen.textRoot.text_input.text=filecont
+            #textScreen.textRoot.text_input.text=filecont
+            textScreen.textRoot.set_text(filecont)
             textScreen.textRoot.text_input.cursor=(0,0)
             self.sm.current='textScreen'
             return
         
-        textScreen.textRoot.text_input.text=filecont
+        #textScreen.textRoot.text_input.text=filecont
+        textScreen.textRoot.set_text(filecont)        
         textScreen.textRoot.text_input.cursor=(0,0)
         self.sm.current='textScreen'
         self.title='%s [%s]'  % (APP_NAME,self.filename)
@@ -790,8 +812,21 @@ class MainApp(App):
         self.filename = filename
         fileScreen = self.sm.get_screen('fileScreen')
         #fileScreen.fileRoot.status.text='opening file...'
+        if self.is_jpg(filename):
+            Clock.schedule_once(self.on_file_open_ex_jpg_1)
+            return
         Clock.schedule_once(self.on_file_open_ex_1)
 
+    def on_file_open_ex_jpg_1(self,dt):
+        from photo_screen import PhotoScreen
+        if self.sm.has_screen('photoScreen'):
+            photoScreen = self.sm.get_screen('photoScreen')
+            self.sm.remove_widget(photoScreen)
+        self.photoScreen = PhotoScreen(name='photoScreen',datapath=EX_PATH,filename=self.filename)
+        self.sm.add_widget(self.photoScreen)
+        self.sm.current='photoScreen'
+        self.title='%s [%s]'  % (APP_NAME,self.filename)
+        
     def on_file_open_ex_1(self,dt):
         textScreen = self.sm.get_screen('textScreen')
         file_label = textScreen.textRoot.file_label
@@ -804,22 +839,17 @@ class MainApp(App):
         except:
             exc = get_exc_details()
             Logger.info('kcf: on_file_open exc:%s' % exc)
-            textScreen.textRoot.text_input.text=filecont
+            #textScreen.textRoot.text_input.text=filecont            
+            textScreen.textRoot.set_text(filecont)
             textScreen.textRoot.text_input.cursor=(0,0)
             self.sm.current='textScreen'
             return
-        textScreen.textRoot.text_input.text=filecont
+        #textScreen.textRoot.text_input.text=filecont
+        textScreen.textRoot.set_text(filecont)        
         textScreen.textRoot.text_input.cursor=(0,0)
         self.sm.current='textScreen'        
         self.title='%s [%s]'  % (APP_NAME,self.filename)
-        skip='''
-    def on_file_new(self,filename):
-        self.filename=filename
-        textScreen =self.sm.get_screen('textScreen')
-        textScreen.textRoot.file_label.text = filename
-        textScreen.textRoot.text_input.text =''
-        self.sm.current='textScreen'
-        '''
+
         
     def on_file_save(self,filename):
         print('on_file_save %s' % filename)
@@ -985,9 +1015,10 @@ class MainApp(App):
                 elif keyx=='Upload':
                     self.upload_only(v)
                 elif keyx=='Upload binary':
-                    msg='Upload binary not implemented'
-                    self.textScreen.textRoot.status.text=msg
-                    print(msg)
+                    self.on_upload_binary(v)
+                    #msg='Upload binary not implemented'
+                    #self.textScreen.textRoot.status.text=msg
+                    #print(msg)
                 else:
                     msg='%s not implemented' % keyx
                     self.textScreen.textRoot.status.text=msg
@@ -995,8 +1026,42 @@ class MainApp(App):
                     #self.on_upload(self.cont)
                 break
         self.dlg.dismiss()
+
+    def on_upload_binary(self,v):
+        #fpath ='%s/%s' % (self.datapath,self.filename)
+        Logger.info('kcf:on_upload_binary')
+        textScreen = self.sm.get_screen('textScreen')
+        status = textScreen.textRoot.status
+        status.text='upload as base64 to %s' % self.settings['ip']
+        Clock.schedule_once(self.upload_binary)
         
-                
+
+    def upload_binary(self,v):
+        self.dlg.dismiss()
+        textScreen = self.sm.get_screen('textScreen')
+        status = textScreen.textRoot.status
+        f=open('%s/%s' % (self.datapath,self.filename),'rb')        
+        contx = f.read()
+        #Logger.info('kcf: cont:%s' % `self.cont`)
+        f.close()
+        b64c = binascii.b2a_base64(contx)
+        b64_cont,b64c=b64c[:76],b64c[76:]
+        while len(b64c)>76:
+            xstr, b64c=b64c[:76],b64c[76:]
+            b64_cont+= '\n'+xstr
+        b64_cont+= '\n'+b64c
+        
+        #f=open('test.jpg.b64','wb')
+        #f.write(b64_cont)
+        #f.close()
+        
+        cont = '\x02\nsvfile:%s\n' % str(self.filename+'.b64')
+        cont += b64_cont
+        cont +='\n\x03\n\x04\n'
+        self.dev_com.send(cont, self.settings['ip'])
+        self.wait_resp(status)        
+
+        
     def on_upload_m_can(self,v):
         self.dlg.dismiss()        
         

@@ -112,7 +112,7 @@ class FileRoot(BoxLayout):
         fs=[]
         
         for fn in fxs:
-            if fn[-3:]=='.py' or fn[-4:]=='.txt':
+            if self.is_accepted_file(fn):
                 fs.append(fn)
         fs.sort()
         #print ('s: %s' % fs)
@@ -122,10 +122,15 @@ class FileRoot(BoxLayout):
         fxs = os.listdir(self.datapath)
         fs=[]
         for fn in fxs:
-            if fn[-3:]=='.py' or fn[-4:]=='.txt':
+            if self.is_accepted_file(fn):            
                 fs.append(fn)
         return len(fs)
 
+    def is_accepted_file(self,fn):
+        if fn[-3:]=='.py' or fn[-4:]=='.txt' or fn[-4:]=='.jpg':
+            return True
+        return False
+    
     def get_next_page_n(self, data_len, nrec_per_page, page):
         r_end = page * nrec_per_page
         if data_len > r_end:
