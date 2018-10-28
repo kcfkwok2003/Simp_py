@@ -14,6 +14,8 @@ from PIL import Image
 from kivy.uix.image import Image as UImage
 from kivy.graphics import Color,Callback,Rectangle,Line
 from kivy.core.text import Label as CoreLabel
+from kivy.uix.boxlayout import BoxLayout
+
 import time
 import re
 import os
@@ -67,8 +69,8 @@ class FontpyRoot(FloatLayout):
                 self.line=Line(points=[0,i,1600,i])
             for i in [100,200,300,400,500,600,700,800,900,1000,1100,1200,1300,1400,1500]:
                 self.line=Line(points=[i,0,i,1600])
-            Color(0.2,0.2,0,2)
-            self.title_rect=Rectangle(pos=(0,500),size=(800,100))
+#            Color(0.2,0.2,0,2)
+#            self.title_rect=Rectangle(pos=(0,500),size=(800,100))
             print("bbb")
 
     def my_callback(self,instr):
@@ -106,71 +108,40 @@ class FontpyRoot(FloatLayout):
         #self.status.text=''
         pass
     
-class FontpyRootxx(BoxLayout):
-    def __init__(self, **kwargs):
-        global DATA_PATH
-        kwargs['orientation']='vertical'        
-        filename=kwargs.get('filename','')
-        datapath = kwargs.get('datapath',DATA_PATH)
-        #datapath = kwargs.get('datapath','seve_py_dat')
-        self.datapath=datapath
-        self.filename=filename
-        self.file_settings={'filename':filename, 'datapath':datapath}
-        super(FontpyRoot, self).__init__(**kwargs)
-        self.app = App.get_running_app()
-        self.app_operations = APP_OPERATIONS
-        self.layout = BoxLayout(orientation='horizontal', size_hint_y=0.1)
-        self.title=Label(text='Photo Operator')
-        self.layout.add_widget(self.title)
-        self.add_widget(self.layout)
-        fpath='%s/%s' % (self.datapath, self.filename)
-
-        self.blayout = BoxLayout(orientation='horizontal',size_hint_y=0.1)
-        for btn_name in OPERATION_BUTTONS:
-            btn = Button(text=btn_name)
-            btn.bind(on_press= self.on_op)
-            self.blayout.add_widget(btn)
-        self.status = Label(text='')
-        self.blayout.add_widget(self.status)
-        self.add_widget(self.blayout)
-
-
-    def app_on_op(self,v):
-        operation = self.app_operations.get(v.text, None)        
-        on_op = getattr(self.app, operation, None)
-        if callable(on_op):
-            on_op(v)
-        else:
-            Logger.info('kcf:app:%s not implemented' % operation)
-            
-    def on_op(self,v):
-        operation = self.app_operations.get(v.text, None)
-        if operation is None:
-            Logger.info('kcf:APP_OPERATIONS has no such operation:%s' % v.text)
-            return
-        on_op = getattr(self, operation,None)
-        if on_op is not None:
-            on_op(v)
-            return
-        
-        self.app_on_op(v)        
-
-    def file_cancel(self,v):
-        try:
-            self.app.on_file_cancel(v)
-        except:
-            pass
-        
-    def refresh(self):
-        self.status.text=''        
 
 
 class FontpyScreen(Screen):
     def __init__(self,**kwargs):
         super(FontpyScreen, self).__init__(**kwargs)
+        self.layout1=BoxLayout(orientation='vertical')
         self.fontpyRoot= FontpyRoot(**kwargs)
-        self.add_widget(self.fontpyRoot)
+        self.layout1.add_widget(self.fontpyRoot)
+        self.btns =BoxLayout(orientation='horizontal',size_hint_y=0.1,padding=(20,10))
+        self.btn_prev=Button(text='PREV')
+        self.btn_prev.bind(on_press=self.on_prev)
+        self.btn_next=Button(text='NEXT')
+        self.btn_next.bind(on_press=self.on_next)
+        self.btn_proc=Button(text='PROCESS')
+        self.btn_proc.bind(on_press=self.on_process)
+        self.btns.add_widget(self.btn_prev)
+        self.btns.add_widget(Label(text=' ',size_hint_x=0.1))
+        self.btns.add_widget(self.btn_next)
+        self.btns.add_widget(Label(text=' ',size_hint_x=0.1))
+        self.btns.add_widget(self.btn_proc)
+        self.status = Label(text='')
+        self.btns.add_widget(self.status)
+        self.layout1.add_widget(self.btns)
+        self.add_widget(self.layout1)
+        
+    def on_process(self,v):
+        print('on_process')
+        
+    def on_prev(self,v):
+        print('on_prev')
 
+    def on_next(self,v):
+        print('on_next')
+        
     def on_pre_enter(self):
         print 'fontpyScreen on_pre_enter'
         self.fontpyRoot.refresh()
