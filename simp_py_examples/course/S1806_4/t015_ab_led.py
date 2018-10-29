@@ -22,5 +22,5 @@ while True:
             bpressed=True
             led.value(0)
     else:
-        apressed=False
+        bpressed=False
     time.sleep(0.1)

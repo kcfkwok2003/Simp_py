@@ -5,7 +5,7 @@ import time
 inp= Pin(21, Pin.IN)
 while True:
   if inp.value()==0:
-    lcd.text(0,100,” on”)
+    lcd.text(0,100,"on ")
   else:
-    lcd.text(0,100,”off”)
+    lcd.text(0,100,"off")
   time.sleep(0.1)
