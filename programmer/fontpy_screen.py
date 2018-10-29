@@ -72,12 +72,22 @@ class FontpyRoot(FloatLayout):
 #            Color(0.2,0.2,0,2)
 #            self.title_rect=Rectangle(pos=(0,500),size=(800,100))
             print("bbb")
-
+        self.render()
+        
     def my_callback(self,instr):
         with self.canvas.before:
             Color(0,5,0.5,0.9,0)
             Rectangle(pos=(0,0),size=(200,200))
 
+    def setgText(self,text):
+        self.mText= text
+
+    def render(self):
+        self.canvas.clear()
+        label = CoreLabel(text='TExt', font_size=20)
+        label.refresh()
+        self.canvas.ask_update()
+        
     def app_on_op(self,v):
         operation = self.app_operations.get(v.text, None)        
         on_op = getattr(self.app, operation, None)
@@ -108,7 +118,7 @@ class FontpyRoot(FloatLayout):
         #self.status.text=''
         pass
     
-
+    
 
 class FontpyScreen(Screen):
     def __init__(self,**kwargs):
