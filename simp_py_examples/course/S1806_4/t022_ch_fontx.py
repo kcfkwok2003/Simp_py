@@ -1,5 +1,6 @@
 # t022.py
 from ch_fontx import CH_FONTS
+from simp_py import lcd
 BITM={0: 0x80, 1: 0x40, 2:0x20, 3:0x10, 4:0x8,5:0x4,6:0x2,7:0x1}
 def pr_ch(x,y,fntdat,color):
   global BITM
@@ -8,15 +9,15 @@ def pr_ch(x,y,fntdat,color):
     ix=0
     for i in range(8):
       if fnt0 & BITM[i]:
-        tft.tft.pixel(x+ix, y, color)
+        lcd.pixel(x+ix, y, color)
       else:
-        tft.tft.pixel(x+ix, y, 0x000000)
+        lcd.pixel(x+ix, y, 0x000000)
       ix+=1
     for i in range(8):
       if fnt1 & BITM[i]:
-        tft.tft.pixel(x+ix, y, color)
+        lcd.pixel(x+ix, y, color)
       else:
-        tft.tft.pixel(x+ix, y, 0x000000)
+        lcd.pixel(x+ix, y, 0x000000)
       ix+=1
     y+=1
 if __name__=='__main__':

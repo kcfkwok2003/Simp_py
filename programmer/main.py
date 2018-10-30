@@ -860,7 +860,7 @@ class MainApp(App):
         try:
             f =open('%s/%s' % (self.datapath,self.filename),'wb')
             filecont= self.sm.get_screen('textScreen').textRoot.text_input.text
-            f.write(filecont)
+            f.write(filecont.encode('utf-8'))
             f.close()
             textScreen.textRoot.status.text='Saved to %s/%s' % (self.datapath,self.filename)
         except:
