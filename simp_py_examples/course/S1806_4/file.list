@@ -1,3 +1,6 @@
+button.py
+ch.txt
+ch_fontx.py
 rtc.py
 t007_cnt.py
 t008_cont.py
@@ -14,3 +17,4 @@ t018_adc.py
 t019_snsrly.py
 t020_rtc.py
 t021_drip.py
+t022_ch_fontx.py
