@@ -3,7 +3,7 @@ from ch_fontx import CH_FONTS
 from simp_py import lcd
 BITM={0: 0x80, 1: 0x40, 2:0x20, 3:0x10, 4:0x8,5:0x4,6:0x2,7:0x1}
 def pr_ch(x,y,fntdat,color):
-  global BITM
+  global BITM,lcd
   while fntdat:
     fnt0,fnt1, fntdat = fntdat[0],fntdat[1], fntdat[2:]
     ix=0
