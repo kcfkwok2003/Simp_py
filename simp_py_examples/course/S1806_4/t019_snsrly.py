@@ -5,8 +5,16 @@ import time
 
 sensor = ADC(Pin(35,Pin.IN))
 relay = Pin(26,Pin.OPEN_DRAIN)
-relay_off = lambda : relay.value(1)
-relay_on  = lambda : relay.value(0)
+def relay_off():
+    global relay
+    relay.value(1)
+
+def relay_on():
+    global relay
+    relay.value(0)
+    
+#relay_off = lambda : relay.value(1)
+#relay_on  = lambda : relay.value(0)
 relay_off()
 
 lcd.clear()
