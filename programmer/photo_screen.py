@@ -108,9 +108,10 @@ class PhotoRoot(BoxLayout):
             self.save_jpg()
 
     def save_jpg_and_py(self):
-        print('save_jpg_and_py')
+        self.datapath = DATA_PATH
         fn =self.filename.replace('.jpg','_scaled.jpg')
         fpath='%s/%s' % (self.datapath,fn)
+        print('save_jpg_and_py %s' % fpath)
         self.imgx1.save(fpath)
         fn_py='test_' + fn + '.py'
         f=open('%s/%s' % (self.datapath,fn_py),'wb')
@@ -123,10 +124,11 @@ class PhotoRoot(BoxLayout):
         self.app.title='%s [%s]'  % (APP_NAME,self.app.filename)        
         
     def save_jpg(self):
+        self.datapath= DATA_PATH
         fn =self.filename.replace('.jpg','_scaled.jpg')
         fpath='%s/%s' % (self.datapath,fn)
         self.imgx1.save(fpath)
-        self.status.text ='jpg saved'
+        self.status.text ='jpg saved %s' % fpath
         self.app.filename=fn
         self.app.datapath = DATA_PATH
         self.app.title='%s [%s]'  % (APP_NAME,self.app.filename)
