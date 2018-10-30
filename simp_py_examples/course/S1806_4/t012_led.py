@@ -1,4 +1,5 @@
 # t012.py
+import time
 from machine import Pin
 led=Pin(26,Pin.OUT)
 while True:
