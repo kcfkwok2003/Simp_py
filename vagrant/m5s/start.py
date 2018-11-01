@@ -8,7 +8,7 @@ import time
 import _thread
 
 mach_id = machine.unique_id()
-HEADER = 'SIMP_PY 1.1.1a'  # try to fix readPixel problem
+HEADER = 'SIMP_PY 1.2x'
 BOARD = 'm5stk'
 SERVER_PORT=8080
 STA_ESSID ='testssid'
@@ -19,12 +19,12 @@ AP_AUTHMODE=3
 AP_PASSW='12345678'
 PASSF_INFO1='No valid passkey'
 PASSF_INFO2='Wait 10s'
-
+DEF_HOST_CODE='---'
 
 class START:
     global HEADER,SERVER_PORT,PASSF_INFO1,PASSF_INFO2,AP_ESSID,AP_AUTHMODE,mon,tft, BOARD
     def __init__(self,passcode=None):
-        global STA_ESSID, STA_PASSW, AP_DEFAULT, AP_PASSW
+        global STA_ESSID, STA_PASSW, AP_DEFAULT, AP_PASSW,DEF_HOST_CODE
         from passcodelib import  PASSCODELIB as SEC
         from app import APP
 
@@ -38,17 +38,20 @@ class START:
                 print('no pass.key')
                 passcode=""
         secx = SEC()
+        HOST_CODE=DEF_HOST_CODE
         if secx.veri(passcode,True):
             self.passf=True
             try:
-                from wifi_config import STA_ESSID, STA_PASSW, AP_DEFAULT, AP_PASSW
+                from wifi_config import STA_ESSID, STA_PASSW, AP_DEFAULT, AP_PASSW,HOST_CODE
             except:
                 print('import wifi_config exc')
             self.AP_DEFAULT=AP_DEFAULT
             self.AP_PASSW=AP_PASSW
+            self.HOST_CODE= HOST_CODE
         else:
             self.AP_DEFAULT=1
             self.AP_PASSW=AP_PASSW
+            self.HOST_CODE= HOST_CODE
         self.STA_ESSID=STA_ESSID
         self.STA_PASSW=STA_PASSW            
    
@@ -58,6 +61,7 @@ class START:
         self.app.psk=passcode
         self.app.header=HEADER
         self.app.board=BOARD
+        self.app.HOST_CODE=bytearray( self.HOST_CODE)
         
     def start(self):
         print ('starting')
@@ -88,9 +92,10 @@ class START:
         tft.tft.text(0,0,HEADER)
         tft.tft.text(0,20,essid)
         tft.tft.text(0,40,info[0])
+        tft.tft.text(0,60,self.HOST_CODE)
         if not self.passf:
-            tft.tft.text(0,60,PASSF_INFO1)
-            tft.tft.text(0,80,PASSF_INFO2)
+            tft.tft.text(0,80,PASSF_INFO1)
+            tft.tft.text(0,100,PASSF_INFO2)
 
         self.ip_info= info
         self.myip=info[0]

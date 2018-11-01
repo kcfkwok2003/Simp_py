@@ -49,7 +49,7 @@ HOST_CODE='********'
    STX LF 'exec' LF command LF ETX LF EOT LF
 
 1.12 host code
-   STX LF 'host' LF host_code LF ETX LF
+   STX LF 'host:' host_code LF ETX LF
    * send this before ping and other commands
    
 2 message from device to host

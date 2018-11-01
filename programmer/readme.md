@@ -19,4 +19,7 @@ working:
   2. host should record and set the uid of the target device in set page
   3. only allow upload wifi config when ip is 192.168.4.1
   4. implement protocol 1.12 host code of ping in host side
-  
+  5. device: when start, show HOST_CODE
+  6. device: when receive HOST_CODE not matched, set h_ip_f to false
+     device: resp with '?h/ip' instead of ok 
+  - device: when start in ap, not run test.py until b pressed  

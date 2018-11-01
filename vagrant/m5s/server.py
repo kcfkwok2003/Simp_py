@@ -70,6 +70,8 @@ class SERVER:
         self.psk =main.app.psk
         self.header= main.app.header
         self.board=main.app.board
+        self.HOST_CODE= main.app.HOST_CODE
+        host_f='chk_host'
         _thread.allowsuspend(True)
         while True:
             ntf = _thread.getnotification()
@@ -93,7 +95,8 @@ class SERVER:
             ureq=False
             ginfo=False
             b64=False
-            execf=False            
+            execf=False
+            ck_host=False
             fn=''
             self.client.set_cl(cl)
             mon.set_mon_cl(self.client)
@@ -161,7 +164,15 @@ class SERVER:
                                 ginfo=True
                             elif sx==b'exec':
                                 print('exec')
-                                execf=True                                
+                                execf=True
+                            elif sx[:5]==b'host:':
+                                ck_host=True                                
+                                host=sx[5:]
+                                print('host:%s' % host)
+                                if host==self.HOST_CODE:
+                                    host_f='ok'
+                                else:
+                                    host_f='chk_host'
                             else:
                                 pass
                         else:
@@ -192,9 +203,11 @@ class SERVER:
                                         mon.set_mon_cl(None)
                                         cl.close()
 
-                                        break                                    
+                                        break
+
                                 else:
-                                    resp=b'\x02\nresp\nok\n\x03\n'
+                                    resp=b'\x02\nresp\n%s\n\x03\n' % host_f
+                                    
                                     try:
                                         self.send(cl,resp)
                                     except:
@@ -221,6 +234,7 @@ class SERVER:
                                 ginfo=False
                                 b64=False
                                 fn=''
+                                ck_host=False
                             elif sx==b'\x02':
                                 #print('STX')
                                 first_line=True

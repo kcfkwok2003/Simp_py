@@ -164,7 +164,7 @@ class SettingsRoot(BoxLayout):
             text+='%s:%s\n' % (key,vx)
             self.settings[key]=string.strip(vx)
         Logger.info('kcf: on_settings_ok settings:%s' % `self.settings`)
-        cont ="STA_ESSID='%s'\nSTA_PASSW='%s'\nAP_DEFAULT=%s\nAP_PASSW='%s'\n" % (self.settings['STA_ESSID'],self.settings['STA_PASSW'],self.settings['AP_DEFAULT'], self.settings['AP_PASSW'])
+        cont ="STA_ESSID='%s'\nSTA_PASSW='%s'\nAP_DEFAULT=%s\nAP_PASSW='%s'\nHOST_CODE='%s'\n" % (self.settings['STA_ESSID'],self.settings['STA_PASSW'],self.settings['AP_DEFAULT'], self.settings['AP_PASSW'],self.settings['HOST_CODE'])
         f=open('wifi_config.py','wb')
         f.write(cont)
         f.close()
