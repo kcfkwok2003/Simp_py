@@ -1,3 +1,0 @@
-title=Simp-py
-author=cfkwok
-orientation=landscape
