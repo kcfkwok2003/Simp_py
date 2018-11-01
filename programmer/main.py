@@ -455,7 +455,7 @@ class MainApp(App):
                 #status.text='rx:%s' % self.mon_rx_cnt                
                 Clock.schedule_once(self.nxt_mon_ka, 0.3)
 
-    def show_devinfo(self,dt):
+    def show_devinfo__(self,dt):
         print('show_devinfo')
         from msg_dlg import MSG_DLG_KV, MsgDialog 
         from kivy.lang.builder import Builder
@@ -468,6 +468,40 @@ class MainApp(App):
         self._popup = Popup(title="Device info",content=content,size_hint=(0.5,0.5))
         self._popup.open()
         return self._popup
+
+    def get_conn_dev(self):
+        conn_dev = '%s/%s' % (self.devinfo.get('Board','---'),self.devinfo.get('UID','---'))
+        return conn_dev
+    
+    def show_devinfo(self,dt):
+        print('show_devinfo')
+        from confm_dlg import MButDialog
+        text="Board:%(Board)s\nHeader:%(Header)s\nUID:%(UID)s\nPasskey:%(Passkey)s" % self.devinfo
+        conn_dev = self.get_conn_dev()
+        button_names=[' ','OK',' ']
+
+        callbacks={}
+        title='Device info'
+        print('conn_dev:%s' % conn_dev)
+        print("settings['CONN_DEVICE']:%s" % self.settings['CONN_DEVICE'])
+        if self.settings['CONN_DEVICE'] !=conn_dev:
+            button_names=[' ','CANCEL','SET']            
+            title = 'Device not match, set it?'
+        callbacks['SET']=self.set_conn_dev
+        callbacks['CANCEL']=self.set_can
+        callbacks['OK']= self.set_can
+        self.dlg = MButDialog(title=title,message=text,button_names=button_names,callbacks=callbacks,size_hint=(0.5,0.7))
+        self.dlg.open()
+
+    def set_conn_dev(self,v):
+        print('set_conn_dev')
+        self.settingsScreen.settingsRoot.tinputs['CONN_DEVICE'].text=self.get_conn_dev()
+        self.settings['CONN_DEVICE']= self.get_conn_dev()
+        self.dlg.dismiss()
+        
+    def set_can(self,v):
+        print('set_can')
+        self.dlg.dismiss()
         
     def timeout_close(self,dt):
         if not self.uresped:
@@ -631,6 +665,7 @@ class MainApp(App):
             return True
 
     def on_file_m(self,v):
+        self.textScreen.textRoot.status.text=''        
         from radio_dlg import MButDialog
         button_names =[' ','CANCEL','OK']
         callbacks={}
@@ -709,7 +744,8 @@ class MainApp(App):
         #textScreen.textRoot.text_input.text =''
         self.sm.current='textScreen'
         self.dlg.dismiss()
-        self.title='%s [%s]'  % (APP_NAME,self.filename)
+        
+        self.title='%s [%s] [%s]'  % (APP_NAME,self.filename,self.datapath)
         
         
     def on_file_save_as(self,fn):
@@ -742,7 +778,7 @@ class MainApp(App):
         self.sm.current='textScreen'        
         self.dlg.dismiss()
         self.filename=fname
-        self.title='%s [%s]'  % (APP_NAME,self.filename)
+        self.title='%s [%s] [%s]'  % (APP_NAME,self.filename,self.datapath)
                 
     def on_file(self,v):
         print('on_file ...')
@@ -782,7 +818,8 @@ class MainApp(App):
         self.photoScreen = PhotoScreen(name='photoScreen',datapath=DATA_PATH,filename=self.filename)
         self.sm.add_widget(self.photoScreen)
         self.sm.current='photoScreen'
-        self.title='%s [%s]'  % (APP_NAME,self.filename)        
+        self.title='%s [%s] [%s]'  % (APP_NAME,self.filename,self.datapath)
+        
         
     def on_file_open_1(self,dt):
         textScreen = self.sm.get_screen('textScreen')
@@ -806,7 +843,7 @@ class MainApp(App):
         textScreen.textRoot.set_text(filecont)        
         textScreen.textRoot.text_input.cursor=(0,0)
         self.sm.current='textScreen'
-        self.title='%s [%s]'  % (APP_NAME,self.filename)
+        self.title='%s [%s] [%s]'  % (APP_NAME,self.filename, self.datapath)
         
     def on_file_open_ex(self,filename):
         self.filename = filename
@@ -825,7 +862,7 @@ class MainApp(App):
         self.photoScreen = PhotoScreen(name='photoScreen',datapath=EX_PATH,filename=self.filename)
         self.sm.add_widget(self.photoScreen)
         self.sm.current='photoScreen'
-        self.title='%s [%s]'  % (APP_NAME,self.filename)
+        self.title='%s [%s] [%s]'  % (APP_NAME,self.filename,self.datapath)
         
     def on_file_open_ex_1(self,dt):
         textScreen = self.sm.get_screen('textScreen')
@@ -848,7 +885,7 @@ class MainApp(App):
         textScreen.textRoot.set_text(filecont)        
         textScreen.textRoot.text_input.cursor=(0,0)
         self.sm.current='textScreen'        
-        self.title='%s [%s]'  % (APP_NAME,self.filename)
+        self.title='%s [%s] [%s]'  % (APP_NAME,self.filename,self.datapath)
 
         
     def on_file_save(self,filename):
@@ -863,6 +900,7 @@ class MainApp(App):
             f.write(filecont.encode('utf-8'))
             f.close()
             textScreen.textRoot.status.text='Saved to %s/%s' % (self.datapath,self.filename)
+            self.title='%s [%s] [%s]'  % (APP_NAME,self.filename,self.datapath)
         except:
             exc = get_exc_details()
             Logger.info('kcf: on_file_save exc:%s' % exc)
@@ -897,7 +935,7 @@ class MainApp(App):
             return
         self.sm.current='textScreen'
         self.dlg.dismiss()
-        self.title='%s [%s]'  % (APP_NAME,self.filename)
+        self.title='%s [%s] [%s]'  % (APP_NAME,self.filename,self.datapath)
                 
     def on_reset(self,v):
         screen_name = self.sm.current
@@ -961,7 +999,9 @@ class MainApp(App):
             'STA_PASSW':'',
             'AP_DEFAULT':'1',
             'AP_PASSW':'12345678',
+            'HOST_CODE':'STEM-001',
             'course_code':'S1801',
+            'CONN_DEVICE':'uid:-----',
         }
         try:
             f =open('%s/settings.dat' % self.datapath,'r')
@@ -1124,7 +1164,8 @@ class MainApp(App):
     def ping(self,dt):
         textScreen = self.sm.get_screen('textScreen')
         status = textScreen.textRoot.status
-        cont = '\x02\nping\n\x03\n\x04\n'
+        cont = '\x02\nhost\n%s\n\x03\n' % self.settings['HOST_CODE']
+        cont += '\x02\nping\n\x03\n\x04\n'
         self.dev_com.send(cont, self.settings['ip'])
         self.wait_resp(status, 5)
         
@@ -1172,6 +1213,9 @@ class MainApp(App):
     def on_upload_wifi_config(self,v):
         settingsScreen = self.sm.get_screen('settingsScreen')
         status = settingsScreen.settingsRoot.status
+        if self.settings['ip']!='192.168.4.1':
+            status.text='Not AP, Sending wifi config to %s rejected' % self.settings['ip']
+            return
         status.text='Sending wifi config to %s' % self.settings['ip']
         Clock.schedule_once(self.upload_wifi_config)
 

@@ -31,11 +31,14 @@ SETTINGS_TITLE={
     'STA_PASSW': 'Station password',
     'AP_DEFAULT': 'AP Default',
     'AP_PASSW': 'AP password',
+    'HOST_CODE': 'Host code',
     'course_config':'Course Configuration',
     'course_code':'Course Code',
+    'device_info':'Device info',
+    'CONN_DEVICE': 'Connected Device',
     }
 
-SETTINGS_ORDER=['ip','wifi_config','STA_ESSID','STA_PASSW','AP_DEFAULT','AP_PASSW','course_config','course_code']
+SETTINGS_ORDER=['ip','wifi_config','STA_ESSID','STA_PASSW','AP_DEFAULT','AP_PASSW','HOST_CODE','course_config','course_code','device_info','CONN_DEVICE']
 
 class SettingsRoot(BoxLayout):
     
@@ -50,7 +53,7 @@ class SettingsRoot(BoxLayout):
         layouts={}
         tinputs={}
         for key in SETTINGS_ORDER:
-            if key=='course_config':
+            if key=='course_config' or key=='device_info':
                 layouts[key]=BoxLayout(orientation='horizontal',size_hint_y=0.1
 )
                 lb =Button(text=SETTINGS_TITLE[key],disabled=True)
@@ -75,6 +78,8 @@ class SettingsRoot(BoxLayout):
                     layouts[key].add_widget(lb)
                 if key=='STA_PASSW'  or key=='AP_PASSW':
                     tinputs[key] = TextInput(text=self.settings[key], font_name=FONT_PATH, password=True)
+                elif key=='CONN_DEVICE':
+                    tinputs[key] = TextInput(text=self.settings[key], font_name=FONT_PATH,readonly=True)         
                 else:
                     tinputs[key] = TextInput(text=self.settings[key], font_name=FONT_PATH)
                     
@@ -153,6 +158,8 @@ class SettingsRoot(BoxLayout):
                 continue
             elif key=='course_config':
                 continue
+            elif key=='device_info':
+                continue
             vx = self.tinputs[key].text
             text+='%s:%s\n' % (key,vx)
             self.settings[key]=string.strip(vx)
@@ -189,6 +196,7 @@ if __name__=='__main__':
                 'STA_PASSW': 'sta_pass',
                 'AP_DEFAULT':'1',
                 'AP_PASSW':'12345678',
+                'HOST_CODE':'stem-1',
                 'course_code':'S1801',
                 }
             self.settingsScreen = SettingsScreen(name='settingsScreen',app_operations=APP_OPERATIONS,operation_buttons=OPERATION_BUTTONS,settings=self.settings)

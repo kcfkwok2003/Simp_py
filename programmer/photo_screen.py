@@ -37,7 +37,6 @@ class PhotoRoot(BoxLayout):
         kwargs['orientation']='vertical'        
         filename=kwargs.get('filename','')
         datapath = kwargs.get('datapath',DATA_PATH)
-        #datapath = kwargs.get('datapath','seve_py_dat')
         self.datapath=datapath
         self.filename=filename
         self.file_settings={'filename':filename, 'datapath':datapath}
@@ -54,14 +53,9 @@ class PhotoRoot(BoxLayout):
         imgx1.save('_temp.jpg')
         self.imgx1 = imgx1
         self.img = UImage(source='_temp.jpg')
-        #self.img = pygame.image.load('/data/simp_py_dat/20181019_185603.jpg')
-        
-        #self.img = Image(source='/data/simp_py_dat/20181023_090116_scaled.jpg')
+
         print('img:%s' % self.img)
         self.add_widget(self.img)
-        #self.content = GridLayout(cols=3,size_hint_y=0.8)
-        #self.show_image()
-        #self.add_widget(self.content)
         self.blayout = BoxLayout(orientation='horizontal',size_hint_y=0.1)
         for btn_name in OPERATION_BUTTONS:
             btn = Button(text=btn_name)
@@ -71,13 +65,6 @@ class PhotoRoot(BoxLayout):
         self.blayout.add_widget(self.status)
         self.add_widget(self.blayout)
 
-    def show_image(self):
-        self.content.add_widget(Label(text=' '))
-        #self.img = Image(source='/data/simp_py_dat/20181019_185603.jpg')
-        self.img = Image(source='/data/simp_py_dat/20181023_090116_scaled.jpg')
-        print('img:%s' % self.img)
-        self.content.add_widget(self.img)        
-        self.content.add_widget(Label(text=' '))
 
     def on_photo_process(self,v):
         print('on_photo_process')
@@ -94,7 +81,7 @@ class PhotoRoot(BoxLayout):
         print('on_photo_process_op')
         keys = self.dlg.radios
         for keyx in keys:
-            print('%s:%s' % (keyx,self.dlg.radios[keyx].state)) # dir(self.dlg.radios[keyx])))
+            print('%s:%s' % (keyx,self.dlg.radios[keyx].state)) 
             if self.dlg.radios[keyx].state=='down':
                 self.on_photo_op(keyx)
                 break            
@@ -109,7 +96,9 @@ class PhotoRoot(BoxLayout):
 
     def save_jpg_and_py(self):
         self.datapath = DATA_PATH
-        fn =self.filename.replace('.jpg','_scaled.jpg')
+        fn = self.filename
+        if not fn.endswith('_scaled.jpg'):
+            fn =self.filename.replace('.jpg','_scaled.jpg')
         fpath='%s/%s' % (self.datapath,fn)
         print('save_jpg_and_py %s' % fpath)
         self.imgx1.save(fpath)
@@ -121,17 +110,19 @@ class PhotoRoot(BoxLayout):
         self.status.text ='jpg + py saved'
         self.app.filename=fn
         self.app.datapath=DATA_PATH
-        self.app.title='%s [%s]'  % (APP_NAME,self.app.filename)        
+        self.app.title='%s [%s] [%s]'  % (APP_NAME,self.app.filename,self.datapath)        
         
     def save_jpg(self):
         self.datapath= DATA_PATH
-        fn =self.filename.replace('.jpg','_scaled.jpg')
+        fn = self.filename
+        if not fn.endswith('_scaled.jpg'):        
+            fn =self.filename.replace('.jpg','_scaled.jpg')
         fpath='%s/%s' % (self.datapath,fn)
         self.imgx1.save(fpath)
-        self.status.text ='jpg saved %s' % fpath
+        self.status.text ='jpg saved' # %s' % fpath
         self.app.filename=fn
         self.app.datapath = DATA_PATH
-        self.app.title='%s [%s]'  % (APP_NAME,self.app.filename)
+        self.app.title='%s [%s] [%s]'  % (APP_NAME,self.app.filename,self.datapath)
         
     def app_on_op(self,v):
         operation = self.app_operations.get(v.text, None)        
@@ -178,8 +169,6 @@ class PhotoScreen(Screen):
 if __name__=='__main__':
     class TestApp(App):
         def build(self):
-            #self.kv_text= kv_text_for_test
-            #self.kv_text+='\n%s\n' % FONT_PATH
             self.photoScreen = PhotoScreen(name='photoScreen',data_path=DATA_PATH,filename='20181019_185603.jpg')
             screenManager = ScreenManager(transition=FadeTransition())
             screenManager.add_widget(self.photoScreen)
