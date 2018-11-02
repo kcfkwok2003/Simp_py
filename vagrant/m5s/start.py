@@ -27,7 +27,7 @@ class START:
         global STA_ESSID, STA_PASSW, AP_DEFAULT, AP_PASSW,DEF_HOST_CODE
         from passcodelib import  PASSCODELIB as SEC
         from app import APP
-
+        self.ap=None
         self.passf =False
         if passcode is None:
             try:

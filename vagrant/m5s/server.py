@@ -64,6 +64,11 @@ class SERVER:
         
         return txt
 
+    def is_ap(self):
+        if self.ap is None:
+            return False
+        return self.ap.active()
+    
     def server_th(self,main):
         self.passf = main.app.passf
         self.uid = main.app.uid
@@ -71,7 +76,9 @@ class SERVER:
         self.header= main.app.header
         self.board=main.app.board
         self.HOST_CODE= main.app.HOST_CODE
-        host_f='chk_host'
+        self.ap = main.ap
+        host_r='chk_host'
+        host_f=False
         _thread.allowsuspend(True)
         while True:
             ntf = _thread.getnotification()
@@ -85,6 +92,7 @@ class SERVER:
             cl, addr = self.s.accept()
             cl.settimeout(60)
             print ('conn from',addr)
+            host_f=False
             data=b''
             first_line=None
             is_content =None
@@ -96,7 +104,6 @@ class SERVER:
             ginfo=False
             b64=False
             execf=False
-            ck_host=False
             fn=''
             self.client.set_cl(cl)
             mon.set_mon_cl(self.client)
@@ -128,53 +135,73 @@ class SERVER:
                         if first_line:
                             first_line=False
                             sx = sx.strip()
-                            if sx ==b'svtest':
-                                print('svtest')
-                                self.fd=open('test.py','wb')
-                                is_content=True
-                            elif sx[:7]==b'svfile:':
-                                fn = sx[7:]
-                                if fn==b'main.py' or fn==b'boot.py':
-                                    fn = 'test.py'
-                                print('svfile:%s' % fn)
-                                self.fd=open(fn,'wb')
-                                is_content=True
-                                if fn[-4:]==b'.b64':
-                                    b64=True
-                            elif sx==b'svwifi':
-                                print('svwifi')
-                                self.fd=open('wifi_config.py','wb')
-                                is_content=True
-                            elif sx==b'reset':
-                                reset=True
-                                print('reset')
-                            elif sx==b'stmon':  # start mon
-                                monx=True
-                                print('stmon')
-                            elif sx==b'kamon':  # keep alive mon
-                                kamon=True
-                            elif sx==b'endmon':  # end mon
-                                monx=False
-                                print('endmon')
-                            elif sx==b'ureq':
-                                print('ureq')
-                                ureq=True
-                            elif sx==b'ginfo':
-                                print('ginfo')
-                                ginfo=True
-                            elif sx==b'exec':
-                                print('exec')
-                                execf=True
+                            if sx==b'svwifi':
+                                if self.is_ap():
+                                    print('svwifi')
+                                    self.fd=open('wifi_config.py','wb')
+                                    is_content=True
+                                else:
+                                    print('svwifi not ap')
+                                    host_r='reject'
                             elif sx[:5]==b'host:':
-                                ck_host=True                                
                                 host=sx[5:]
                                 print('host:%s' % host)
                                 if host==self.HOST_CODE:
-                                    host_f='ok'
+                                    host_r='ok'
+                                    host_f=True
                                 else:
-                                    host_f='chk_host'
+                                    host_r='chk_host'
+                                    host_f=False
+                            elif sx==b'ginfo':
+                                print('ginfo')
+                                ginfo=True
+                                
+                            elif sx[:7]==b'svfile:':
+                                fn = sx[7:]
+                                if fn==b'pass.key':
+                                    if self.is_ap():
+                                        self.fd=open(fn,'wb')
+                                        is_content=True
+                                elif host_f:
+                                    if fn==b'main.py' or fn==b'boot.py':
+                                        fn = 'test.py'
+                                    print('svfile:%s' % fn)
+                                    self.fd=open(fn,'wb')
+                                    is_content=True
+                                    if fn[-4:]==b'.b64':
+                                        b64=True
+                                else:
+                                    print('host?1')
+                                
+                            elif host_f:
+                                if sx ==b'svtest':
+                                    print('svtest')
+                                    self.fd=open('test.py','wb')
+                                    is_content=True
+
+                                elif sx==b'reset':
+                                    reset=True
+                                    print('reset')
+                                elif sx==b'stmon':  # start mon
+                                    monx=True
+                                    print('stmon')
+                                elif sx==b'kamon':  # keep alive mon
+                                    kamon=True
+                                elif sx==b'endmon':  # end mon
+                                    monx=False
+                                    print('endmon')
+                                elif sx==b'ureq':
+                                    print('ureq')
+                                    ureq=True
+
+                                elif sx==b'exec':
+                                    print('exec')
+                                    execf=True
+
+                                else:
+                                    pass
                             else:
-                                pass
+                                print('host?2')
                         else:
                             if sx==b'\x03':
                                 #print('ETX')
@@ -206,7 +233,7 @@ class SERVER:
                                         break
 
                                 else:
-                                    resp=b'\x02\nresp\n%s\n\x03\n' % host_f
+                                    resp=b'\x02\nresp\n%s\n\x03\n' % host_r
                                     
                                     try:
                                         self.send(cl,resp)
@@ -234,7 +261,6 @@ class SERVER:
                                 ginfo=False
                                 b64=False
                                 fn=''
-                                ck_host=False
                             elif sx==b'\x02':
                                 #print('STX')
                                 first_line=True
