@@ -8,8 +8,9 @@ import time
 BUFFER_SIZE=1024
 
 class DEV_COM:
-    def __init__(self,ip=None, dev_com_cb=None):
+    def __init__(self,ip=None, dev_com_cb=None, settings={}):
         self.ip=ip
+        self.settings=settings
         self.dev_com_cb= dev_com_cb
         self.sock=None
         #self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -122,6 +123,8 @@ class DEV_COM:
     def send(self, msg, ip=None):
         if ip:
             self.ip=ip
+        hostmsg='\x02\nhost:%s\n' % self.settings['HOST_CODE']
+        msg= hostmsg +msg
         self.send_queue.put(msg)
         return
 

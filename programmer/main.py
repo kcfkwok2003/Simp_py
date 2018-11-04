@@ -105,7 +105,7 @@ class MainApp(App):
 
             self.sm.current='textScreen'
             self.back = 'textScreen'
-            self.dev_com = DEV_COM(self.settings['ip'], self.dev_com_cb)
+            self.dev_com = DEV_COM(self.settings['ip'], self.dev_com_cb, self.settings)
             return self.sm
         else:
             from msg_dlg import MSG_DLG_KV, MsgDialog 
@@ -1164,8 +1164,8 @@ class MainApp(App):
     def ping(self,dt):
         textScreen = self.sm.get_screen('textScreen')
         status = textScreen.textRoot.status
-        cont = '\x02\nhost:%s\n\x03\n' % self.settings['HOST_CODE']
-        cont += '\x02\nping\n\x03\n\x04\n'
+        #cont = '\x02\nhost:%s\n\x03\n' % self.settings['HOST_CODE']
+        cont = '\x02\nping\n\x03\n\x04\n'
         self.dev_com.send(cont, self.settings['ip'])
         self.wait_resp(status, 5)
         

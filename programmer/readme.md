@@ -5,13 +5,13 @@ V1.2 host todo: (simp-py windows and android)
   * only AP mode can upload WIFI config and host code (win done) 
   * add host code for matching host and device, device will only accept host with same host code can write program (win done)
   * device will send uid to host. host should check again it to avoid connected to a wrong device.
+  * add reload option in File menu to reload file edited by external editor
   
 V1.2 device todo:
-  * when startup in AP mode, test.py will not auto run, press B to run
+  * when startup in AP mode, test.py will not be run (dev done)
   * in startup info, show also host code (dev done)
-  * when 3 button pressed, show startup info, 1st line of test.py
-  * only AP mode can change WIFI config and host code
-  * device will sent uid in each message.
+  * only AP mode can change WIFI config and host code (dev done)
+  * device will sent uid in each message. (dev done)
   
 working:
   * refer to protocol.txt 1.12
@@ -22,5 +22,6 @@ working:
   5. device: when start, show HOST_CODE
   6. device: when receive HOST_CODE not matched, set host_r to 'chk host', otherwise 'ok'
      device: resp with host_r when ping
-  7. device: old simp-py without HOST_CODE use connection to reject?
+  7. host: host should send host code before any action except in ap mode
+  8. device: when start up in AP mode, test.py will not be run
   - device: when start in ap, not run test.py until b pressed  

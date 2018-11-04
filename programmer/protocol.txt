@@ -42,14 +42,14 @@ HOST_CODE='********'
 1.9 keep alive monitor
    STX LF 'kamon' LF ETX LF
 
-1.10 user request command
+1.10 user request command (obsoleted)
    STX LF 'ureq' LF msg LF ETX LF
 
 1.11 remote execute command
    STX LF 'exec' LF command LF ETX LF EOT LF
 
 1.12 host code
-   STX LF 'host:' host_code LF ETX LF
+   STX LF 'host:' host_code LF
    * send this before ping and other commands
    
 2 message from device to host
@@ -68,6 +68,10 @@ HOST_CODE='********'
    'psk' uid ':' psk LF
    'ok' LF ETX LF
 
-2.5 machine uid before other message
-   STX LF 'uid' LF uid LF ETX LF
+2.5 new response with machine uid
+   STX LF 'resp' LF
+   'uid:' uid LF
+   'ok' LF ETX LF
+   
+   #STX LF 'uid' LF uid LF ETX LF
    
