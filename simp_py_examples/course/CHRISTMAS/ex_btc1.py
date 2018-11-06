@@ -40,10 +40,10 @@ while 1:
   while True:
     if time.time() > nxttime:
       break
-    if btnA.pressed():
+    if btnA.isPressed():
       tft.on()
       song.play()
-    if btnB.pressed():
+    if btnB.isPressed():
       tft.on()
-    if btnC.pressed():
+    if btnC.isPressed():
       tft.off()
