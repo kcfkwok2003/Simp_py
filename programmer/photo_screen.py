@@ -50,9 +50,9 @@ class PhotoRoot(BoxLayout):
         fpath='%s/%s' % (self.datapath, self.filename)
         imgx=Image.open(fpath)
         imgx1 =imgx.resize((320,240))
-        imgx1.save('_temp.jpg')
+        imgx1.save('_%s' % self.filename)
         self.imgx1 = imgx1
-        self.img = UImage(source='_temp.jpg')
+        self.img = UImage(source='_%s' % self.filename)
 
         print('img:%s' % self.img)
         self.add_widget(self.img)

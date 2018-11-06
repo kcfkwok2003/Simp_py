@@ -124,6 +124,7 @@ class DEV_COM:
         if ip:
             self.ip=ip
         hostmsg='\x02\nhost:%s\n' % self.settings['HOST_CODE']
+        print(type(msg))
         msg= hostmsg +msg
         self.send_queue.put(msg)
         return
