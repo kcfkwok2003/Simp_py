@@ -14,6 +14,7 @@ V1.2 device todo:
   * only AP mode can change WIFI config and host code (dev done)
   * device will sent uid in each message. (dev done)
   * device can use port other than 8080 according to host_code with ':[port]'
+  * when startup in AP mode, press A to run test.py
   
 working:
   * refer to protocol.txt 1.12
