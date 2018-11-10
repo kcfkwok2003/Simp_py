@@ -6,12 +6,14 @@ V1.2 host todo: (simp-py windows and android)
   * add host code for matching host and device, device will only accept host with same host code can write program (win done)
   * device will send uid to host. host should check again it to avoid connected to a wrong device.
   * add reload option in File menu to reload file edited by external editor
+  * host can connect to device port other than 8080, specified by ip:port (win done)
   
 V1.2 device todo:
   * when startup in AP mode, test.py will not be run (dev done)
   * in startup info, show also host code (dev done)
   * only AP mode can change WIFI config and host code (dev done)
   * device will sent uid in each message. (dev done)
+  * device can use port other than 8080 according to host_code with ':[port]'
   
 working:
   * refer to protocol.txt 1.12

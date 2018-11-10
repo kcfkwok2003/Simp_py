@@ -3,7 +3,7 @@
 # date: 2017-12-20
 import gc
 import machine
-from simp_py import mon,tft
+from simp_py import mon,tft,lcd
 import sys
 import time
 import _thread
@@ -14,20 +14,21 @@ class APP:
         self.passf=passf
         self.usr_btn =machine.Pin(BUTTON_A_PIN,machine.Pin.IN)
 
-    def test_th(self):
+    def test_th(self,main):
+        self.main=main        
         _thread.allowsuspend(True)
         x=0
         if not self.passf:
             txt='.'
             for i in range(10):
-                tft.tft.text(0,100,txt)
+                lcd.text(0,100,txt)
                 time.sleep(1)
                 txt+='.'
             txt+='ok'
-            tft.tft.text(0,100,txt)
+            lcd.text(0,100,txt)
 
         while True:
-            tft.tft.rect(0,120,320,60,0,0)
+            lcd.rect(0,120,320,60,0,0)
             gc.collect()
             ntf = _thread.getnotification()
             if ntf:
@@ -40,6 +41,10 @@ class APP:
                     pass
                     
             if self.usr_btn.value()!=0:
+                if self.main.is_ap():
+                    lcd.text(0,120,'Press A to run')
+                    while self.usr_btn.value()!=0:
+                        time.sleep(0.5)
                 cont=''
                 try:
                     print('read test.py')
@@ -48,17 +53,17 @@ class APP:
                     f.close()
                 except:
                     print('no test.py')
-                    tft.tft.text(0,120,b'No test.py')
+                    lcd.text(0,120,b'No test.py')
                     return
                 mon.data={}
                 mon.data['_state']=b'run'
                 try:
                     self.cont=cont
-                    tft.tft.text(0,120,'Run test.py')
+                    lcd.text(0,120,'Run test.py')
                     print('exec test.py')
                     exec(cont,globals(),{'__name__':'__main__'})
                     print('exec done')
-                    tft.tft.text(0,200, 'test.py end')
+                    lcd.text(0,200, 'test.py end')
 
                 except Exception as e:
                     f=open('exc.txt','w')
@@ -67,7 +72,7 @@ class APP:
                     f=open('exc.txt')
                     mon.data['_exc']=f.read()
                     f.close()
-                    tft.tft.text(0,200,'test.py has exc')
+                    lcd.text(0,200,'test.py has exc')
 
                 mon.data['_state']=b'stopped'
 
@@ -80,16 +85,16 @@ class APP:
                 time.sleep(2)
                 while self.usr_btn.value()==0:
                     time.sleep(1)
-                tft.tft.text(0,60,'Press key to')
-                tft.tft.text(0,80,'clear wifi')
-                tft.tft.text(0,100,'settings')
+                lcd.text(0,80,'Press A to')
+                lcd.text(0,100,'clear wifi')
+                lcd.text(0,120,'settings')
                 while self.usr_btn.value()!=0:
                     time.sleep(1)
                 import os
                 os.remove('wifi_config.py')
-                tft.tft.clear()
-                tft.tft.text(0,0,'Wifi settings')
-                tft.tft.text(0,20,'cleared')
+                lcd.clear()
+                lcd.text(0,0,'Wifi settings')
+                lcd.text(0,20,'cleared')
                 while 1:
                     time.sleep()
                         

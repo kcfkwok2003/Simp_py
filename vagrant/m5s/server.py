@@ -64,10 +64,6 @@ class SERVER:
         
         return txt
 
-    def is_ap(self):
-        if self.ap is None:
-            return False
-        return self.ap.active()
     
     def server_th(self,main):
         self.passf = main.app.passf
@@ -76,7 +72,7 @@ class SERVER:
         self.header= main.app.header
         self.board=main.app.board
         self.HOST_CODE= main.app.HOST_CODE
-        self.ap = main.ap
+        self.main = main
         host_r='chk_host'
         host_f=False
         _thread.allowsuspend(True)
@@ -136,7 +132,7 @@ class SERVER:
                             first_line=False
                             sx = sx.strip()
                             if sx==b'svwifi':
-                                if self.is_ap():
+                                if self.main.is_ap():
                                     print('svwifi')
                                     self.fd=open('wifi_config.py','wb')
                                     is_content=True
@@ -155,11 +151,15 @@ class SERVER:
                             elif sx==b'ginfo':
                                 print('ginfo')
                                 ginfo=True
+                            elif sx==b'reset':
+                                if self.main.is_ap() or host_f:
+                                    reset=True
+                                    print('reset')
                                 
                             elif sx[:7]==b'svfile:':
                                 fn = sx[7:]
                                 if fn==b'pass.key':
-                                    if self.is_ap():
+                                    if self.main.is_ap():
                                         self.fd=open(fn,'wb')
                                         is_content=True
                                 elif host_f:
@@ -172,16 +172,14 @@ class SERVER:
                                         b64=True
                                 else:
                                     print('host?1')
-                                
+
                             elif host_f:
                                 if sx ==b'svtest':
                                     print('svtest')
                                     self.fd=open('test.py','wb')
                                     is_content=True
 
-                                elif sx==b'reset':
-                                    reset=True
-                                    print('reset')
+
                                 elif sx==b'stmon':  # start mon
                                     monx=True
                                     print('stmon')
@@ -233,7 +231,7 @@ class SERVER:
                                         break
 
                                 else:
-                                    resp=b'\x02\nresp\n%s\n\x03\n' % host_r
+                                    resp=b'\x02\nresp\nuid:%s\n%s\n\x03\n' % (self.uid,host_r)
                                     
                                     try:
                                         self.send(cl,resp)

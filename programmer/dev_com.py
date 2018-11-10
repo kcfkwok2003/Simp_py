@@ -98,11 +98,20 @@ class DEV_COM:
                 Logger.info('kcf: msg sent')
             else:
                 self.recv_queue.put('connection failure\n')
-                
+
+        
     def connect(self,ip=None,ping=False):
         if ip:
             self.ip=ip
-        self.server_addr=(self.ip, 8080)
+        port=8080
+        self.server_addr=(self.ip, port)
+        if ':' in self.ip:
+            ipxs = self.ip.split(':')
+            try:
+                port=int(ipxs[-1])
+            except:
+                pass
+            self.server_addr=(ipxs[0], port)
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.setsockopt(socket.SOL_SOCKET,socket.SO_SNDBUF,BUFFER_SIZE)
         if ping:

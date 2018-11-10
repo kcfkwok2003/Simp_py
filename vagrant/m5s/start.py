@@ -3,12 +3,12 @@
 # date: 2017-12-20
 import machine
 import network
-from simp_py import tft,mon
+from simp_py import tft,mon,lcd
 import time
 import _thread
 
 mach_id = machine.unique_id()
-HEADER = 'SIMP_PY 1.2x'
+HEADER = 'SIMP_PY 1.2'
 BOARD = 'm5stk'
 SERVER_PORT=8080
 STA_ESSID ='testssid'
@@ -29,6 +29,7 @@ class START:
         from app import APP
         self.ap=None
         self.passf =False
+        self.wifiset=False
         if passcode is None:
             try:
                 f=open('pass.key')
@@ -42,6 +43,7 @@ class START:
         if secx.veri(passcode,True):
             self.passf=True
             try:
+                self.wifiset=True                
                 from wifi_config import STA_ESSID, STA_PASSW, AP_DEFAULT, AP_PASSW,HOST_CODE
             except:
                 print('import wifi_config exc')
@@ -53,8 +55,14 @@ class START:
             self.AP_PASSW=AP_PASSW
             self.HOST_CODE= HOST_CODE
         self.STA_ESSID=STA_ESSID
-        self.STA_PASSW=STA_PASSW            
-   
+        self.STA_PASSW=STA_PASSW
+        self.server_port= SERVER_PORT
+        if ':' in HOST_CODE:
+            try:
+                self.server_port=int(HOST_CODE.split(':')[-1])
+            except:
+                pass
+        print('port:%s' % self.server_port)
         self.app=APP(self.passf)
         uid = secx.get_uid()
         self.app.uid= uid
@@ -62,12 +70,18 @@ class START:
         self.app.header=HEADER
         self.app.board=BOARD
         self.app.HOST_CODE=bytearray( self.HOST_CODE)
-        
+
+    def is_ap(self):
+        if self.ap is None:
+            return False
+        return self.ap.active()
+
+    
     def start(self):
         print ('starting')
-        tft.tft.text(0,0,'Scanning...')
-        tft.tft.text(0,20,'Press key to')
-        tft.tft.text(0,40,'skip test')
+        lcd.text(0,0,'Scanning...')
+        lcd.text(0,20,'Press A to')
+        lcd.text(0,40,'skip test')
         info=['']
         if self.AP_DEFAULT:
             self.setup_ap()
@@ -88,14 +102,14 @@ class START:
                 self.setup_ap()
                 essid= AP_ESSID
                 info=self.ap.ifconfig()
-        tft.tft.clear()
-        tft.tft.text(0,0,HEADER)
-        tft.tft.text(0,20,essid)
-        tft.tft.text(0,40,info[0])
-        tft.tft.text(0,60,self.HOST_CODE)
+        lcd.clear()
+        lcd.text(0,0,HEADER)
+        lcd.text(0,20,essid)
+        lcd.text(0,40,info[0])
+        lcd.text(0,60,self.HOST_CODE)
         if not self.passf:
-            tft.tft.text(0,80,PASSF_INFO1)
-            tft.tft.text(0,100,PASSF_INFO2)
+            lcd.text(0,80,PASSF_INFO1)
+            lcd.text(0,100,PASSF_INFO2)
 
         self.ip_info= info
         self.myip=info[0]
@@ -126,9 +140,9 @@ def start(passcode=None):
     main = START(passcode)
     main.start()
     from server import SERVER
-    server = SERVER(host=main.myip,port=SERVER_PORT)
+    server = SERVER(host=main.myip,port=main.server_port)
     main.server=server
     _thread.start_new_thread('server',server.server_th,(main,))       
-    _thread.start_new_thread('app',main.app.test_th,())
+    _thread.start_new_thread('app',main.app.test_th,(main,))
     return main
     

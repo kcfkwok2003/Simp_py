@@ -1007,7 +1007,7 @@ class MainApp(App):
             f =open('%s/settings.dat' % self.datapath,'r')
             lines = f.readlines()
             for line in lines:
-                ss = line.split(':')
+                ss = line.split(':',1)
                 if len(ss)>1:
                     self.settings[ss[0]]=string.strip(ss[1])
 
