@@ -127,7 +127,7 @@ class FileRoot(BoxLayout):
         return len(fs)
 
     def is_accepted_file(self,fn):
-        if fn[-3:]=='.py' or fn[-4:]=='.txt' or fn[-4:]=='.jpg':
+        if fn[-3:]=='.py' or fn[-4:]=='.txt' or fn[-4:]=='.jpg' or fn[-4:]=='.prj':
             return True
         return False
     

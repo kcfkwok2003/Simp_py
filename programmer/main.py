@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from kivy.core.window import Window
 Window.clearcolor=(0.6,0.6,0.6,1)
-VERSION='1.0.6'
+VERSION='1.2'
 YEAR ='2018'
 APP_NAME='Simp-py'
 ABOUT_MSG='''
@@ -18,7 +18,9 @@ RADIO_FILE_NAMES=['Open Examples',
              'Save         ',
              'Save as      ',
              'New file     ',
-             'Font py      ',]
+             'Font py      ',
+                  'Reload       ',     
+]
 
 
 RADIO_HELP_NAMES=['Help content        ',
@@ -30,6 +32,7 @@ RADIO_HELP_NAMES=['Help content        ',
 RADIO_UPLOAD_NAMES=['Upload as test.py',
                     'Upload           ',
                     'Upload binary    ',
+                    'Upload files in prj',
                     ]
 from kivy.app import App
 from kivy.base import EventLoop
@@ -94,6 +97,10 @@ class MainApp(App):
         self.mon_mode=False
         self.mon_rx_cnt=0
         self.mon_tx_cnt=0
+        self.prj_idx=0
+        self.prj_files=[]
+        self.prj_len=0
+    
         self.download_sim_cont=False
         if self.chk_settings_path():
             self.get_settings()
@@ -375,14 +382,25 @@ class MainApp(App):
             return
         
         if nlines[0]=='resp':
-            txt = nlines[1]
+            uidx= nlines[1]
+            if uidx[:4]=='uid:':
+                uidx= uidx[4:]
+            print('uidx:%s' % uidx)
+            t_dev=self.settings.get('CONN_DEVICE','---')
+            ss = t_dev.split('/')
+            uidy = ss[-1]
+            print('conn_dev:%s' % t_dev)
+            #print('conn_dev:%s' % self.get_conn_dev())
+            txt = nlines[2]
             tlines = string.split(status.text,'\n')
             Logger.info('kcf: current:%s' % current)
             Logger.info('kcf: tlines;%s' % `tlines`)
             Logger.info('kcf: status:%s' % `status`)
             if len(tlines)>0:
-                txt = tlines[-1] +'\n' + txt
-                
+                if uidx==uidy:
+                    txt = tlines[-1] +'\n' + txt
+                else:
+                    txt = tlines[-1] +'\n' + 'uid not match %s ~ %s' % (uidx,uidy)
             if current=='monScreen':
                 status.text= txt
                 if not self.mon_mode:
@@ -394,6 +412,13 @@ class MainApp(App):
             elif current=='textScreen':
                 status.text=txt
                 self.dev_com.close()
+                if nlines[2]=='ok':
+                    print('*** ok')
+                    if self.prj_len >0:
+                        if (self.prj_idx +1) < self.prj_len: 
+                            self.prj_idx+=1
+                            Clock.schedule_once(self.upload_prj_file)
+                            
             elif current=='settingsScreen':
                 devinfo={}
                 if nlines[1][:3]=='inf':
@@ -717,6 +742,9 @@ class MainApp(App):
             self.datapath=DATA_PATH
             self.on_file_new_m()
             return
+        elif self.m_op_sch=='Reload':
+            self.on_file_reload()
+            return
         else:
             msg ='%s not implemented' % self.m_op_sch
             self.textScreen.textRoot.status.text=msg
@@ -733,7 +761,7 @@ class MainApp(App):
         button_names=[' ','CANCEL','OK']
         callbacks={}
         callbacks['OK']=self.new_file
-        self.dlg=MButDialog(title='New file',message='Input new file name',button_names=button_names,callbacks=callbacks,size_hint=(0.8,0.5))
+        self.dlg=MButDialog(title='New file',message='Input new file name(.py,.txt,.prj)',button_names=button_names,callbacks=callbacks,size_hint=(0.8,0.5))
         self.dlg.open()
 
     def new_file(self,v):
@@ -800,6 +828,30 @@ class MainApp(App):
         if filename[-4:].lower()=='.jpg':
             return True
         return False
+
+    def on_file_reload(self):
+        filecont=''
+        textScreen = self.sm.get_screen('textScreen')        
+        fpath = '%s/%s' % (self.datapath, self.filename)
+        try:
+            f=open(fpath,'rb')
+            filecont=f.read()
+            f.close()
+        except:
+            exc = get_exc_details()
+            Logger.info('kcf: on_file_open exc:%s' % exc)
+            #textScreen.textRoot.text_input.text=filecont
+            textScreen.textRoot.set_text(filecont)
+            textScreen.textRoot.text_input.cursor=(0,0)
+            self.sm.current='textScreen'
+            return
+        textScreen.textRoot.status.text='reloaded: %s' % fpath
+        #textScreen.textRoot.text_input.text=filecont
+        textScreen.textRoot.set_text(filecont)        
+        textScreen.textRoot.text_input.cursor=(0,0)
+        self.sm.current='textScreen'
+        self.title='%s [%s] [%s]'  % (APP_NAME,self.filename, self.datapath)
+        
     
     def on_file_open(self,filename):
         self.filename = filename
@@ -1059,6 +1111,8 @@ class MainApp(App):
                     #msg='Upload binary not implemented'
                     #self.textScreen.textRoot.status.text=msg
                     #print(msg)
+                elif keyx=='Upload files in prj':
+                    self.on_upload_prj(v)
                 else:
                     msg='%s not implemented' % keyx
                     self.textScreen.textRoot.status.text=msg
@@ -1067,6 +1121,98 @@ class MainApp(App):
                 break
         self.dlg.dismiss()
 
+    def on_upload_prj(self,v):
+        Logger.info('kcf:on_upload_prj')
+        textScreen = self.sm.get_screen('textScreen')
+        status = textScreen.textRoot.status
+        if self.filename[-4:]!='.prj':
+            status.text='Not a prj file'
+            return
+        ss = textScreen.textRoot.text_input.text
+        lines = ss.split('\n')
+        files=[]
+        for line in lines:
+            filex = line.strip()
+            print ('filex:%s' % filex)
+            if len(filex)==0 or filex[0]=='#':
+                continue
+            files.append(filex)
+        if len(files)>0:
+            status.text='upload %d files in prj to %s' % (len(files),self.settings['ip'])
+            self.prj_idx=0
+            self.prj_files = files
+            self.prj_len=len(files)
+            Clock.schedule_once(self.upload_prj_file)
+            return
+        status.text='no upload files in prj'
+
+    def upload_prj_file(self,v):
+        filex = self.prj_files[self.prj_idx]
+        msg ='sending %s(%s/%s) to %s' % (filex, self.prj_idx, self.prj_len, self.settings['ip'])
+        print msg
+        status = self.textScreen.textRoot.status
+        status.text=msg
+        if filex[-4:].lower()=='.jpg':
+            self.upload_binary_file(filex)
+        elif '>' in filex:
+            ss = filex.split('>')
+            if ss[-1].strip() =='test.py':
+                self.upload_test_file(ss[0].strip())
+            else:
+                status.text='%s not supported' % filex
+        else:
+            self.upload_file(filex)
+
+    def upload_file(self,fname):
+        print('upload_file %s' % fname)
+        status = self.textScreen.textRoot.status
+        f=open('%s/%s' % (self.datapath,fname),'rb')        
+        self.cont = f.read()
+        #Logger.info('kcf: cont:%s' % `self.cont`)
+        f.close()        
+        cont = '\x02\nsvfile:%s\n' % str(fname)
+        cont += self.cont
+        cont +='\n\x03\n\x04\n'
+        self.dev_com.send(cont, self.settings['ip'])
+        self.wait_resp(status)
+
+    def upload_test_file(self, fname):
+        print('upload_test_file %s' % fname)
+        #textScreen = self.sm.get_screen('textScreen')
+        status = self.textScreen.textRoot.status
+        f=open('%s/%s' % (self.datapath,fname),'rb')
+        self.cont = f.read()
+        f.close()
+        cont = '\x02\nsvtest\n'+ self.cont +'\n\x03\n\x04\n'
+        self.dev_com.send(cont, self.settings['ip'])
+        self.wait_resp(status)
+        
+    def upload_binary_file(self,fname):
+        print('upload_binary_file %s' % fname)
+        #textScreen = self.sm.get_screen('textScreen')
+        status = self.textScreen.textRoot.status
+        f=open('%s/%s' % (self.datapath,fname),'rb')        
+        contx = f.read()
+        #Logger.info('kcf: cont:%s' % `self.cont`)
+        f.close()
+        b64c = binascii.b2a_base64(contx)
+        b64_cont,b64c=b64c[:76],b64c[76:]
+        while len(b64c)>76:
+            xstr, b64c=b64c[:76],b64c[76:]
+            b64_cont+= '\n'+xstr
+        b64_cont+= '\n'+b64c
+        
+        #f=open('test.jpg.b64','wb')
+        #f.write(b64_cont)
+        #f.close()
+        
+        cont = '\x02\nsvfile:%s\n' % str(fname+'.b64')
+        cont += b64_cont
+        cont +='\n\x03\n\x04\n'
+        self.dev_com.send(cont, self.settings['ip'])
+        self.wait_resp(status)        
+
+        
     def on_upload_binary(self,v):
         #fpath ='%s/%s' % (self.datapath,self.filename)
         Logger.info('kcf:on_upload_binary')
