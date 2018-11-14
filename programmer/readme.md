@@ -1,14 +1,14 @@
 V1.2 host todo: (simp-py windows and android)
-  * fix about wrongly clearing edit area during 1st time upload (simp_py-android v1.1.14)
-  * fix scaled.jpg recursive problem (win done) 
-  * show path in title  (win done)
-  * only AP mode can upload WIFI config and host code (win done) 
-  * add host code for matching host and device, device will only accept host with same host code can write program (win done)
-  * device will send uid to host. host should check again it to avoid connected to a wrong device. (win done)
-  * host can connect to device port other than 8080, specified by ip:port (win done) 
-  * add reload option in File menu to reload file edited by external editor (win done)
-  * add new and open prj file (win done)
-  * add upload "files in prj" (win done)
+  a1 fix about wrongly clearing edit area during 1st time upload (simp_py-android v1.1.14)
+  a2 fix scaled.jpg recursive problem (win done) 
+  a3 show path in title  (win done)
+  a4 only AP mode can upload WIFI config and host code (win done) 
+  a5 add host code for matching host and device, device will only accept host with same host code can write program (win done)
+  a6 device will send uid to host. host should check again it to avoid connected to a wrong device. (win done)
+  a7 host can connect to device port other than 8080, specified by ip:port (win done) 
+  a8 add reload option in File menu to reload file edited by external editor (win done)
+  a9 add new and open prj file (win done)
+  a10 add upload "files in prj" (win done)
   
 V1.2 device todo:
   * when startup in AP mode, test.py will not be run (dev done)
@@ -17,6 +17,9 @@ V1.2 device todo:
   * device will sent uid in each message. (dev done)
   * device can use port other than 8080 according to host_code with ':[port]'
   * when startup in AP mode, press A to run test.py
+
+working for host android:
+  1.
   
 working:
   * refer to protocol.txt 1.12
