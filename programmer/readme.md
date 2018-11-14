@@ -1,8 +1,8 @@
 V1.2 host todo: (simp-py windows and android)
   a1 fix about wrongly clearing edit area during 1st time upload (simp_py-android v1.1.14)
-  a2 fix scaled.jpg recursive problem (win done) 
-  a3 show path in title  (win done)
-  a4 only AP mode can upload WIFI config and host code (win done) 
+  a2 fix scaled.jpg recursive problem (win done) (android changed) 
+  a3 show path in title  (win done)  (android changed)
+  a4 only AP mode can upload WIFI config and host code (win done) (android changed) 
   a5 add host code for matching host and device, device will only accept host with same host code can write program (win done)
   a6 device will send uid to host. host should check again it to avoid connected to a wrong device. (win done)
   a7 host can connect to device port other than 8080, specified by ip:port (win done) 
@@ -19,7 +19,11 @@ V1.2 device todo:
   * when startup in AP mode, press A to run test.py
 
 working for host android:
-  1.
+  1. a2 fix scaled.jpg recursive problem (changed)
+  2. a3 show path in title (changed)
+  3. a4 only ap mode can upload wifi config (changed)
+  4. add host code and connected device in settings screen
+  
   
 working:
   * refer to protocol.txt 1.12
