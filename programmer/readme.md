@@ -9,6 +9,7 @@ V1.2 host todo: (simp-py windows and android)
   a8 add reload option in File menu to reload file edited by external editor (win done)
   a9 add new and open prj file (win done)
   a10 add upload "files in prj" (win done)
+  a11 save prj from course folder ask for copy files in prj (win done)
   
 V1.2 device todo:
   * when startup in AP mode, test.py will not be run (dev done)

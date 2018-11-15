@@ -721,6 +721,7 @@ class MainApp(App):
     def on_file_m_op_sch(self,v):
         handler=None
         title=''
+        org_path= self.datapath        
         self.datapath=DATA_PATH
         if self.m_op_sch=='Open':
             handler=self.on_file_open
@@ -732,7 +733,7 @@ class MainApp(App):
             title='Simp-py [course]'
         elif self.m_op_sch=='Save':
             self.datapath=DATA_PATH
-            self.on_file_save(self.filename)
+            self.on_file_save(self.filename,org_path)
             return
         elif self.m_op_sch=='Save as':
             self.datapath=DATA_PATH
@@ -940,7 +941,7 @@ class MainApp(App):
         self.title='%s [%s] [%s]'  % (APP_NAME,self.filename,self.datapath)
 
         
-    def on_file_save(self,filename):
+    def on_file_save(self,filename,org_path):
         print('on_file_save %s' % filename)
         textScreen = self.sm.get_screen('textScreen')
         file_label = textScreen.textRoot.file_label
@@ -959,9 +960,21 @@ class MainApp(App):
             textScreen.textRoot.status.text='Save to %s/%s failed' % (self.datapath,self.filename)
             self.sm.current='textScreen'
             return
-        self.ask_save_test()
+        print('org_path:%s %s' % (org_path, org_path.endswith('course')))
+        
+        if filename.endswith('.py'):
+            self.ask_save_test()
+        elif filename.endswith('.prj') and org_path.endswith('course'):
+            self.ask_copy_files_in_prj()
         self.sm.current='textScreen'
 
+    def ask_copy_files_in_prj(self):
+        button_names=['CANCEL','OK']
+        callbacks={}
+        callbacks['OK']=self.copy_files_in_prj
+        self.dlg=MButDialog(title='Copy files in prj to data folder',message='Copy files from course folder?',button_names=button_names,callbacks=callbacks,size_hint=(0.8,0.5))
+        self.dlg.open()
+        
     def ask_save_test(self):
         button_names=['CANCEL','OK']
         callbacks={}
@@ -969,6 +982,54 @@ class MainApp(App):
         self.dlg=MButDialog(title='Also save to test.py',message='Save to test.py?',button_names=button_names,callbacks=callbacks,size_hint=(0.8,0.5))
         self.dlg.open()
 
+    def copy_files_in_prj(self,v):
+        self.dlg.dismiss()
+        print('copy_files_in_prj')
+        cont = self.textScreen.textRoot.text_input.text
+        lines = cont.split('\n')
+        files=[]
+        for line in lines:
+            filex = line.strip()
+            if len(filex)>0 and filex[0]!='#':
+                if '>' in filex:
+                    ss=filex.split('>')
+                    files.append(ss[0].strip())
+                    files.append(filex)
+                else:
+                    files.append(filex)
+        if len(files) ==0:
+            self.textScreen.textRoot.status.text='No files copied'
+            return
+        self.copy_files_len= len(files)
+        self.copy_files=files
+        self.copy_files_idx=0
+        self.textScreen.textRoot.status.text='%s/%s %s' % (self.copy_files_idx,self.copy_files_len, self.copy_files[self.copy_files_idx])
+        Clock.schedule_once(self.copy_files_sch,0.1)
+
+    def copy_files_sch(self,dt):
+        from shutil import copyfile
+        filex = self.copy_files[self.copy_files_idx]
+        src = '%s/%s' % (EX_PATH, filex)
+        dst = '%s/%s' % (DATA_PATH, filex)
+        if '>' in filex:
+            ss= filex.split('>')
+            src = '%s/%s' % (EX_PATH, ss[0].strip())
+            dst = '%s/test.py' % (DATA_PATH,)
+        try:
+            Logger.info('kcf: copy file %s' % filex)
+            copyfile(src,dst)
+        except:
+            exc = get_exc_details()
+            Logger.info('kcf: copy_file exc:%s' % exc)
+            self.textScreen.textRoot.status.text+='\nException:%s' % exc
+            return
+        self.copy_files_idx+=1
+        if self.copy_files_idx >= self.copy_files_len:
+            self.textScreen.textRoot.status.text+='%s files copied' % self.copy_files_len
+            return
+        self.textScreen.textRoot.status.text='%s/%s %s' % (self.copy_files_idx,self.copy_files_len, self.copy_files[self.copy_files_idx])
+        Clock.schedule_once(self.copy_files_sch,0.1)
+        
     def save_to_test(self,v):
         print('save_to_test')
         textScreen = self.sm.get_screen('textScreen')
