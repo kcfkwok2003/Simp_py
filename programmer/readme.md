@@ -5,9 +5,9 @@ V1.2 host todo: (simp-py windows and android)
   a4 only AP mode can upload WIFI config and host code (win done) (android changed) 
   a5 add host code for matching host and device, device will only accept host with same host code can write program (win done) (android changed)
   a6 device will send uid to host. host should check again it to avoid connected to a wrong device. (win done) (android changed)
-  a7 host can connect to device port other than 8080, specified by ip:port (win done) 
+  a7 host can connect to device port other than 8080, specified by ip:port (win done) (android changed)
   a8 add reload option in File menu to reload file edited by external editor (win done) (android changed)
-  a9 add new and open prj file (win done)
+  a9 add new and open prj file (win done) (android changed)
   a10 add upload "files in prj" (win done)
   a11 save prj from course folder ask for copy files in prj (win done)
   
@@ -33,8 +33,9 @@ working for host android:
   11. rst with host code (changed)
   12. mon with host code (Changed)
   13. a6 host check uid not match with message show (changed)
-  14. a7 use port other than 8080
-  
+  14. a7 use port other than 8080 (changed)
+  15. a11 save prj from course folder ask for copy files in prj (changed)
+  16. a10 add upload "files in prj"
   
 working:
   * refer to protocol.txt 1.12
