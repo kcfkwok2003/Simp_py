@@ -49,6 +49,7 @@ def pr_ch(x,y,fntdat,color=0xffffff,transparent=True,scale=2):
   return x+ix
 
 def pr_texts(x,y,texts,CH_FONTS):
+  global sp
   for text in texts:
     for chx in text:
       fntdat =CH_FONTS.get(chx,sp)

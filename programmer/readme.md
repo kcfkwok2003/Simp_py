@@ -1,5 +1,5 @@
 V1.2 host todo: (simp-py windows and android)
-  a1 fix about wrongly clearing edit area during 1st time upload (simp_py-android v1.1.14)
+  a1 fix about wrongly clearing edit area during 1st time upload (simp_py-android v1.1.14) (android changed)
   a2 fix scaled.jpg recursive problem (win done) (android changed) 
   a3 show path in title  (win done)  (android changed)
   a4 only AP mode can upload WIFI config and host code (win done) (android changed) 
@@ -23,7 +23,14 @@ working for host android:
   1. a2 fix scaled.jpg recursive problem (changed)
   2. a3 show path in title (changed)
   3. a4 only ap mode can upload wifi config (changed)
-  4. add host code and connected device in settings screen
+  4. add host code and connected device in settings screen (changed)
+  5. upload wifi config with host_code (changed)
+  6. ping with host (changed)
+  7. set uid with devinfo (changed)
+  8. no more ping before upload (changed)
+  9. add reload in file operation (changed)
+  10. upload with host code (changed)
+  11. rst with host code
   
   
 working:
