@@ -3,10 +3,10 @@ V1.2 host todo: (simp-py windows and android)
   a2 fix scaled.jpg recursive problem (win done) (android changed) 
   a3 show path in title  (win done)  (android changed)
   a4 only AP mode can upload WIFI config and host code (win done) (android changed) 
-  a5 add host code for matching host and device, device will only accept host with same host code can write program (win done)
-  a6 device will send uid to host. host should check again it to avoid connected to a wrong device. (win done)
+  a5 add host code for matching host and device, device will only accept host with same host code can write program (win done) (android changed)
+  a6 device will send uid to host. host should check again it to avoid connected to a wrong device. (win done) (android changed)
   a7 host can connect to device port other than 8080, specified by ip:port (win done) 
-  a8 add reload option in File menu to reload file edited by external editor (win done)
+  a8 add reload option in File menu to reload file edited by external editor (win done) (android changed)
   a9 add new and open prj file (win done)
   a10 add upload "files in prj" (win done)
   a11 save prj from course folder ask for copy files in prj (win done)
@@ -30,7 +30,10 @@ working for host android:
   8. no more ping before upload (changed)
   9. add reload in file operation (changed)
   10. upload with host code (changed)
-  11. rst with host code
+  11. rst with host code (changed)
+  12. mon with host code (Changed)
+  13. a6 host check uid not match with message show (changed)
+  14. a7 use port other than 8080
   
   
 working:

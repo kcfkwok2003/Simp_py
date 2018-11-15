@@ -26,7 +26,7 @@ def read_texts(fn):
   return txts
 
 def pr_ch(x,y,fntdat,color=0xffffff,transparent=True,scale=2):
-  global BITM,lcd
+  global BITM,lcd,pixel
   while fntdat:
     #print('fntdata:%s' % fntdat)
     fnt0,fnt1, fntdat = fntdat[0],fntdat[1], fntdat[2:]
@@ -49,7 +49,7 @@ def pr_ch(x,y,fntdat,color=0xffffff,transparent=True,scale=2):
   return x+ix
 
 def pr_texts(x,y,texts,CH_FONTS):
-  global sp
+  global sp, pr_ch
   for text in texts:
     for chx in text:
       fntdat =CH_FONTS.get(chx,sp)
