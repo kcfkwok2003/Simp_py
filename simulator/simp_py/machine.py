@@ -101,6 +101,19 @@ class RTC:
 def unique_id():
     return None
 
+class PWM:
+    def __init__(self,pin):
+        self.pin=pin
+        self.dutyx=0
+        self.freqx=0
+
+    def duty(self,dutyx):
+        self.dutyx=dutyx
+
+    def freq(self,freqx):
+        self.freqx=freqx
+        
+    
 pins=PINS()
 gdata1.pins=pins
 

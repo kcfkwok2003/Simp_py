@@ -351,6 +351,7 @@ class LCD:
         TFT_clearStringRect(x,y,text)
 
     def image(self,x,y,fn,scale=0,img_type=-1,image_debug=0):
+        self.pixels={}
         if img_type<0:
             # try to determine image type
             ext=fn.split('.')[-1].upper()

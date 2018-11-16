@@ -8,8 +8,10 @@ V1.2 host todo: (simp-py windows and android)
   a7 host can connect to device port other than 8080, specified by ip:port (win done) (android changed)
   a8 add reload option in File menu to reload file edited by external editor (win done) (android changed)
   a9 add new and open prj file (win done) (android changed)
-  a10 add upload "files in prj" (win done)
-  a11 save prj from course folder ask for copy files in prj (win done)
+  a10 add upload "files in prj" (win done) (android changed)
+  a11 save prj from course folder ask for copy files in prj (win done) (android changed)
+  a12 change font py script, and save prj (android changed)
+  a13 add prj to jpg test (android changed)
   
 V1.2 device todo:
   * when startup in AP mode, test.py will not be run (dev done)
@@ -35,7 +37,7 @@ working for host android:
   13. a6 host check uid not match with message show (changed)
   14. a7 use port other than 8080 (changed)
   15. a11 save prj from course folder ask for copy files in prj (changed)
-  16. a10 add upload "files in prj"
+  16. a10 add upload "files in prj" (changed)
   
 working:
   * refer to protocol.txt 1.12

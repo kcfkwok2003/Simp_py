@@ -33,7 +33,6 @@ def _sleep(t):
             break
 time.sleep = _sleep
 
-
 TITLE_X =80
 TITLE_Y = 0
 TITLE_Y_C= LCD_Y0 // 2

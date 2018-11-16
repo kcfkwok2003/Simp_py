@@ -4,7 +4,7 @@ from pr_fontx import read_texts,pr_texts
 from button import Button
 from machine import Pin
 from christmas_song import song
-import _thread
+import sys
 
 from text1_fontx import CH_FONTS
 from text2_fontx import CH_FONTS as fontx2
@@ -41,7 +41,9 @@ def thread_run():
     song.play()
     time.sleep(2)
 
-_thread.start_new_thread('song',thread_run,())
+if sys.platform=='esp32':
+  import _thread
+  _thread.start_new_thread('song',thread_run,())
 
 while True:
   for i in range(1,4):
