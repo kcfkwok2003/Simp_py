@@ -32,6 +32,9 @@ def _sleep(t):
             #print('wake @%s' % time.time())
             break
 time.sleep = _sleep
+def _sleep_ms(t):
+    time.sleep(0.001 * t)
+time.sleep_ms = _sleep_ms
 
 TITLE_X =80
 TITLE_Y = 0
