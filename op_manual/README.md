@@ -1,4 +1,4 @@
-Simp-py 操作摘要 (v1.2)
+Simp-py 操作摘要 (v1.2.1)
 
 1\. 從google play(暫時只適用於香港) 安裝Simp-py app (Android 5.0 或以上)
 
@@ -22,11 +22,12 @@ Ref:
 <table>
 <tbody>
 <tr class="odd">
-<td><img src=".//media/image18.png" style="width:2.39063in;height:2.39898in" /></td>
+<td><p><img src=".//media/image16.png" style="width:2.5in;height:2.5in" /></p>
+<p>圖1</p></td>
 <td><p>按一下M5Stack側面的紅色按鍵,約3秒後</p>
 <p>LCD 亮起. 出現左圖畫面. 信息包括:</p>
-<p>SIMP_PY 板本，例如 1.0.9a</p>
-<p>Wifi 接入點的名稱 (SSID) 例如 SIMP_PY-9EDC</p>
+<p>SIMP_PY 板本，例如 1.2</p>
+<p>Wifi 接入點的名稱 (SSID) 例如 SIMP_PY-3640</p>
 <p>網絡地址(IP address)，例如 192.168.4.1</p>
 <ul>
 <li><blockquote>
@@ -35,20 +36,29 @@ Ref:
 <li><blockquote>
 <p>如果SSID不是SIMP_PY-.. 和 IP 不是192.168.4.1, 請參照12.1 (2) 回复到初始狀態.</p>
 </blockquote></li>
+<li><blockquote>
+<p>當M5Stack 在AP模式,IP 定是192.168.4.1, 此時不會運行test.py, 按下A鍵才會運行.</p>
+</blockquote></li>
 </ul></td>
 </tr>
 </tbody>
 </table>
+
+M5Stack 側面的紅色按鍵是開關. 按一下開機, 連按兩下關機.
+
+前面3個按鍵由左至右為A,B,C 按鍵.
 
 4\. 經Wi-Fi連接M5Stack 的 AP 模式 (見附錄A1)
 
 <table>
 <tbody>
 <tr class="odd">
-<td><img src=".//media/image7.png" style="width:1.9375in;height:1.375in" /></td>
-<td><img src=".//media/image16.png" style="width:1.9375in;height:3.06944in" /></td>
+<td><p><img src=".//media/image2.png" style="width:1.9375in;height:1.375in" /></p>
+<p>圖2</p></td>
+<td><p><img src=".//media/image10.png" style="width:1.9375in;height:3.05556in" /></p>
+<p>圖3</p></td>
 <td><p>在手機開啟Wi-Fi 連接到M5Stack.</p>
-<p>進入Simp-py Apps, 按[Set..] 入設定頁.</p>
+<p>進入Simp-py Apps, 按[Set..] 進入設定頁.(參考附錄B)</p>
 <p>在Device IP欄輸入對應的ip 地址</p></td>
 </tr>
 </tbody>
@@ -59,10 +69,13 @@ Ref:
 <table>
 <tbody>
 <tr class="odd">
-<td><img src=".//media/image17.png" style="width:2.97917in;height:3.54167in" /></td>
+<td><p><img src=".//media/image14.png" style="width:2.97917in;height:3.08333in" /></p>
+<p>圖4</p></td>
 <td><p>在設定頁面按下[DevInfo] 便能經Wi-Fi 讀取器件資訊</p>
+<p>顯示Device not match, set it? 表示Connected Device 內容不配合.</p>
 <p>Passkey: ??? 表示passkey 未設定.</p>
-<p>要取得passkey, 記下Device info 內的資料, 到下列網登記便可:</p>
+<p>按[OK]設定Connected Device 內容.</p>
+<p>要取得passkey, 記下Device info 內的資料, 到下列網站登記便可:</p>
 <p><a href="http://simp-py.appspot.com/"><span class="underline">http://simp-py.appspot.com/</span></a></p></td>
 </tr>
 </tbody>
@@ -73,8 +86,8 @@ Ref:
 <table>
 <thead>
 <tr class="header">
-<th><img src=".//media/image1.png" style="width:1.76339in;height:1.95313in" /></th>
-<th><img src=".//media/image3.png" style="width:1.71542in;height:1.85938in" /></th>
+<th><img src=".//media/image8.png" style="width:1.76339in;height:1.95313in" /></th>
+<th><img src=".//media/image5.png" style="width:1.71542in;height:1.85938in" /></th>
 <th><p>在設定頁按[Passkey], 然後選 Upload passkey by hand.</p>
 <p>按[ok],</p>
 <p>輸入passkey 再按[ok] 確定.</p>
@@ -85,8 +98,9 @@ Ref:
 </thead>
 <tbody>
 <tr class="odd">
-<td><img src=".//media/image2.png" style="width:1.80208in;height:1.76389in" /></td>
-<td><img src=".//media/image6.png" style="width:1.72917in;height:1.30556in" /></td>
+<td><img src=".//media/image1.png" style="width:1.80208in;height:1.76389in" /></td>
+<td><p><img src=".//media/image7.png" style="width:1.72917in;height:1.30556in" /></p>
+<p>圖5</p></td>
 <td><p>如果你因升級或重寫固件.而之前已備份了passkey 文件,可.</p>
 <p>在設定頁按[Passkey], 然後選 Upload passkey from file.</p>
 <p>按[ok], 看見右圖信息再按[ok] 確定.</p>
@@ -138,22 +152,31 @@ Ref:
 </tbody>
 </table>
 
-8\.
-下載課程例子
+8\. 下載課程例子
 
-|                           |                          |                                                                                                                   |
-| ------------------------- | ------------------------ | ----------------------------------------------------------------------------------------------------------------- |
-| ![](.//media/image12.png) | ![](.//media/image9.png) | 先到設定頁輸入正確課程編號 (Course code). 然按\[help\] 選 Download Course. 按 \[ok\] 便下載課程例子. 例子會放在/data/simp\_py/simp\_py\_ex/ 內. |
+<table>
+<tbody>
+<tr class="odd">
+<td><p><img src=".//media/image3.png" style="width:1.9375in;height:1.34722in" /></p>
+<p>圖6</p></td>
+<td><p><img src=".//media/image13.png" style="width:1.9375in;height:2.02778in" /></p>
+<p>圖7</p></td>
+<td>先到設定頁輸入正確課程編號 (Course code). 然按[help] 選 Download Course. 按 [ok] 便下載課程例子. 例子會放在/data/simp_py/simp_py_ex/course 內.</td>
+</tr>
+</tbody>
+</table>
 
 9\. 運行課程 例子
 
 <table>
 <tbody>
 <tr class="odd">
-<td><img src=".//media/image10.png" style="width:1.9375in;height:3.45833in" /></td>
-<td><img src=".//media/image8.png" style="width:1.9375in;height:3.5in" /></td>
+<td><p><img src=".//media/image15.png" style="width:1.9375in;height:3.06944in" /></p>
+<p>圖8</p></td>
+<td><p><img src=".//media/image17.png" style="width:1.91421in;height:3.04688in" /></p>
+<p>圖9</p></td>
 <td><p>在主頁按[File], 選Open Examples</p>
-<p>進入course 文件夾, 選t101.py</p>
+<p>選t101.py</p>
 <p>按[Ping]測試連接狀況。</p>
 <p>按[upld] , 選Upload as test.py, 按[ok]</p>
 <p>上載成功後會問是否”Reset the device?” 按[OK]</p>
@@ -171,7 +194,12 @@ Ref:
 <td><p>在主頁按[File], 選:</p>
 <p>Save: 把文件以相同名稱存放入data/simp_py_dat 內. 儲存會問&quot;Also save to test.py”, 按 [OK] 便多存儲一份為 test.py</p>
 <p>Save as : 把文件以不同名稱存放入data/simp_py_dat 內.</p>
-<p>請嘗試用前述方法運行不同例子. 或嘗試修改部分內容.</p></td>
+<p>請嘗試用前述方法運行不同例子. 或嘗試修改部分內容.</p>
+<p>Open : 打開存放在data/simp_py_dat內的文件. 可打開的文件後綴包括 py, txt, jpg, prj</p>
+<p>如果是jpg 文件, 會進入Photo operator 頁, 可下調相片,生成程式和 prj 文件</p>
+<p>New file: 清除編輯區, 輸入新文件名稱.</p>
+<p>Font py : 如果當前文件後綴為txt, 會進入字體數據生成頁, 生成數據,程式和 prj 文件.</p>
+<p>Reload : 如果使用外置的編輯工具修改了文件, 可在此按Reload 重新載入文件.</p></td>
 </tr>
 </tbody>
 </table>
@@ -185,7 +213,8 @@ Ref:
 <table>
 <tbody>
 <tr class="odd">
-<td><img src=".//media/image4.png" style="width:2.52515in;height:2.57813in" /></td>
+<td><p><img src=".//media/image4.png" style="width:2.52515in;height:2.57813in" /></p>
+<p>圖10</p></td>
 <td><p>按 [Start] 開始監測</p>
 <p>按 [Stop] 結朿監測</p>
 <p>如果程式有異常(Exception), 會看見如_exc:Traceback 等</p>
@@ -200,7 +229,8 @@ Ref:
 <table>
 <tbody>
 <tr class="odd">
-<td><img src=".//media/image11.png" style="width:2.399in;height:4.2982in" /></td>
+<td><p><img src=".//media/image9.png" style="width:2.399in;height:4.2982in" /></p>
+<p>圖11</p></td>
 <td><p>即時命令:</p>
 <p>例如輸入tft.off() 按[Send] 可關 lcd 背光, 輸入 tft.on(), 按[Send] 可重開 lcd 背光.</p>
 <p>運行文件:</p>
@@ -246,6 +276,28 @@ import t102</th>
 12.3 Android 7.0以上版本, 設定Wifi 直接連接Ｍ5Stack時（附錄A1) , 由於此路徑不接通Internet ,
 會彈出確認框, 請進行確認, 在頂列也要出現wifi 符號, 否則會連接不上 M5Stack.
 
+13\. Host code 和Connected Device
+
+由於M5Stack 的IP 地址分配有可能因改變了而使手機和M5Stack 出現錯誤配搭.
+
+Simp-py r1.2 開始在設定頁增加了 Host code 和Connected Device.
+
+用戶可自行設定Host Code並上傳至M5Stack. 設定好後M5Stack 只會接受來自相同Host code 的 手機的命令.(AP
+模式則無此限制) 用戶會在狀態欄看到chk\_host 的信息.此時用戶應查看M5Stack 的IP 地址並修改手機上的設定.
+
+用戶如果有多部M5Stack 並使用相同Host code 時. 由於每部M5Stack 都有獨立的ID. Connected Device
+可儲存上次連接的的M5Stack, 如果連錯了另一部M5Stack, 用戶會在狀態欄看到 uid not match 等信息.
+此時用戶應查看M5Stack 的IP 地址並修改手機上的設定.
+
+14\. Host code 和 通訊口(port) 設定 (不熟識網絡用戶請不要作此部份嘗試)
+
+M5Stack 的默認通訊口為8080
+
+Host code 如果包含有":" , 例如"STEM-000:80”
+
+如果上傳給M5Stack, M5Stack 重啟後會使用通訊口80, 手機應在Device IP 項加入":80", 例如:
+"192.168.1.123:80" 才能和M5Stack 通訊.
+
 **附錄A M5stack WIFI 連接方式**
 
 A1. AP (Access Point) 接入點模式
@@ -255,7 +307,7 @@ A1. AP (Access Point) 接入點模式
 <tr class="odd">
 <td><p>IP: 固定為: 192.168.4.1</p>
 <p>無互聯網連線</p></td>
-<td><img src=".//media/image13.png" style="width:3.55208in;height:2.125in" /></td>
+<td><img src=".//media/image19.png" style="width:3.55208in;height:2.125in" /></td>
 </tr>
 </tbody>
 </table>
@@ -270,7 +322,7 @@ A2.工作站(Station)模式(在內聯網)
 <p>例如:</p>
 <p>192.168.0.100</p>
 <p>192.168.1.22</p></td>
-<td><img src=".//media/image14.png" style="width:3.76042in;height:2.13889in" /></td>
+<td><img src=".//media/image12.png" style="width:3.76042in;height:2.13889in" /></td>
 </tr>
 </tbody>
 </table>
@@ -284,7 +336,7 @@ A3. 工作站(Station)模式(手機熱點)
 <p>經手機連上互聯網</p>
 <p>例如:</p>
 <p>192.168.43.100</p></td>
-<td><img src=".//media/image15.png" style="width:2.97917in;height:1.93056in" /></td>
+<td><img src=".//media/image6.png" style="width:2.97917in;height:1.93056in" /></td>
 </tr>
 </tbody>
 </table>
@@ -294,7 +346,7 @@ A3. 工作站(Station)模式(手機熱點)
 <table>
 <tbody>
 <tr class="odd">
-<td><img src=".//media/image5.png" style="width:2.97917in;height:3.59722in" /></td>
+<td><img src=".//media/image11.png" style="width:2.60353in;height:3.14063in" /></td>
 <td><p>從上而下:</p>
 <p>標題欄: Simp-py 及檔名</p>
 <p>編輯區: 程式文件在此顯示.</p>
@@ -310,3 +362,88 @@ A3. 工作站(Station)模式(手機熱點)
 </tr>
 </tbody>
 </table>
+
+**附錄C 設定頁簡介**
+
+<table>
+<tbody>
+<tr class="odd">
+<td><img src=".//media/image18.png" style="width:2.6367in;height:4.13021in" /></td>
+<td><p>從上而下:</p>
+<p>Device IP: M5Stack 的IP 地址</p>
+<p>Wifi Configuration 部份包括:</p>
+<ul>
+<li><blockquote>
+<p>Station ESSID</p>
+</blockquote></li>
+<li><blockquote>
+<p>Station password</p>
+</blockquote></li>
+<li><blockquote>
+<p>AP Default</p>
+</blockquote></li>
+<li><blockquote>
+<p>AP password</p>
+</blockquote></li>
+<li><blockquote>
+<p>Host code</p>
+</blockquote></li>
+</ul>
+<p>前四項設定參考7.1和7.2</p>
+<p>Host code 用戶可自行設定.</p>
+<p>按[Upload] 會上傳此部份資料到M5Stack.</p>
+<p>Course code: 設定此部份可下載相關課程例子.</p>
+<p>Connected Device: 按下[DevInfo] 取得 M5Stack 的資訊(見第5節)及更改.</p></td>
+</tr>
+</tbody>
+</table>
+
+\[\] View station password: 鈎選會顯示Station password 項目內容.
+
+\[\] View ap password: 鈎選會顯示AP password 項目內容.
+
+\[Save\] : 作任何修改後, 應按\[Save\] 儲存.
+
+\[DevInfo\] : 按此鍵可讀取M5Stack 資訊.(見第5節)
+
+\[Upload\] : 按此鍵上傳Wifi Configuration 資料到M5Stack.
+
+\[Rst\] : 按此鍵令M5Stack 重啟.
+
+\[Passkey\] : 按此鍵進行Passkey 操作.(見第6節)
+
+\[Back\] : 返回主頁.
+
+**附錄D \[help\] 簡介**
+
+在主頁按下\[help\] 出現幫助選項
+
+<table>
+<tbody>
+<tr class="odd">
+<td><img src=".//media/image13.png" style="width:1.9375in;height:2.02778in" /></td>
+<td><p>Help content : 進入幫助頁</p>
+<p>Download GNUFont : 下載GNU 中文字庫</p>
+<p>Download Course: 下載課程例子. Course code 要先在設定頁設好.</p>
+<p>Clean course : 把先前下載的課程例子清除.</p>
+<p>Download Simulator : 下載M5Stack 模擬器.</p></td>
+</tr>
+</tbody>
+</table>
+
+**附錄E M5Stack 模擬器 簡介(只適合用於教學示範或實驗性質)**
+
+M5Stack 模擬器是用python 和py-game 寫成的.
+
+在Android 上運行模擬器:
+
+按裝pydroid3, 然後用 pip 安娤paho-mqtt 模組.
+
+在pydroid3 內打開/data/simp\_py\_dat/simulator.py 然後運行.
+
+Simulator.py 便會模擬M5Stack 環境打開/data/simp\_py\_dat/test.py 並運行.
+
+可在Pydroid3 的編輯器修改test.py 或在simp\_py 內修改某文件, 然後儲存時選擇"Also save to
+test.py” 便可.
+
+如果用Pydroid3 修改了和Simp\_py 載入的相同文件. 在Simp\_py 中按\[File\] 然後選擇reload 重新載入.
