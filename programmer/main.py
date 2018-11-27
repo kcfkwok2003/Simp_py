@@ -1241,7 +1241,11 @@ class MainApp(App):
         print('upload_test_file %s' % fname)
         #textScreen = self.sm.get_screen('textScreen')
         status = self.textScreen.textRoot.status
-        f=open('%s/%s' % (self.datapath,fname),'rb')
+        fpath ='%s/%s' % (self.datapath,fname)
+        if (not os.path.isfile(fpath)):
+            status.text = '%s not found' % fpath
+            return
+        f=open(fpath,'rb')
         self.cont = f.read()
         f.close()
         cont = '\x02\nsvtest\n'+ self.cont +'\n\x03\n\x04\n'
