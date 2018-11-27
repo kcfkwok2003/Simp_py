@@ -5,6 +5,7 @@ Ref: https://play.google.com/store/apps/details?id=com.tienlink.simp_py
 
 2. 如自行安裝M5Stack Simp-py 固件, 請到此下載:
 https://github.com/kcfkwok2003/Simp_py/tree/master/vagrant/m5s/bin
+
 需要先安裝esptool, esptool 下載及安裝說明:
 https://github.com/espressif/esptool
 參考erflash.sh 及wrflash.sh 清除及寫入固件(需修改port 參數)
