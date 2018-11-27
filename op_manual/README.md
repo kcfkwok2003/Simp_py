@@ -22,7 +22,7 @@ Ref:
 <table>
 <tbody>
 <tr class="odd">
-<td><img src="media/image18.png" style="width:2.39063in;height:2.39898in" /></td>
+<td><img src=".//media/image18.png" style="width:2.39063in;height:2.39898in" /></td>
 <td><p>按一下M5Stack側面的紅色按鍵,約3秒後</p>
 <p>LCD 亮起. 出現左圖畫面. 信息包括:</p>
 <p>SIMP_PY 板本，例如 1.0.9a</p>
@@ -45,8 +45,8 @@ Ref:
 <table>
 <tbody>
 <tr class="odd">
-<td><img src="media/image7.png" style="width:1.9375in;height:1.375in" /></td>
-<td><img src="media/image16.png" style="width:1.9375in;height:3.06944in" /></td>
+<td><img src=".//media/image7.png" style="width:1.9375in;height:1.375in" /></td>
+<td><img src=".//media/image16.png" style="width:1.9375in;height:3.06944in" /></td>
 <td><p>在手機開啟Wi-Fi 連接到M5Stack.</p>
 <p>進入Simp-py Apps, 按[Set..] 入設定頁.</p>
 <p>在Device IP欄輸入對應的ip 地址</p></td>
@@ -59,7 +59,7 @@ Ref:
 <table>
 <tbody>
 <tr class="odd">
-<td><img src="media/image17.png" style="width:2.97917in;height:3.54167in" /></td>
+<td><img src=".//media/image17.png" style="width:2.97917in;height:3.54167in" /></td>
 <td><p>在設定頁面按下[DevInfo] 便能經Wi-Fi 讀取器件資訊</p>
 <p>Passkey: ??? 表示passkey 未設定.</p>
 <p>要取得passkey, 記下Device info 內的資料, 到下列網登記便可:</p>
@@ -73,8 +73,8 @@ Ref:
 <table>
 <thead>
 <tr class="header">
-<th><img src="media/image1.png" style="width:1.76339in;height:1.95313in" /></th>
-<th><img src="media/image3.png" style="width:1.71542in;height:1.85938in" /></th>
+<th><img src=".//media/image1.png" style="width:1.76339in;height:1.95313in" /></th>
+<th><img src=".//media/image3.png" style="width:1.71542in;height:1.85938in" /></th>
 <th><p>在設定頁按[Passkey], 然後選 Upload passkey by hand.</p>
 <p>按[ok],</p>
 <p>輸入passkey 再按[ok] 確定.</p>
@@ -85,8 +85,8 @@ Ref:
 </thead>
 <tbody>
 <tr class="odd">
-<td><img src="media/image2.png" style="width:1.80208in;height:1.76389in" /></td>
-<td><img src="media/image6.png" style="width:1.72917in;height:1.30556in" /></td>
+<td><img src=".//media/image2.png" style="width:1.80208in;height:1.76389in" /></td>
+<td><img src=".//media/image6.png" style="width:1.72917in;height:1.30556in" /></td>
 <td><p>如果你因升級或重寫固件.而之前已備份了passkey 文件,可.</p>
 <p>在設定頁按[Passkey], 然後選 Upload passkey from file.</p>
 <p>按[ok], 看見右圖信息再按[ok] 確定.</p>
@@ -141,17 +141,17 @@ Ref:
 8\.
 下載課程例子
 
-|                        |                       |                                                                                                                   |
-| ---------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| ![](media/image12.png) | ![](media/image9.png) | 先到設定頁輸入正確課程編號 (Course code). 然按\[help\] 選 Download Course. 按 \[ok\] 便下載課程例子. 例子會放在/data/simp\_py/simp\_py\_ex/ 內. |
+|                           |                          |                                                                                                                   |
+| ------------------------- | ------------------------ | ----------------------------------------------------------------------------------------------------------------- |
+| ![](.//media/image12.png) | ![](.//media/image9.png) | 先到設定頁輸入正確課程編號 (Course code). 然按\[help\] 選 Download Course. 按 \[ok\] 便下載課程例子. 例子會放在/data/simp\_py/simp\_py\_ex/ 內. |
 
 9\. 運行課程 例子
 
 <table>
 <tbody>
 <tr class="odd">
-<td><img src="media/image10.png" style="width:1.9375in;height:3.45833in" /></td>
-<td><img src="media/image8.png" style="width:1.9375in;height:3.5in" /></td>
+<td><img src=".//media/image10.png" style="width:1.9375in;height:3.45833in" /></td>
+<td><img src=".//media/image8.png" style="width:1.9375in;height:3.5in" /></td>
 <td><p>在主頁按[File], 選Open Examples</p>
 <p>進入course 文件夾, 選t101.py</p>
 <p>按[Ping]測試連接狀況。</p>
@@ -185,7 +185,7 @@ Ref:
 <table>
 <tbody>
 <tr class="odd">
-<td><img src="media/image4.png" style="width:2.52515in;height:2.57813in" /></td>
+<td><img src=".//media/image4.png" style="width:2.52515in;height:2.57813in" /></td>
 <td><p>按 [Start] 開始監測</p>
 <p>按 [Stop] 結朿監測</p>
 <p>如果程式有異常(Exception), 會看見如_exc:Traceback 等</p>
@@ -200,7 +200,7 @@ Ref:
 <table>
 <tbody>
 <tr class="odd">
-<td><img src="media/image11.png" style="width:2.399in;height:4.2982in" /></td>
+<td><img src=".//media/image11.png" style="width:2.399in;height:4.2982in" /></td>
 <td><p>即時命令:</p>
 <p>例如輸入tft.off() 按[Send] 可關 lcd 背光, 輸入 tft.on(), 按[Send] 可重開 lcd 背光.</p>
 <p>運行文件:</p>
@@ -255,7 +255,7 @@ A1. AP (Access Point) 接入點模式
 <tr class="odd">
 <td><p>IP: 固定為: 192.168.4.1</p>
 <p>無互聯網連線</p></td>
-<td><img src="media/image13.png" style="width:3.55208in;height:2.125in" /></td>
+<td><img src=".//media/image13.png" style="width:3.55208in;height:2.125in" /></td>
 </tr>
 </tbody>
 </table>
@@ -270,7 +270,7 @@ A2.工作站(Station)模式(在內聯網)
 <p>例如:</p>
 <p>192.168.0.100</p>
 <p>192.168.1.22</p></td>
-<td><img src="media/image14.png" style="width:3.76042in;height:2.13889in" /></td>
+<td><img src=".//media/image14.png" style="width:3.76042in;height:2.13889in" /></td>
 </tr>
 </tbody>
 </table>
@@ -284,7 +284,7 @@ A3. 工作站(Station)模式(手機熱點)
 <p>經手機連上互聯網</p>
 <p>例如:</p>
 <p>192.168.43.100</p></td>
-<td><img src="media/image15.png" style="width:2.97917in;height:1.93056in" /></td>
+<td><img src=".//media/image15.png" style="width:2.97917in;height:1.93056in" /></td>
 </tr>
 </tbody>
 </table>
@@ -294,7 +294,7 @@ A3. 工作站(Station)模式(手機熱點)
 <table>
 <tbody>
 <tr class="odd">
-<td><img src="media/image5.png" style="width:2.97917in;height:3.59722in" /></td>
+<td><img src=".//media/image5.png" style="width:2.97917in;height:3.59722in" /></td>
 <td><p>從上而下:</p>
 <p>標題欄: Simp-py 及檔名</p>
 <p>編輯區: 程式文件在此顯示.</p>
