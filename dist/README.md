@@ -6,6 +6,9 @@
 
 進入m5stackp-x.y.z 文件夾內, 參考erflash.sh 及 wrflash.sh 寫入固件往M5stack (需有4M psRam)
 註: 1.0.9a 有mqtt 支援.
+r1.1 以後木版本在以下文件夾內:
+https://github.com/kcfkwok2003/Simp_py/tree/master/vagrant/m5s/bin
+
 
 ## wifikit32
 
