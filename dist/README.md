@@ -2,11 +2,8 @@
 
 ## M5Stack
 
-進入m5stack-x.y.z 文件夾內, 參考erflash.sh 及 wrflash.sh 寫入固件往M5stack (無psRam)
+前往以下文件夾下載固件,  參考erflash.sh 及 wrflash.sh 寫入固件往M5stack
 
-進入m5stackp-x.y.z 文件夾內, 參考erflash.sh 及 wrflash.sh 寫入固件往M5stack (需有4M psRam)
-註: 1.0.9a 有mqtt 支援.
-r1.1 以後木版本在以下文件夾內:
 https://github.com/kcfkwok2003/Simp_py/tree/master/vagrant/m5s/bin
 
 
@@ -20,19 +17,20 @@ https://github.com/kcfkwok2003/Simp_py/tree/master/vagrant/m5s/bin
 
 # Android Apps 下載:
 
-此為舊版帶源碼Android apk.
-新版Android Apps 請往Google play store(只適用於中港澳) 下載.
+Android Apps 請往Google play store(只適用於中港澳) 下載.
 
-## Simp-programmer-x.y.z-debug.apk
+# Windows / Linux (kivy 版本)
 
-MCU python 編程工具
+1. 安裝 git, 及python 和 kivy
+2. git clone https://github.com/kcfkwok2003/Simp_py.git
+3. cd simp_py/programmer
+4. python main.py
 
-## Simp-fonts-x.y.z-debug.apk
+## 相關下載網址
+* git : https://gitforwindows.org
+* python : www.python.org
+* kivy : kivy.org
 
-中文字體抽取成python 碼程式工具
 
-## Simp-remote-x.y.z-debug.apk
-
-遙控範例
 
 
