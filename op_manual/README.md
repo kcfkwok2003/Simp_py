@@ -161,7 +161,7 @@ M5Stack 側面的紅色按鍵是開關. 按一下開機, 連按兩下關機.
 <p>圖6</p></td>
 <td><p><img src=".//media/image7.png" style="width:1.9375in;height:2.02778in" /></p>
 <p>圖7</p></td>
-<td>先到設定頁輸入正確課程編號 (Course code). 然按[help] 選 Download Course. 按 [ok] 便下載課程例子. 例子會放在/data/simp_py_ex/course 內.</td>
+<td>先到設定頁輸入正確課程編號 (Course code). 然按[help] 選 Download Course. 按 [ok] 便下載課程例子. 例子會放在 /data/simp_py_ex/course 內.</td>
 </tr>
 </tbody>
 </table>
@@ -454,11 +454,11 @@ test.py” 便可.
 <tbody>
 <tr class="odd">
 <td><img src=".//media/image20.png" style="width:1.78646in;height:1.51235in" /></td>
-<td><p>Upload as test.py: 把文件上載至M5Stack 為test.py.</p>
-<p>M5Stack 開機後只會運行test.py</p>
-<p>Upload : 把文件上載至M5Stack (保留原文件名)</p>
+<td><p>Upload as test.py: 把文件上載至 M5Stack 為 test.py.</p>
+<p>M5Stack 開機後只會運行 test.py</p>
+<p>Upload : 把文件上載至 M5Stack (保留原文件名)</p>
 <p>Upload binary: 上載 jpg (相片) 文件時要選這項</p>
-<p>Upload files in prj : 把prj 文件中所列的文件上載至M5Stack. 上載時會自動選合適格式. Prj 文件最後一行如果有..&gt;test.py. 該文件會上載為test.py. 不需上載的文件名可在前面加上#.</p></td>
+<p>Upload files in prj : 把 prj 文件中所列的文件上載至 M5Stack. 上載時會自動選合適格式. Prj 文件最後一行如果有 ..&gt;test.py. 該文件會上載為 test.py. 不需上載的文件名可在前面加上 #.</p></td>
 </tr>
 </tbody>
 </table>
