@@ -161,7 +161,7 @@ M5Stack 側面的紅色按鍵是開關. 按一下開機, 連按兩下關機.
 <p>圖6</p></td>
 <td><p><img src=".//media/image7.png" style="width:1.9375in;height:2.02778in" /></p>
 <p>圖7</p></td>
-<td>先到設定頁輸入正確課程編號 (Course code). 然按[help] 選 Download Course. 按 [ok] 便下載課程例子. 例子會放在/data/simp_py/simp_py_ex/course 內.</td>
+<td>先到設定頁輸入正確課程編號 (Course code). 然按[help] 選 Download Course. 按 [ok] 便下載課程例子. 例子會放在/data/simp_py_ex/course 內.</td>
 </tr>
 </tbody>
 </table>
