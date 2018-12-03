@@ -1,0 +1,8 @@
+# test_mpu9250.prj
+# help to upload files in batch
+# to stop upload a file, add '#' before it
+# to upload a file as test.py add '>test.py' behind it
+mpu9250.py
+mpu6500.py
+ak8963.py
+test_mpu9250.py>test.py

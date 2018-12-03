@@ -1,0 +1,6 @@
+# test_mqtt_demo.prj
+# help to upload files in batch
+# to stop upload a file, add '#' before it
+# to upload a file as test.py add '>test.py' behind it
+button.py
+test_mqtt_demo.py>test.py

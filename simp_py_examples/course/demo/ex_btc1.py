@@ -2,9 +2,9 @@ from simp_py import tft
 from btc_price import get_btc_info
 from button import Button
 from song import *
-btnA=Button(39)
-btnB=Button(38)
-btnC=Button(37)
+btnA=Button(39,'A')
+btnB=Button(38,'B')
+btnC=Button(37,'C')
 NOTES1=[a,a,a,f,cH,a,f,cH,a]
 DURATIONS1=[500,500,500,350,150,500,350,150,650]
 song=SONG(25)
