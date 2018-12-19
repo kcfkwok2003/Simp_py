@@ -26,6 +26,7 @@ test_mpu9250.prj
 test_mpu9250.py
 test_mqtt_demo.prj
 test_mqtt_demo.py
+test_rtc.py
 text1.txt
 text1_fontx.py
 text2.txt
