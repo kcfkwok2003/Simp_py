@@ -24,6 +24,7 @@ t308_cfnt.py
 test_christmas.py
 test_mpu9250.prj
 test_mpu9250.py
+test_mqtt.py
 test_mqtt_demo.prj
 test_mqtt_demo.py
 test_rtc.py
